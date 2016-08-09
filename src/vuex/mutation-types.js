@@ -1,0 +1,2 @@
+export const TOPICS_LIST = 'TOPICS_LIST'
+export const TOPICS_ARTICLE = 'TOPICS_ARTICLE'

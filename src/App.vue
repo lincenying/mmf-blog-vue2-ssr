@@ -7,7 +7,12 @@ body {
 .router-link-active {
     color: red;
 }
-
+.view {
+  transition: all .35s ease;
+}
+.view-enter, .view-leave-active {
+  opacity: 0;
+}
 </style>
 
 <template>
@@ -24,7 +29,9 @@ body {
             <router-link to="/about">About</router-link>
         </li>
     </ul>
-    <router-view class="view"></router-view>
+    <transition name="view" mode="out-in">
+        <router-view class="view"></router-view>
+    </transition>
 </div>
 
 </template>
