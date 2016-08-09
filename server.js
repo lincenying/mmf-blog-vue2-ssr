@@ -29,7 +29,7 @@ const html = (() => {
 let renderer
 if (isProd) {
   // create server renderer from real fs
-    const bundlePath = resolve('./dist/server-bundle.js')
+    const bundlePath = resolve('./dist/server/server-bundle.js')
     renderer = createBundleRenderer(fs.readFileSync(bundlePath, 'utf-8'))
 } else {
     require('./build/setup-dev-server')(app, bundle => {
