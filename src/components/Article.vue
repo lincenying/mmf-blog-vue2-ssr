@@ -35,10 +35,9 @@
 <script lang="babel">
 import { mapGetters } from 'vuex'
 import comment from './Comment.vue'
-const fetchInitialData = store => {
-    return store.dispatch(`getArticle`).then(() => {
-        return store.dispatch(`getComment`, { page: 1, limit: 5})
-    })
+const fetchInitialData = async store => {
+    await store.dispatch(`getArticle`)
+    await store.dispatch(`getComment`, { page: 1, limit: 5})
 }
 export default {
     prefetch: fetchInitialData,
