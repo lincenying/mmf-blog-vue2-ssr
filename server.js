@@ -57,7 +57,7 @@ Object.keys(proxyTable).forEach(function(context) {
 })
 
 app.use('/dist', express.static(resolve('./dist')))
-app.use(favicon(resolve('./src/assets/logo.png')))
+app.use(favicon(resolve('./dist/static/favicon.ico')))
 
 app.get('*', (req, res) => {
     var ss = Date.now()
