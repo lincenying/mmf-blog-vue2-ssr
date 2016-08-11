@@ -13,6 +13,7 @@
 </template>
 <script lang="babel">
     import { mapGetters } from 'vuex'
+    import { ua, ssp } from '../tools/command'
     import indexPost from './IndexPost.vue'
     const fetchInitialData = (store, config = { page: 1}) => {
         const id = store.state.route.params.id || ""
@@ -37,7 +38,7 @@
                 topics: 'getTopics'
             }),
             isPC() {
-                return true
+                return ua() === "PC"
             },
             nextPage() {
                 return this.topics.curPage + 1
@@ -53,6 +54,9 @@
         beforeMount() {
             if (this.topics.path !== this.$route.fullPath)
                 this.loadMore(1)
+        },
+        mounted() {
+            ssp(this.$route.path)
         },
         watch: {
             '$route'() {

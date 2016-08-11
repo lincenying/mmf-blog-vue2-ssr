@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import ls from 'store2'
 
+export const inBrowser = typeof window !== 'undefined'
+
 export const ua = () => {
-    var userAgentInfo = navigator && navigator.userAgent
+    var userAgentInfo = typeof window !== 'undefined' ? navigator.userAgent : ''
     var Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod']
     var flag = 'PC'
     for (var vv = 0; vv < Agents.length; vv++) {
@@ -13,16 +15,19 @@ export const ua = () => {
     }
     return flag
 }
+
 export const ssp = path => {
-    var clientHeight = document.documentElement.clientHeight,
-        scrollTop = ls.get(path)
-    if (scrollTop) {
-        Vue.nextTick(() => {
-            if (document.body.clientHeight >= scrollTop + clientHeight) {
-                window.scrollTo(0, scrollTop)
-            } else {
-                ls.remove(path)
-            }
-        })
+    if (typeof window !== 'undefined') {
+        var clientHeight = document.documentElement.clientHeight,
+            scrollTop = ls.get(path)
+        if (scrollTop) {
+            Vue.nextTick(() => {
+                if (document.body.clientHeight >= scrollTop + clientHeight) {
+                    window.scrollTo(0, scrollTop)
+                } else {
+                    ls.remove(path)
+                }
+            })
+        }
     }
 }
