@@ -1,7 +1,10 @@
-const base = require('./webpack.base.config')
+const baseConfig = require('./webpack.base.config')
+var utils = require('./utils')
+var merge = require('webpack-merge')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const config = Object.assign({}, base, {
+var config = Object.assign({}, baseConfig, {
     plugins: [
         // strip comments in Vue code
         new webpack.DefinePlugin({
@@ -19,28 +22,45 @@ if (process.env.NODE_ENV === 'production') {
     // extract CSS into a single file so it's applied on initial render
     const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-    config.vue = {
-        loaders: {
-            css: ExtractTextPlugin.extract({
-                loader: "css-loader",
-                fallbackLoader: "vue-style-loader"
+    config = merge(config, {
+        module: {
+            loaders: utils.styleLoaders({
+                sourceMap: false,
+                extract: true
             })
-        }
-    }
-
-    config.plugins.push(
-        new ExtractTextPlugin('css/styles.css'),
-        // this is needed in webpack 2 for minifying CSS
-        new webpack.LoaderOptionsPlugin({
-            minimize: true
-        }),
-        // minify JS
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+        },
+        vue: {
+            loaders: utils.cssLoaders({
+                sourceMap: false,
+                extract: true
+            })
+        },
+        plugins: [
+            new ExtractTextPlugin('css/styles.css'),
+            // this is needed in webpack 2 for minifying CSS
+            new webpack.LoaderOptionsPlugin({
+                minimize: true
+            }),
+            // minify JS
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                }
+            })
+        ]
+    })
+} else {
+    config = merge(config, {
+        module: {
+            loaders: utils.styleLoaders()
+        },
+        proxy: {
+            '/api/**': {
+                target: 'http://www.mmxiaowu.com/',
+                secure: false,
+                changeOrigin: true
             }
-        })
-    )
+        }
+    })
 }
-
 module.exports = config

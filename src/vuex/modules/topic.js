@@ -17,10 +17,11 @@ const state = {
 const mutations = {
     [TOPICS_LIST]: (state, {data, path, page}) => {
         if (page === 1) {
-            state.topics.list = [].concat(data)
+            state.topics.list = [].concat(data.list)
         } else {
-            state.topics.list = state.topics.list.concat(data)
+            state.topics.list = state.topics.list.concat(data.list)
         }
+        state.topics.hasNext = data.hasNext
         state.topics.curPage = page
         state.topics.path = path
     },

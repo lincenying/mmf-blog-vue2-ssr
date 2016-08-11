@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Home from '../components/Home.vue'
-import About from '../components/About.vue'
-import Topics from '../components/Topics.vue'
 import Article from '../components/Article.vue'
 import VueRouter from 'vue-router'
 
@@ -12,9 +10,8 @@ const router = new VueRouter({
     base: __dirname,
     routes: [
         { path: '/', component: Home },
-        { path: '/Topics', component: Topics },
-        { path: '/Article/:id', component: Article },
-        { path: '/About', component: About }
+        { path: '/category/:id(\\d+)', component: Home },
+        { path: '/article/:id(\\d+)', component: Article }
     ]
 })
 

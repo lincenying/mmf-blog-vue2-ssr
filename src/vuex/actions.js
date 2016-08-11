@@ -1,13 +1,16 @@
 import request from 'axios'
+import qs from 'qs'
 
-request.defaults.baseURL = 'https://cnodejs.org/api/v1'
+request.defaults.baseURL = 'http://www.mmxiaowu.com/api'
+request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
-export const getTopics = ({ commit, state }, page) => {
-    return request.get('/topics?page=' + page + '&limit=10').then(response => {
+export const getTopics = ({ commit, state }, config) => {
+    return request.post('/', qs.stringify(config)).then(response => {
+        console.log(config)
         if (response.statusText === 'OK') {
             commit('TOPICS_LIST', {
                 ...response.data,
-                page,
+                page: config.page,
                 path: state.route.fullPath
             })
         }
@@ -17,10 +20,10 @@ export const getTopics = ({ commit, state }, page) => {
 }
 
 export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
-    return request.get('/topic/' + id).then(response => {
+    return request.get('/?id=' + id).then(response => {
         if (response.statusText === 'OK') {
             commit('TOPICS_ARTICLE', {
-                ...response.data
+                ...response.data.data
             })
         }
     }).catch(error => {

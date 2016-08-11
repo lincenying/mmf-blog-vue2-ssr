@@ -9,6 +9,7 @@ const resolve = file => path.resolve(__dirname, file)
 const express = require('express')
 const favicon = require('serve-favicon')
 const serialize = require('serialize-javascript')
+const proxyMiddleware = require('http-proxy-middleware')
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
 
 const app = express()
@@ -24,7 +25,6 @@ const html = (() => {
         tail: template.slice(i + '{{ APP }}'.length)
     }
 })()
-
 // setup the server renderer, depending on dev/prod environment
 let renderer
 if (isProd) {
@@ -36,6 +36,25 @@ if (isProd) {
         renderer = createBundleRenderer(bundle)
     })
 }
+
+const proxyTable = {
+    '/api': {
+        target: 'http://www.mmxiaowu.com',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api': '/api'
+        }
+    }
+}
+Object.keys(proxyTable).forEach(function(context) {
+    var options = proxyTable[context]
+    if (typeof options === 'string') {
+        options = {
+            target: options
+        }
+    }
+    app.use(proxyMiddleware(context, options))
+})
 
 app.use('/dist', express.static(resolve('./dist')))
 app.use(favicon(resolve('./src/assets/logo.png')))
