@@ -6,7 +6,6 @@ request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencod
 
 export const getTopics = ({ commit, state }, config) => {
     return request.post('/', qs.stringify(config)).then(response => {
-        console.log(config)
         if (response.statusText === 'OK') {
             commit('TOPICS_LIST', {
                 ...response.data,
@@ -20,10 +19,23 @@ export const getTopics = ({ commit, state }, config) => {
 }
 
 export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
-    return request.get('/?id=' + id).then(response => {
+    return request.get('/?action=article&markdown=1&id=' + id).then(response => {
         if (response.statusText === 'OK') {
             commit('TOPICS_ARTICLE', {
-                ...response.data.data
+                ...response.data
+            })
+        }
+    }).catch(error => {
+        console.log(error)
+    })
+}
+
+export const getComment = ({ commit, state: {route: { params: { id }}} }, { page, limit }) => {
+    return request.get('/?action=comment&id=' + id + "&page=" + page + "&limit=" + limit).then(response => {
+        if (response.statusText === 'OK') {
+            commit('TOPICS_COMMENT', {
+                ...response.data,
+                page
             })
         }
     }).catch(error => {

@@ -14,9 +14,9 @@
 <script lang="babel">
     import { mapGetters } from 'vuex'
     import indexPost from './IndexPost.vue'
-    const fetchInitialData = (store, config) => {
-        var id = store.state.route.params.id || ""
-        var qs = store.state.route.params.qs || ""
+    const fetchInitialData = (store, config = { page: 1}) => {
+        const id = store.state.route.params.id || ""
+        const qs = store.state.route.params.qs || ""
         const base = {
             ...config,
             action: 'getArticleList',
@@ -25,7 +25,7 @@
             id,
             qs
         }
-        return store.dispatch(`getTopics`, base)
+        return store.dispatch('getTopics', base)
     }
     export default {
         prefetch: fetchInitialData,
@@ -38,18 +38,21 @@
             }),
             isPC() {
                 return true
+            },
+            nextPage() {
+                return this.topics.curPage + 1
             }
         },
         methods: {
-            loadMore(page = this.topics.curPage + 1) {
-                var id = this.$route.params.id || ""
-                var qs = this.$route.params.qs || ""
+            loadMore(page = this.nextPage) {
                 fetchInitialData(this.$store, {
-                    id,
-                    qs,
                     page
                 })
             }
+        },
+        beforeMount() {
+            if (this.topics.path !== this.$route.fullPath)
+                this.loadMore(1)
         },
         watch: {
             '$route'() {
