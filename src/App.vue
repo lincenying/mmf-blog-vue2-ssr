@@ -59,13 +59,18 @@ export default {
         About
     },
     methods: {
-        goBack() {},
-        goTop() {},
+        goBack() {
+            this.$router.go(-1)
+        },
+        goTop() {
+            window.scrollTo(0, 0)
+        },
         search(e) {
             var qs = e.target.value
             if (qs === "") {
                 return false
             }
+            this.$router.replace('/search/' + qs)
         }
     },
     computed: {

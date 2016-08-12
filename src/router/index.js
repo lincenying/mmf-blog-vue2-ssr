@@ -24,6 +24,7 @@ const router = new VueRouter({
     routes: [
         { path: '/', component: Home },
         { path: '/category/:id(\\d+)', component: Home },
+        { path: '/search/:qs', component: Home },
         { path: '/article/:id(\\d+)', component: Article, meta: { scrollToTop: true } }
     ]
 })

@@ -54,13 +54,13 @@ if (process.env.NODE_ENV === 'production') {
         module: {
             loaders: utils.styleLoaders()
         },
-        proxy: {
-            '/api/**': {
-                target: 'http://www.mmxiaowu.com/',
-                secure: false,
-                changeOrigin: true
-            }
-        }
+        // proxy: {
+        //     '/api/**': {
+        //         target: 'http://www.mmxiaowu.com/',
+        //         secure: false,
+        //         changeOrigin: true
+        //     }
+        // }
     })
 }
 module.exports = config
