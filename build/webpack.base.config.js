@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const projectRoot = path.resolve(__dirname, '../')
 module.exports = {
     devtool: '#source-map',
@@ -13,6 +14,9 @@ module.exports = {
     },
     resolveLoader: {
         root: path.join(__dirname, '../node_modules'),
+    },
+    externals: {
+        'jquery': 'jQuery'
     },
     module: {
         preLoaders: [{
@@ -43,5 +47,12 @@ module.exports = {
         eslint: {
             formatter: require('eslint-friendly-formatter')
         }
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
+        })
+    ]
 }

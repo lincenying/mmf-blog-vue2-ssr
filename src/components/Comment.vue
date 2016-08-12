@@ -80,7 +80,7 @@ export default {
         },
         postComment() {
             if (this.form.content === '') {
-                this.showMsg('请输入评论内容!', 'error')
+                this.$store.dispatch('showMsg', '请输入评论内容!', 'error')
             } else {
                 // 1
             }

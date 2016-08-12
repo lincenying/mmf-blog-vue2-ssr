@@ -12,7 +12,8 @@ const state = {
     article: {
         data: {},
         next: {},
-        prev: {}
+        prev: {},
+        path: ''
     },
     comment: {
         curPage: 1,
@@ -32,10 +33,11 @@ const mutations = {
         state.topics.curPage = page
         state.topics.path = path
     },
-    [TOPICS_ARTICLE]:  (state, { data, next, prev }) => {
+    [TOPICS_ARTICLE]:  (state, { data, next, prev, path }) => {
         state.article.data = data
         state.article.next = next
         state.article.prev = prev
+        state.article.path = path
     },
     [TOPICS_COMMENT]:  (state, { data, page }) => {
         if (page === 1) {

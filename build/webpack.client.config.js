@@ -3,6 +3,7 @@ var utils = require('./utils')
 var merge = require('webpack-merge')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 var config = Object.assign({}, baseConfig, {
     plugins: [
@@ -20,7 +21,6 @@ var config = Object.assign({}, baseConfig, {
 
 if (process.env.NODE_ENV === 'production') {
     // extract CSS into a single file so it's applied on initial render
-    const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
     config = merge(config, {
         module: {

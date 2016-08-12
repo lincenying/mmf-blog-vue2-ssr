@@ -52,7 +52,7 @@
             }
         },
         beforeMount() {
-            if (this.topics.path !== this.$route.fullPath)
+            if (this.topics.path !== this.$route.path)
                 this.loadMore(1)
         },
         mounted() {

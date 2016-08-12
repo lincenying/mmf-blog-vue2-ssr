@@ -1,7 +1,9 @@
 const webpack = require('webpack')
+var utils = require('./utils')
+var merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 
-module.exports = Object.assign({}, base, {
+var config = Object.assign({}, base, {
     target: 'node',
     devtool: null,
     entry: './src/server-entry.js',
@@ -17,3 +19,5 @@ module.exports = Object.assign({}, base, {
         })
     ]
 })
+
+module.exports = config

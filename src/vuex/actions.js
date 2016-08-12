@@ -1,16 +1,25 @@
-import request from 'axios'
-import qs from 'qs'
+import {
+    TOPICS_LIST, TOPICS_ARTICLE, TOPICS_COMMENT
+} from './mutation-types'
 
-request.defaults.baseURL = 'http://www.mmxiaowu.com/api'
-request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+import * as api from '../api'
+import toastr from 'toastr'
+
+export const showMsg = ({commit}, content, type = 'error') => {
+    toastr[type](content)
+}
+
+export const hideMsg = () => {
+    toastr.clear()
+}
 
 export const getTopics = ({ commit, state }, config) => {
-    return request.post('/', qs.stringify(config)).then(response => {
+    return api.getTopics(config).then(response => {
         if (response.statusText === 'OK') {
-            commit('TOPICS_LIST', {
+            commit(TOPICS_LIST, {
                 ...response.data,
                 page: config.page,
-                path: state.route.fullPath
+                path: state.route.path
             })
         }
     }).catch(error => {
@@ -18,11 +27,12 @@ export const getTopics = ({ commit, state }, config) => {
     })
 }
 
-export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
-    return request.get('/?action=article&markdown=1&id=' + id).then(response => {
+export const getArticle = ({ commit, state: {route: { path, params: { id }}} }) => {
+    return api.getArticle(id).then(response => {
         if (response.statusText === 'OK') {
-            commit('TOPICS_ARTICLE', {
-                ...response.data
+            commit(TOPICS_ARTICLE, {
+                ...response.data,
+                path
             })
         }
     }).catch(error => {
@@ -31,9 +41,9 @@ export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
 }
 
 export const getComment = ({ commit, state: {route: { params: { id }}} }, { page, limit }) => {
-    return request.get('/?action=comment&id=' + id + "&page=" + page + "&limit=" + limit).then(response => {
+    return api.getComment({id, page, limit}).then(response => {
         if (response.statusText === 'OK') {
-            commit('TOPICS_COMMENT', {
+            commit(TOPICS_COMMENT, {
                 ...response.data,
                 page
             })

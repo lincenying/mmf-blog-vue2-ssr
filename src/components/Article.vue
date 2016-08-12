@@ -50,7 +50,8 @@ export default {
         comment
     },
     beforeMount() {
-        fetchInitialData(this.$store)
+        if (this.article.path !== this.$route.path)
+            fetchInitialData(this.$store)
     },
     watch: {
         '$route'() {
