@@ -1,6 +1,14 @@
-# vue2-ssr-template
+# mmf-blog-vue2-ssr
 
-> A Vue.js project with vue 2.0, vue-router and vuex starter kit for server side rendering.
+demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
+
+react: [https://github.com/lincenying/mmf-blog-react](https://github.com/lincenying/mmf-blog-react)
+
+vue1: [https://github.com/lincenying/mmf-blog-vue](https://github.com/lincenying/mmf-blog-vue)
+
+vue2: [https://github.com/lincenying/mmf-blog-vue2](https://github.com/lincenying/mmf-blog-vue2)
+
+vue2 服务端渲染: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr) // 未完成
 
 ## Build Setup
 
@@ -16,13 +24,3 @@ npm start
 npm install
 npm run dev
 ```
-
-## Reference resources
-
-[vue-ssr-demo](https://github.com/yyx990803/vue-ssr-demo)
-
-[vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
-
-## License
-
-[MIT](http://opensource.org/licenses/MIT)
