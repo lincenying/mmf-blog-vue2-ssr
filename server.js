@@ -11,6 +11,7 @@ const favicon = require('serve-favicon')
 const serialize = require('serialize-javascript')
 const proxyMiddleware = require('http-proxy-middleware')
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
+var proxyConfig = require('./proxy')
 
 const app = express()
 
@@ -37,17 +38,8 @@ if (isProd) {
     })
 }
 
-const proxyTable = {
-    '/api': {
-        target: 'http://www.mmxiaowu.com',
-        changeOrigin: true,
-        pathRewrite: {
-            '^/api': '/api'
-        }
-    }
-}
-Object.keys(proxyTable).forEach(function(context) {
-    var options = proxyTable[context]
+Object.keys(proxyConfig).forEach(function(context) {
+    var options = proxyConfig[context]
     if (typeof options === 'string') {
         options = {
             target: options
