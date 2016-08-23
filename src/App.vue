@@ -29,7 +29,13 @@
                 <div class="m-nav">
                     <ul class="menuOpen">
                         <li class="tag-all">
-                            <router-link to="/" exact>All</router-link>
+                            <router-link to="/" exact><i></i>All</router-link>
+                        </li>
+                        <li class="tag-life">
+                            <router-link to="/admin/list/1"><i></i>List</router-link>
+                        </li>
+                        <li class="tag-study">
+                            <router-link to="/admin/post"><i></i>Post</router-link>
                         </li>
                     </ul>
                 </div>
@@ -75,7 +81,7 @@ export default {
     },
     computed: {
         visit() {
-            return true
+            return !this.$route.meta.needLogin
         }
     }
 }

@@ -1,6 +1,8 @@
 import Vue from 'vue'
+import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Article from '../components/Article.vue'
+import AdminList from '../components/AdminList.vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
@@ -22,10 +24,12 @@ const router = new VueRouter({
     base: __dirname,
     scrollBehavior,
     routes: [
-        { path: '/', component: Home },
-        { path: '/category/:id(\\d+)', component: Home },
-        { path: '/search/:qs', component: Home },
-        { path: '/article/:id(\\d+)', component: Article, meta: { scrollToTop: true } }
+        { path: '/', component: Home, meta: { needLogin: false } },
+        { path: '/login', component: Login, meta: { needLogin: false } },
+        { path: '/category/:id(\\d+)', component: Home, meta: { needLogin: false } },
+        { path: '/search/:qs', component: Home, meta: { needLogin: false } },
+        { path: '/article/:id', component: Article, meta: { needLogin: false } },
+        { path: '/admin/list/:page(\\d+)', component: AdminList, meta: { needLogin: true } }
     ]
 })
 
