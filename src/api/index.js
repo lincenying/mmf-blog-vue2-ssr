@@ -18,6 +18,9 @@ export default {
         user.setEmail('admin1@mmxiaowu.com')
         return user.signUp()
     },
+    getUser() {
+        return AV.User.current()
+    },
     login(config) {
         return AV.User.logIn(config.username, config.password)
     },

@@ -2,10 +2,14 @@ import {
     GLOBAL_HIDEMSG,
     GLOBAL_LOADDING,
     GLOBAL_PROGRESS,
-    GLOBAL_SHOWMSG
+    GLOBAL_SHOWMSG,
+    GLOBAL_LOGIN_FORM,
+    GLOBAL_LOGIN_STATUS
 } from '../mutation-types'
 
 const state = {
+    showLoginBox: false,
+    sessionToken: '',
     loading: false,
     progress: 0,
     message: {
@@ -31,6 +35,12 @@ const mutations = {
             content: '',
             title: ''
         }
+    },
+    [GLOBAL_LOGIN_FORM](state, status) {
+        state.showLoginBox = status
+    },
+    [GLOBAL_LOGIN_STATUS](state, sessionToken) {
+        state.sessionToken = sessionToken
     }
 }
 

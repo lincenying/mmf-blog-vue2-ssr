@@ -79,14 +79,12 @@ export const postComment = ({ commit, state: {route: { params: { id }}} }, { use
 }
 
 export const getAdminTopics = ({commit, state: {route: { path, params: { page } }}}, config) => {
-    return api.getAdminTopics(config).then(response => {
-        if (response.statusText === 'OK') {
-            commit(RECEIVE_ADMIN_TOPICS, {
-                ...response.data,
-                page: config.page,
-                path
-            })
-        }
+    return api.getTopics(config).then(data => {
+        commit(RECEIVE_ADMIN_TOPICS, {
+            ...data,
+            page: config.page,
+            path
+        })
     }).catch(error => {
         console.log(error)
     })

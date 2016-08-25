@@ -23,7 +23,7 @@
 import { mapGetters } from 'vuex'
 const fetchInitialData = async store => {
     const base = {
-        action: 'getAdminArticle',
+        admin: 1,
         limit: 20
     }
     await store.dispatch('getAdminTopics', base)
@@ -59,6 +59,9 @@ export default {
     created() {
         if (this.$route.path !== this.topics.path)
             fetchInitialData(this.$store)
+        else {
+            this.$store.dispatch('gProgress', 100)
+        }
     },
     watch: {
         '$route'() {

@@ -1,5 +1,4 @@
 <template>
-
 <div id="app">
     <div class="g-doc">
         <div class="g-hd">
@@ -45,7 +44,7 @@
             <router-view class="router"></router-view>
         </transition>
         <div class="g-ft">
-            <span class="copy"><span title="Copyright">©</span> <a href="/">M·M·F 小屋</a> 2016.06</span>
+            <span class="copy"><span title="Copyright">©</span> <a href="/">M·M·F 小屋</a> 2016.06 <a v-if="!global.sessionToken" @click="handleLogin" href="javascript:;"> | 登录</a></span>
             <span class="beian"><i></i> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000">浙公网安备 000000000000号</a></span>
         </div>
         <div class="arrow">
@@ -53,18 +52,21 @@
             <a class="go-back" href="javascript:;" @click="goBack"></a>
         </div>
     </div>
+    <Login v-if="global.login" />
 </div>
-
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import api from './api'
 import NProgress from 'nprogress'
 import About from './components/About.vue'
+import Login from './components/Login.vue'
 
 export default {
     components: {
-        About
+        About,
+        Login
     },
     computed: {
         ...mapGetters({
@@ -81,6 +83,9 @@ export default {
         goTop() {
             window.scrollTo(0, 0)
         },
+        handleLogin() {
+            this.$store.commit('GLOBAL_LOGIN', !this.global.showLoginBox)
+        },
         search(e) {
             var qs = e.target.value
             if (qs === "") {
@@ -88,6 +93,11 @@ export default {
             }
             this.$router.replace('/search/' + qs)
         }
+    },
+    mounted() {
+        const currentUser = api.getUser()
+        if (currentUser)
+            this.$store.commit('GLOBAL_LOGIN_STATUS', currentUser._sessionToken)
     },
     watch: {
         'global.progress'(val) {
@@ -103,6 +113,5 @@ export default {
         }
     }
 }
-
 </script>
 <style src="./App.css"></style>
