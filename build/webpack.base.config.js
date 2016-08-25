@@ -38,6 +38,9 @@ module.exports = {
             loader: 'babel',
             exclude: /node_modules/
         }, {
+            test: /\.json$/,
+            loader: 'json'
+        }, {
             test: /\.(png|jpg|gif|svg)$/,
             loader: 'file',
             query: {

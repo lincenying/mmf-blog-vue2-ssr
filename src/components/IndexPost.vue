@@ -3,7 +3,7 @@
         <a href="javascript:;" class="w-icon w-icon-1">&nbsp;</a>
         <a href="javascript:;" class="w-icon2">&nbsp;</a>
         <div class="info">
-            <a href="javascript:;" v-text="item.creat_date"></a>
+            <a href="javascript:;" v-text="dateTime(item.creat_date)"></a>
         </div>
         <div class="cont cont-1">
             <div class="text">
@@ -27,6 +27,10 @@
             }
         },
         methods: {
+            dateTime(val) {
+                var myDate = new Date(val)
+                return myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes()
+            },
             open(e) {
                 this.showMore = !this.showMore
                 var $mPost = $(e.target).parents(".m-post")

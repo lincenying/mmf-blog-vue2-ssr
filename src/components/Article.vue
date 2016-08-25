@@ -6,7 +6,7 @@
                 <a href="javascript:;" class="w-icon w-icon-1">&nbsp;</a>
                 <a href="javascript:;" class="w-icon2">&nbsp;</a>
                 <div class="info">
-                    <a href="javascript:;" v-text="article.data.creat_date"></a>
+                    <a href="javascript:;" v-text="dateTime(article.data.creat_date)"></a>
                     <a href="javascript:;">浏览: {{ article.data.visit }}</a>
                     <a href="javascript:;" class="comnum" v-text="article.data.comment_count"></a>
                 </div>
@@ -41,6 +41,10 @@ const fetchInitialData = async store => {
 }
 export default {
     prefetch: fetchInitialData,
+    beforeMount() {
+        if (this.article.path !== this.$route.path)
+            fetchInitialData(this.$store)
+    },
     computed: {
         ...mapGetters({
             article: 'getArticle'
@@ -49,9 +53,11 @@ export default {
     components: {
         comment
     },
-    beforeMount() {
-        if (this.article.path !== this.$route.path)
-            fetchInitialData(this.$store)
+    methods: {
+        dateTime(val) {
+            var myDate = new Date(val)
+            return myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes()
+        }
     },
     watch: {
         '$route'() {

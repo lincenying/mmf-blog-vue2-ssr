@@ -80,9 +80,15 @@ export default {
         },
         postComment() {
             if (this.form.content === '') {
-                this.$store.dispatch('showMsg', '请输入评论内容!', 'error')
+                this.$store.dispatch('showMsg', '请输入评论内容!')
             } else {
-                // 1
+                this.$store.dispatch('postComment', this.form).then(() => {
+                    this.form.content = ''
+                    this.$store.dispatch('showMsg', {
+                        'content': '评论发布成功',
+                        'type': 'success'
+                    })
+                })
             }
         },
         reply(item) {

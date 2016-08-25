@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Article from '../components/Article.vue'
 import AdminList from '../components/AdminList.vue'
@@ -25,7 +24,6 @@ const router = new VueRouter({
     scrollBehavior,
     routes: [
         { path: '/', component: Home, meta: { needLogin: false } },
-        { path: '/login', component: Login, meta: { needLogin: false } },
         { path: '/category/:id(\\d+)', component: Home, meta: { needLogin: false } },
         { path: '/search/:qs', component: Home, meta: { needLogin: false } },
         { path: '/article/:id', component: Article, meta: { needLogin: false } },

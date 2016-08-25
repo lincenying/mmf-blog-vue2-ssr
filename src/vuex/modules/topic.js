@@ -1,12 +1,12 @@
 import {
-    TOPICS_LIST, TOPICS_ARTICLE, TOPICS_COMMENT
+    TOPICS_LIST, TOPICS_ARTICLE, TOPICS_COMMENT, TOPICS_COMMENT_INSERT
 } from '../mutation-types'
 
 const state = {
     topics: {
         curPage: 1,
         list: [],
-        hasNext: 1,
+        hasNext: 0,
         path: ''
     },
     article: {
@@ -18,18 +18,18 @@ const state = {
     comment: {
         curPage: 1,
         list: [],
-        hasNext: 1
+        hasNext: 0
     }
 }
 
 const mutations = {
-    [TOPICS_LIST]: (state, {data, path, page}) => {
+    [TOPICS_LIST]: (state, {list, hasNext, path, page}) => {
         if (page === 1) {
-            state.topics.list = [].concat(data.list)
+            state.topics.list = [].concat(list)
         } else {
-            state.topics.list = state.topics.list.concat(data.list)
+            state.topics.list = state.topics.list.concat(list)
         }
-        state.topics.hasNext = data.hasNext
+        state.topics.hasNext = hasNext
         state.topics.curPage = page
         state.topics.path = path
     },
@@ -39,14 +39,17 @@ const mutations = {
         state.article.prev = prev
         state.article.path = path
     },
-    [TOPICS_COMMENT]:  (state, { data, page }) => {
+    [TOPICS_COMMENT]:  (state, { list, hasNext, page }) => {
         if (page === 1) {
-            state.comment.list = [].concat(data.list)
+            state.comment.list = [].concat(list)
         } else {
-            state.comment.list = state.comment.list.concat(data.list)
+            state.comment.list = state.comment.list.concat(list)
         }
-        state.comment.hasNext = data.hasNext
+        state.comment.hasNext = hasNext
         state.comment.curPage = page
+    },
+    [TOPICS_COMMENT_INSERT]: (state, data) => {
+        state.comment.list.unshift(data)
     }
 }
 export default {

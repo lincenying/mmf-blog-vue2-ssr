@@ -58,11 +58,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import NProgress from 'nprogress'
 import About from './components/About.vue'
 
 export default {
     components: {
         About
+    },
+    computed: {
+        ...mapGetters({
+            global: 'getGlobal'
+        }),
+        visit() {
+            return !this.$route.meta.needLogin
+        }
     },
     methods: {
         goBack() {
@@ -79,9 +89,17 @@ export default {
             this.$router.replace('/search/' + qs)
         }
     },
-    computed: {
-        visit() {
-            return !this.$route.meta.needLogin
+    watch: {
+        'global.progress'(val) {
+            if (val === 0) {
+                NProgress.set(0)
+                NProgress.start()
+            } else if (val === 100) {
+                NProgress.done()
+            } else {
+                NProgress.set(val/100)
+                NProgress.start()
+            }
         }
     }
 }

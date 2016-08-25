@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.13.1",
     "jquery": "^3.1.0",
+    "leancloud-storage": "^1.3.3",
     "nprogress": "^0.2.0",
     "qs": "^6.2.1",
     "store2": "^2.3.2",
@@ -57,6 +58,7 @@
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
     "http-proxy-middleware": "^0.17.1",
+    "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "lru-cache": "^4.0.1",

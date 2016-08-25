@@ -54,6 +54,9 @@
         beforeMount() {
             if (this.topics.path !== this.$route.path)
                 this.loadMore(1)
+            else {
+                this.$store.dispatch('gProgress', 100)
+            }
         },
         mounted() {
             ssp(this.$route.path)
