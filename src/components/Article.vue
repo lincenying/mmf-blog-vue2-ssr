@@ -44,6 +44,9 @@ export default {
     beforeMount() {
         if (this.article.path !== this.$route.path)
             fetchInitialData(this.$store)
+        else {
+            this.$store.dispatch('gProgress', 100)
+        }
     },
     computed: {
         ...mapGetters({
