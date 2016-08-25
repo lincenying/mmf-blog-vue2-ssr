@@ -96,8 +96,10 @@ export default {
     },
     mounted() {
         const currentUser = api.getUser()
-        if (currentUser)
+        if (currentUser && currentUser._sessionToken) {
+            console.log('session')
             this.$store.commit('GLOBAL_LOGIN_STATUS', currentUser._sessionToken)
+        }
     },
     watch: {
         'global.progress'(val) {
