@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>M·M·F 小屋</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' data: 'unsafe-eval' 'unsafe-inline'; frame-src 'self'" />
+    <meta name="Keywords" content="林岑影, M·M·F 小屋"/>
+    <meta name="Description" content="M·M·F 小屋"/>
+    <%- style %>
+</head>
+
+<body>
+    <script>
+        // eslint-disable-next-line
+        window.__INITIAL_STATE__ = <%- initialState %>
+    </script>
+    <%- body %>
+    <script src="/dist/static/jquery.min.js"></script>
+    <script src="/dist/static/editor.md/editormd.min.js"></script>
+    <script src="/dist/js/client-vendor-bundle.js"></script>
+    <script src="/dist/js/client-bundle.js"></script>
+</body>
+</html>
