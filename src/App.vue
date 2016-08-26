@@ -52,7 +52,7 @@
             <a class="go-back" href="javascript:;" @click="goBack"></a>
         </div>
     </div>
-    <Login v-if="global.login" />
+    <Login v-if="global.showLoginBox" />
 </div>
 </template>
 
@@ -84,7 +84,7 @@ export default {
             window.scrollTo(0, 0)
         },
         handleLogin() {
-            this.$store.commit('GLOBAL_LOGIN', !this.global.showLoginBox)
+            this.$store.commit('GLOBAL_LOGIN_FORM', !this.global.showLoginBox)
         },
         search(e) {
             var qs = e.target.value
