@@ -24,6 +24,9 @@ export default {
     login(config) {
         return AV.User.logIn(config.username, config.password)
     },
+    logout() {
+        return AV.User.logOut()
+    },
     postTopic(config) {
         var obj = AV.Object.extend('article')
         var topics = new obj()

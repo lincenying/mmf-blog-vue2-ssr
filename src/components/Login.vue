@@ -44,6 +44,7 @@
                         content: '登录成功',
                         type: 'success'
                     })
+                    this.$router.replace('/admin/list/1')
                 })
             }
         }

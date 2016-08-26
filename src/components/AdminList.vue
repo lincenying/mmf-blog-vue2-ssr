@@ -29,9 +29,9 @@ const fetchInitialData = async store => {
     await store.dispatch('getAdminTopics', base)
 }
 export default {
-    prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
+            global: 'getGlobal',
             topics: 'getAdminTopics'
         }),
         curPage() {
@@ -57,11 +57,7 @@ export default {
         }
     },
     created() {
-        if (this.$route.path !== this.topics.path)
-            fetchInitialData(this.$store)
-        else {
-            this.$store.dispatch('gProgress', 100)
-        }
+        fetchInitialData(this.$store)
     },
     watch: {
         '$route'() {

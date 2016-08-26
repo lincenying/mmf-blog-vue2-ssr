@@ -9,9 +9,7 @@ const resolve = file => path.resolve(__dirname, file)
 const express = require('express')
 const favicon = require('serve-favicon')
 const serialize = require('serialize-javascript')
-const proxyMiddleware = require('http-proxy-middleware')
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
-var proxyConfig = require('./proxy')
 
 const app = express()
 
@@ -37,16 +35,6 @@ if (isProd) {
         renderer = createBundleRenderer(bundle)
     })
 }
-
-Object.keys(proxyConfig).forEach(function(context) {
-    var options = proxyConfig[context]
-    if (typeof options === 'string') {
-        options = {
-            target: options
-        }
-    }
-    app.use(proxyMiddleware(context, options))
-})
 
 app.use('/dist', express.static(resolve('./dist')))
 app.use(favicon(resolve('./dist/static/favicon.ico')))
