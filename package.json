@@ -15,7 +15,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "node ./server",
-    "start": "NODE_ENV=production node --harmony ./server",
+    "start": "NODE_ENV=production node ./server",
     "build": "npm run build:client && npm run build:server",
     "build:client": "NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
     "build:server": "NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules"
@@ -31,8 +31,9 @@
     "vue-server-renderer": "^2.0.0-rc.3",
     "vue-template-compiler": "^2.0.0-rc.3",
     "vuex": "^2.0.0-rc.5",
-    "vuex-router-sync": "^3.0.0",
-
+    "vuex-router-sync": "^3.0.0"
+  },
+  "devDependencies": {
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^6.1.2",
@@ -71,8 +72,8 @@
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1"
-  },
-  "engines": {
-    "node": "4.x"
+},
+"engines": {
+    "node": "5.x"
   }
 }
