@@ -51,6 +51,17 @@ module.exports = {
             formatter: require('eslint-friendly-formatter')
         }
     },
+    postcss: [
+        autoprefixer({ browsers: [
+            'ie >= 8',
+            'ie_mob >= 10',
+            'ff >= 26',
+            'chrome >= 30',
+            'safari >= 7',
+            'ios >= 7',
+            'android >= 2.3'
+        ]})
+    ],
     plugins: [
         new webpack.ProvidePlugin({
             $: 'jquery',

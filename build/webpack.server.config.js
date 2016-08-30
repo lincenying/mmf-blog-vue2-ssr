@@ -14,6 +14,7 @@ var config = Object.assign({}, base, {
     node: {
         __dirname: true,
     },
+    externals: Object.keys(require('../package.json').dependencies),
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),

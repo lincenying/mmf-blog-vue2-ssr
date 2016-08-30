@@ -29,6 +29,13 @@ module.exports = function setupDevServer(app, onUpdate) {
     serverCompiler.outputFileSystem = mfs
     serverCompiler.watch({}, (err, stats) => {
         if (err) throw err
+        process.stdout.write(stats.toString({
+            colors: true,
+            modules: false,
+            children: false,
+            chunks: false,
+            chunkModules: false
+        }))
         stats = stats.toJson()
         stats.errors.forEach(err => console.error(err))
         stats.warnings.forEach(err => console.warn(err))
