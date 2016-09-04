@@ -4,7 +4,7 @@ import { app, store, router } from './app'
 router.beforeEach((route, redirect, next) => {
     store.dispatch('gProgress', 0)
     var scrollTop = document.body.scrollTop
-    if (store.state.route.path) {
+    if (store.state.route.path && scrollTop) {
         ls.set(store.state.route.path, scrollTop)
     }
     next()
