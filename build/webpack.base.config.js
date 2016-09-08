@@ -2,6 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 var autoprefixer = require('autoprefixer')
 var browserslist = require('browserslist')
+var HappyPack = require('happypack')
+
 const projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
@@ -35,11 +37,13 @@ module.exports = {
         }],
         loaders: [{
             test: /\.vue$/,
-            loader: 'vue'
+            loader: 'vue',
+            happy: { id: 'vue' }
         }, {
             test: /\.js$/,
             loader: 'babel',
-            exclude: /node_modules/
+            exclude: /node_modules/,
+            happy: { id: 'js' }
         }, {
             test: /\.json$/,
             loader: 'json'
@@ -58,6 +62,8 @@ module.exports = {
         autoprefixer({ browsers: browserslist('last 2 version, > 0.1%')})
     ],
     plugins: [
+        new HappyPack({ id: 'vue', threads: 4 }),
+        new HappyPack({ id: 'js', threads: 4 }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
