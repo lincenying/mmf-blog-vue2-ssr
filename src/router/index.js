@@ -20,10 +20,10 @@ const scrollBehavior = to => {
     return position
 }
 
-const requireAuth = (route, redirect, next) => {
+const requireAuth = (to, from, next) => {
     const currentUser = api.getUser()
     if (!currentUser && inBrowser) {
-        redirect({path: '/'})
+        next({path: '/'})
     } else {
         next()
     }
