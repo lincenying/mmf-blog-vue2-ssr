@@ -369,7 +369,7 @@ module.exports = { "default": __webpack_require__(77), __esModule: true };
 
 var port = 8080;
 module.exports = {
-    api: 'http://ssr.mmxiaowu.com/api/?api=true',
+    api: 'http://www.mmxiaowu.com/api/?api=true',
     proxy: 'localhost:3000',
     port: port
 };
