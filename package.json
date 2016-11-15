@@ -24,7 +24,6 @@
     "axios": "^0.15.2",
     "jquery": "^3.1.0",
     "js-cookie": "^2.1.3",
-    "leancloud-storage": "^1.4.0",
     "nprogress": "^0.2.0",
     "store2": "^2.3.2",
     "toastr": "^2.1.2",
@@ -32,10 +31,8 @@
     "vue-router": "^2.0.0",
     "vue-server-renderer": "^2.0.1",
     "vue-template-compiler": "^2.0.1",
-    "vue2-ajax-form": "^1.0.0",
     "vuex": "^2.0.0",
-    "vuex-router-sync": "^3.0.0",
-    "webpack": "2.1.0-beta.25"
+    "vuex-router-sync": "^3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.1",
@@ -80,6 +77,7 @@
     "style-loader": "^0.13.1",
     "sw-precache-webpack-plugin": "^0.5.1",
     "vue-loader": "^9.4.2",
+    "webpack": "2.1.0-beta.25",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.16.0"
