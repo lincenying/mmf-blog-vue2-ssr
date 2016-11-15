@@ -1,8 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-var autoprefixer = require('autoprefixer')
-var browserslist = require('browserslist')
-
+const vueConfig = require('./vue-loader.config')
 const projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
@@ -52,7 +50,8 @@ module.exports = {
             exclude: /node_modules/
         }, {
             test: /\.vue$/,
-            loader: 'vue'
+            loader: 'vue',
+            options: vueConfig
         }, {
             test: /\.js$/,
             loader: 'babel',
@@ -61,12 +60,5 @@ module.exports = {
             test: /\.json$/,
             loader: 'json'
         }]
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery'
-        })
-    ]
+    }
 }

@@ -19,11 +19,6 @@ import Navigation from './components/navigation.vue'
 import Copyright from './components/copyright.vue'
 import Arrow from './components/arrow.vue'
 
-import './assets/css/hljs/googlecode.css'
-import './assets/css/style.css'
-import '../node_modules/toastr/build/toastr.css'
-import '../node_modules/nprogress/nprogress.css'
-
 export default {
     computed: {
         ...mapGetters({
@@ -63,6 +58,10 @@ export default {
     }
 }
 </script>
+<style src="./assets/css/hljs/googlecode.css"></style>
+<style src="./assets/css/style.css"></style>
+<style src="../node_modules/toastr/build/toastr.css"></style>
+<style src="../node_modules/nprogress/nprogress.css"></style>
 <style media="screen">
     .fade-enter-active, .fade-leave-active {
         transition: all 0.3s ease;

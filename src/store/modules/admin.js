@@ -18,6 +18,7 @@ const state = {
 
 const mutations = {
     [RECEIVE_ADMIN_TOPICS](state, {list, path, hasNext, hasPrev}) {
+        console.log(list, path, hasNext, hasPrev)
         state.topic.list = list
         state.topic.path = path
         state.topic.hasNext = hasNext

@@ -6,6 +6,7 @@ const path = require('path')
 const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
+const proxy = require('express-http-proxy')
 const resolve = file => path.resolve(__dirname, file)
 
 function createRenderer(bundle) {
@@ -13,7 +14,7 @@ function createRenderer(bundle) {
     return require('vue-server-renderer').createBundleRenderer(bundle, {
         cache: require('lru-cache')({
             max: 1000,
-            maxAge: 1000 * 60 * 15
+            maxAge: 1000 * 60 * 15,
         })
     })
 }
@@ -23,7 +24,7 @@ function parseIndex(template) {
     const i = template.indexOf(contentMarker)
     return {
         head: template.slice(0, i),
-        tail: template.slice(i + contentMarker.length)
+        tail: template.slice(i + contentMarker.length),
     }
 }
 
@@ -46,19 +47,35 @@ if (isProd) {
         },
         indexUpdated: index => {
             indexHTML = parseIndex(index)
-        }
+        },
     })
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
-    maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
+    maxAge: cache && isProd
+        ? 60 * 60 * 24 * 30
+        : 0
 })
+
+var apiProxy = proxy("localhost:3000", {
+    forwardPath (req) {
+        return req._parsedUrl.path
+    }
+})
+
+app.set('views', path.join(__dirname, 'dist'))
+app.engine('.html', require('ejs').__express)
+app.set('view engine', 'ejs')
 
 app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
 app.use('/public', serve('./public'))
+app.use('/api**', apiProxy)
 
+app.get('/login', (req, res) => {
+    res.render('login.html', { title: '登录' })
+})
 app.get('*', (req, res) => {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
@@ -82,12 +99,11 @@ app.get('*', (req, res) => {
     renderStream.on('end', () => {
         // embed initial store state
         if (context.initialState) {
-            res.write(`<script>window.__INITIAL_STATE__=${serialize(context.initialState, {isJSON: true})}</script>`)
+            res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
         }
         res.end(indexHTML.tail)
         console.log(`whole request: ${Date.now() - s}ms`)
     })
-
     renderStream.on('error', err => {
         if (err && err.code === '404') {
             res.status(404).end('404 | Page Not Found')

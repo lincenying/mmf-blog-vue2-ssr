@@ -17,9 +17,8 @@ export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
         markdown: 1,
         id
     }).then(({data}) => {
-        console.log(data)
         commit(types.RECEIVE_ARTICLE, {
-            ...data.data
+            ...data
         })
     })
 }
@@ -40,10 +39,10 @@ export const getComment = ({ commit, state: {route: { path, params: { id }}} }, 
 }
 
 export const postComment = ({ commit, state: {route: { path, params: { id }}} }, config) => {
-    return api.getFromConfig(config).then(json => {
-        if (json.code === 200) {
-            commit(types.POST_COMMENT, json.data)
-            return json
+    return api.getFromConfig(config).then(({data}) => {
+        if (data.code === 200) {
+            commit(types.POST_COMMENT, data.data)
+            return data
         }
     })
 }

@@ -40,6 +40,7 @@ const mutations = {
         // state.article.data = data
         // state.article.prev = prev
         // state.article.next = next
+        console.log(data, prev, next)
         state.article = {
             data, prev, next
         }

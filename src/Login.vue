@@ -19,9 +19,7 @@
 </template>
 <script lang="babel">
 /* global window */
-import './assets/css/login.css'
-import '../node_modules/toastr/build/toastr.css'
-import config from './config'
+import config from './api/config'
 import { mapGetters } from 'vuex'
 import ls from 'store2'
 import ajaxForm from './components/app/ajax-form.vue'
@@ -61,3 +59,6 @@ export default {
     }
 }
 </script>
+
+<style src="../node_modules/toastr/build/toastr.css"></style>
+<style src="./assets/css/login.css"></style>

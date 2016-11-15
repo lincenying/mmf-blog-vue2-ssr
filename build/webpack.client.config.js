@@ -1,15 +1,32 @@
 const baseConfig = require('./webpack.base.config')
+const utils = require('./utils')
 const path = require('path')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-var config = Object.assign({}, baseConfig, {
+var config = merge(baseConfig, {
+    module: {
+        rules: utils.styleLoaders()
+    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+        }),
+        new CopyWebpackPlugin([{
+            from: 'favicon.ico',
+            to: path.join(__dirname, '../dist')
+        }, {
+            from: 'static/editor.md/**/*',
+            to: path.join(__dirname, '../dist')
+        }]),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         })
     ]
 })
@@ -18,12 +35,6 @@ if (process.env.NODE_ENV === 'production') {
     config = merge(config, {
         module: {
             rules: [{
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract(['css', 'postcss'])
-            },  {
-                test: /\.less/,
-                loader: ExtractTextPlugin.extract(['css', 'postcss', 'less'])
-            }, {
                 test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
                 loader: 'file',
                 query: {
@@ -50,28 +61,13 @@ if (process.env.NODE_ENV === 'production') {
                 }
             }),
             new webpack.LoaderOptionsPlugin({
-                minimize: true,
-                options: {
-                    context: __dirname,
-                    vue: {
-                        loaders: {
-                            css: ExtractTextPlugin.extract({
-                                loader: 'css-loader!postcss-loader',
-                                fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
-                            }),
-                            less: ExtractTextPlugin.extract({
-                                loader: 'css-loader!postcss-loader!less-loader',
-                                fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
-                            })
-                        }
-                    }
-                }
+                minimize: true
             }),
             new SWPrecachePlugin({
                 cacheId: 'vue-hn',
                 filename: 'server/service-worker.js',
                 dontCacheBustUrlsMatching: /./,
-                staticFileGlobsIgnorePatterns: [/index\.html$/, /\.map$/]
+                staticFileGlobsIgnorePatterns: [/server\.html$/, /\.map$/]
             }),
             new HtmlWebpackPlugin({
                 chunks: [
@@ -79,14 +75,6 @@ if (process.env.NODE_ENV === 'production') {
                 ],
                 filename: 'server.html',
                 template: 'src/template/server.html',
-                inject: true,
-            }),
-            new HtmlWebpackPlugin({
-                chunks: [
-                    'manifest', 'vendor', 'app',
-                ],
-                filename: 'main.html',
-                template: 'src/template/index.html',
                 inject: true,
             }),
             new HtmlWebpackPlugin({
@@ -103,12 +91,6 @@ if (process.env.NODE_ENV === 'production') {
     config = merge(config, {
         module: {
             rules: [{
-                test: /\.css$/,
-                loader: 'style!css!postcss'
-            }, {
-                test: /\.less/,
-                loader: 'style!css!postcss!less'
-            }, {
                 test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
                 loader: 'file'
             }]
@@ -123,14 +105,6 @@ if (process.env.NODE_ENV === 'production') {
                 ],
                 filename: 'server.html',
                 template: 'src/template/server.html',
-                inject: true,
-            }),
-            new HtmlWebpackPlugin({
-                chunks: [
-                    'vendor', 'app',
-                ],
-                filename: 'main.html',
-                template: 'src/template/index.html',
                 inject: true,
             }),
             new HtmlWebpackPlugin({

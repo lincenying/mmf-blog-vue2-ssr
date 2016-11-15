@@ -28,7 +28,7 @@
 /* global editormd */
 import { mapGetters } from 'vuex'
 import ajaxForm from '../components/app/ajax-form.vue'
-import config from '../config'
+import config from '../api/config'
 export default {
     computed: {
         ...mapGetters({
@@ -87,7 +87,7 @@ export default {
     mounted() {
         this.$store.dispatch('getAdminArticle').then(({ data }) => {
             this.form = {
-                ...data
+                ...data.data
             }
             editormd("post-content", {
                 width: "100%",

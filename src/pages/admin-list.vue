@@ -29,6 +29,7 @@ const fetchInitialData = async store => {
     await store.dispatch('getAdminTopics', base)
 }
 export default {
+    prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
             topics: 'getAdminTopics'

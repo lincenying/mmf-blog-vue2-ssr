@@ -1,9 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '../store'
-import api from '../config'
+import config from './config'
 
-axios.defaults.baseURL = api.api
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 axios.interceptors.request.use(config => {
@@ -37,7 +36,7 @@ export default {
     getFromConfig(data) {
         return axios({
             method: 'post',
-            url: 'http://localhost:3000/api',
+            url: config.api,
             data: qs.stringify(data),
             xsrfCookieName: 'csrftoken',
             xsrfHeaderName: 'X-CSRFToken',
