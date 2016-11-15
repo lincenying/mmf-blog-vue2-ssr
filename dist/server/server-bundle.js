@@ -1684,7 +1684,6 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
         hasNext = _ref.hasNext,
         hasPrev = _ref.hasPrev;
 
-    console.log(list, path, hasNext, hasPrev);
     state.topic.list = list;
     state.topic.path = path;
     state.topic.hasNext = hasNext;
@@ -1833,7 +1832,6 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
         prev = _ref2.prev,
         next = _ref2.next;
 
-    console.log(data, prev, next);
     state.article = {
         data: data, prev: prev, next: next
     };
@@ -1843,7 +1841,6 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
         path = _ref3.path,
         page = _ref3.page;
 
-    console.log(hasNext, list, path, page);
     if (page === 1) {
         list = [].concat(list);
     } else {

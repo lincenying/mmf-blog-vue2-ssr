@@ -40,13 +40,11 @@ const mutations = {
         // state.article.data = data
         // state.article.prev = prev
         // state.article.next = next
-        console.log(data, prev, next)
         state.article = {
             data, prev, next
         }
     },
     [RECEIVE_COMMENT](state, {hasNext, list, path, page}) {
-        console.log(hasNext, list, path, page)
         if (page === 1) {
             list = [].concat(list)
         } else {
