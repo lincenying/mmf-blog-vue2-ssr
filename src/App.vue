@@ -64,12 +64,10 @@ import { mapGetters } from 'vuex'
 import api from './api'
 import NProgress from 'nprogress'
 import About from './components/About.vue'
-import Login from './components/Login.vue'
 
 export default {
     components: {
-        About,
-        Login
+        About
     },
     computed: {
         ...mapGetters({

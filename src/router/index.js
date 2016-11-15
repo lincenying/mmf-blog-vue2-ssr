@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import Home from '../components/Home.vue'
 import Article from '../components/Article.vue'
-import AdminList from '../components/AdminList.vue'
 import VueRouter from 'vue-router'
-import api from '../api'
-import {inBrowser} from '../tools/command'
 
 Vue.use(VueRouter)
 
@@ -20,15 +17,6 @@ const scrollBehavior = to => {
     return position
 }
 
-const requireAuth = (to, from, next) => {
-    const currentUser = api.getUser()
-    if (!currentUser && inBrowser) {
-        next({path: '/'})
-    } else {
-        next()
-    }
-}
-
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -37,8 +25,7 @@ const router = new VueRouter({
         { path: '/', component: Home, meta: { needLogin: false } },
         { path: '/category/:id(\\d+)', component: Home, meta: { needLogin: false } },
         { path: '/search/:qs', component: Home, meta: { needLogin: false } },
-        { path: '/article/:id', component: Article, meta: { needLogin: false } },
-        { path: '/admin/list/:page(\\d+)', component: AdminList, meta: { needLogin: true }, beforeEnter: requireAuth }
+        { path: '/article/:id', component: Article, meta: { needLogin: false } }
     ]
 })
 

@@ -1,5 +1,4 @@
-@import '../html/css/style.css';
-@import '../html/css/login.css';
+@import './assets/css/style.css';
 @import '../node_modules/toastr/build/toastr.css';
 @import '../node_modules/nprogress/nprogress.css';
 

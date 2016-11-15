@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 var autoprefixer = require('autoprefixer')
 var browserslist = require('browserslist')
-var HappyPack = require('happypack')
 
 const projectRoot = path.resolve(__dirname, '../')
 
@@ -14,56 +13,55 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, '../dist'),
-        publicPath: '/dist/',
-        filename: 'js/client-bundle.js'
+        publicPath: '/',
+        filename: 'static/js/[name].[chunkhash:7].js'
+    },
+    resolve: {
+        extensions: [
+            '.js', '.vue'
+        ],
+        modules: [
+            path.join(__dirname, '../node_modules')
+        ],
+        alias: {
+            'src': path.resolve(__dirname, '../src'),
+            'components': path.resolve(__dirname, '../src/components')
+        }
     },
     resolveLoader: {
-        root: path.join(__dirname, '../node_modules'),
+        modules: [
+            path.join(__dirname, '../node_modules')
+        ]
     },
     externals: {
         'jquery': 'jQuery'
     },
     module: {
-        preLoaders: [{
+        rules: [{
             test: /\.vue$/,
             loader: 'eslint',
+            enforce: "pre",
             include: projectRoot,
             exclude: /node_modules/
         }, {
             test: /\.js$/,
             loader: 'eslint',
+            enforce: "pre",
             include: projectRoot,
             exclude: /node_modules/
-        }],
-        loaders: [{
+        }, {
             test: /\.vue$/,
-            loader: 'vue',
-            happy: { id: 'vue' }
+            loader: 'vue'
         }, {
             test: /\.js$/,
             loader: 'babel',
-            exclude: /node_modules/,
-            happy: { id: 'js' }
+            exclude: /node_modules/
         }, {
             test: /\.json$/,
             loader: 'json'
-        }, {
-            test: /\.(png|jpg|gif|svg)$/,
-            loader: 'file',
-            query: {
-                name: 'images/[name].[ext]?[hash]'
-            }
-        }],
-        eslint: {
-            formatter: require('eslint-friendly-formatter')
-        }
+        }]
     },
-    postcss: [
-        autoprefixer({ browsers: browserslist('last 2 version, > 0.1%')})
-    ],
     plugins: [
-        new HappyPack({ id: 'vue', threads: 4 }),
-        new HappyPack({ id: 'js', threads: 4 }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',

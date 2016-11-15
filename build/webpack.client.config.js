@@ -1,66 +1,110 @@
 const baseConfig = require('./webpack.base.config')
-var utils = require('./utils')
-var merge = require('webpack-merge')
+const merge = require('webpack-merge')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 var config = Object.assign({}, baseConfig, {
     plugins: [
-        // strip comments in Vue code
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         }),
-        // extract vendor chunks for better caching
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            filename: 'js/client-vendor-bundle.js'
+        new HtmlWebpackPlugin({
+            inject: true,
+            filename: 'index.html',
+            template: 'src/template/index.html'
         })
     ]
 })
 
 if (process.env.NODE_ENV === 'production') {
-    // extract CSS into a single file so it's applied on initial render
-
     config = merge(config, {
         module: {
-            loaders: utils.styleLoaders({
-                sourceMap: false,
-                extract: true
-            })
-        },
-        vue: {
-            loaders: utils.cssLoaders({
-                sourceMap: false,
-                extract: true
-            })
+            rules: [{
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract(['css', 'postcss'])
+            },  {
+                test: /\.less/,
+                loader: ExtractTextPlugin.extract(['css', 'postcss', 'less'])
+            }, {
+                test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+                loader: 'file',
+                query: {
+                    limit: 10000,
+                    name: 'static/img/[name].[hash:7].[ext]'
+                }
+            }]
         },
         plugins: [
-            new ExtractTextPlugin('css/styles.css'),
-            // this is needed in webpack 2 for minifying CSS
-            new webpack.LoaderOptionsPlugin({
-                minimize: true
-            }),
-            // minify JS
-            new webpack.optimize.UglifyJsPlugin({
-                compress: {
-                    warnings: false
+            new ExtractTextPlugin('static/css/styles.[hash:7].css'),
+            new webpack.optimize.CommonsChunkPlugin({
+                name: 'vendor',
+                minChunks: function(module, count) {
+                    return (module.resource && /\.js$/.test(module.resource) && module.resource.indexOf('node_modules') > 0)
                 }
+            }),
+            new webpack.optimize.CommonsChunkPlugin({name: 'manifest', chunks: ['vendor']}),
+            new webpack.optimize.UglifyJsPlugin({
+                compressor: {
+                    warnings: false
+                },
+                output: {
+                    comments: false
+                }
+            }),
+            new webpack.LoaderOptionsPlugin({
+                minimize: true,
+                options: {
+                    context: __dirname,
+                    vue: {
+                        loaders: {
+                            css: ExtractTextPlugin.extract({
+                                loader: 'css-loader!postcss-loader',
+                                fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
+                            }),
+                            less: ExtractTextPlugin.extract({
+                                loader: 'css-loader!postcss-loader!less-loader',
+                                fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
+                            })
+                        }
+                    }
+                }
+            }),
+            new SWPrecachePlugin({
+                cacheId: 'vue-hn',
+                filename: 'server/service-worker.js',
+                dontCacheBustUrlsMatching: /./,
+                staticFileGlobsIgnorePatterns: [/index\.html$/, /\.map$/]
             })
         ]
     })
 } else {
     config = merge(config, {
         module: {
-            loaders: utils.styleLoaders()
+            rules: [{
+                test: /\.css$/,
+                loader: 'style!css!postcss'
+            }, {
+                test: /\.less/,
+                loader: 'style!css!postcss!less'
+            }, {
+                test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+                loader: 'file'
+            }]
         },
-        // proxy: {
-        //     '/api/**': {
-        //         target: 'http://www.mmxiaowu.com/',
-        //         secure: false,
-        //         changeOrigin: true
-        //     }
-        // }
+        plugins: [
+            new webpack.optimize.CommonsChunkPlugin({
+                names: ["vendor"]
+            })
+        ],
+        proxy: {
+            '/api/**': {
+                target: 'http://localhost:3000/',
+                secure: false,
+                changeOrigin: true
+            }
+        }
     })
 }
 module.exports = config

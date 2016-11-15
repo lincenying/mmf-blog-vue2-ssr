@@ -19,26 +19,26 @@
     </div>
 </template>
 <script lang="babel">
-    export default {
-        props: ['item', 'ispc'],
-        data () {
-            return {
-                showMore: false
-            }
+export default {
+    props: ['item', 'ispc'],
+    data () {
+        return {
+            showMore: false
+        }
+    },
+    methods: {
+        dateTime(val) {
+            var myDate = new Date(val)
+            return myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes()
         },
-        methods: {
-            dateTime(val) {
-                var myDate = new Date(val)
-                return myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes()
-            },
-            open(e) {
-                this.showMore = !this.showMore
-                var $mPost = $(e.target).parents(".m-post")
-                var offset = $mPost.offset()
-                $("body").animate({
-                    scrollTop: offset.top
-                }, 500 )
-            }
+        open(e) {
+            this.showMore = !this.showMore
+            var $mPost = $(e.target).parents(".m-post")
+            var offset = $mPost.offset()
+            $("body").animate({
+                scrollTop: offset.top
+            }, 500 )
         }
     }
+}
 </script>
