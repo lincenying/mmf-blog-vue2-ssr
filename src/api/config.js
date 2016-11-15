@@ -1,5 +1,5 @@
 const port = 8080
-exports.default = {
+module.exports = {
     api: 'http://localhost:'+ port +'/api/?api=true',
     proxy: 'localhost:3000',
     port
