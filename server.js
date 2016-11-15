@@ -7,6 +7,7 @@ const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
 const proxy = require('express-http-proxy')
+const config = require('./src/api/config')
 const resolve = file => path.resolve(__dirname, file)
 
 function createRenderer(bundle) {
@@ -57,7 +58,7 @@ const serve = (path, cache) => express.static(resolve(path), {
         : 0
 })
 
-var apiProxy = proxy("localhost:3000", {
+var apiProxy = proxy(config.proxy, {
     forwardPath (req) {
         return req._parsedUrl.path
     }

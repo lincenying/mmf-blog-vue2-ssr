@@ -14,20 +14,22 @@ vue2-jsx: [https://github.com/lincenying/mmf-blog-vue2-jsx](https://github.com/l
 
 vue2-jsx leancloud api: [https://github.com/lincenying/mmf-blog-vue2-jsx-lc](https://github.com/lincenying/mmf-blog-vue2-jsx-lc)
 
-vue2-template 服务端渲染: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr) // 未完成
+vue2-template 服务端渲染: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr)
 
 ---
-1. 到 https://leancloud.cn 申请一个帐号
-2. 创建一个 应用
-3. 获取 App Key 和 Master Key
-4. 修改 ./src/api/index.js 下的下面两行
+
+先安装 api server: https://github.com/lincenying/mmf-blog-api
+
 ```
-var APP_ID = 'M1SivUjmGWHTFDv6FpwYxTpl-gzGzoHsz'
-var APP_KEY = 'OwVDXgMCR09ztWdUIYGqG5Hl'
+配置文件: src/api/config.js
+api: api地址, 由于 axios 的原因, 必须要带上域名, 不然访问不了
+proxy: 反向代理地址
+
 ```
+
 ```
 // 安装依赖
-npm install
+npm install      or      yarn
 
 // 生成静态文件
 npm run build
@@ -44,4 +46,4 @@ npm run start
 http://localhost:8080
 
 登录
-http://localhost:8080/login.html
+http://localhost:8080/login
