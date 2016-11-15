@@ -367,11 +367,11 @@ module.exports = { "default": __webpack_require__(77), __esModule: true };
 "use strict";
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    api: 'http://localhost:8080/api/?api=true'
+var port = 8080;
+module.exports = {
+    api: 'http://ssr.mmxiaowu.com/api/?api=true',
+    proxy: 'localhost:3000',
+    port: port
 };
 
 /***/ },
