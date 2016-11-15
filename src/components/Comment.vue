@@ -74,7 +74,7 @@ export default {
     methods: {
         loadcomment() {
             this.$store.dispatch(`getComment`, {
-                page: this.comments.curPage + 1,
+                page: this.comments.page + 1,
                 limit: 5
             })
         },
@@ -82,12 +82,22 @@ export default {
             if (this.form.content === '') {
                 this.$store.dispatch('showMsg', '请输入评论内容!')
             } else {
-                this.$store.dispatch('postComment', this.form).then(() => {
-                    this.form.content = ''
-                    this.$store.dispatch('showMsg', {
-                        'content': '评论发布成功',
-                        'type': 'success'
-                    })
+                this.$store.dispatch('postComment', {
+                    action: 'postComment',
+                    id: this.$route.params.id,
+                    content: this.form.content,
+                    username: this.form.username
+                }).then(({code, message}) => {
+                    if (code === 200) {
+                        this.form.content = ''
+                        this.form.username = ''
+                        this.$store.dispatch('showMsg', {
+                            content: '评论发布成功!',
+                            type: 'success'
+                        })
+                    } else {
+                        this.$store.dispatch('showMsg', message)
+                    }
                 })
             }
         },

@@ -1,4 +1,5 @@
 const baseConfig = require('./webpack.base.config')
+const path = require('path')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -9,11 +10,6 @@ var config = Object.assign({}, baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        }),
-        new HtmlWebpackPlugin({
-            inject: true,
-            filename: 'index.html',
-            template: 'src/template/index.html'
         })
     ]
 })
@@ -37,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
             }]
         },
         plugins: [
-            new ExtractTextPlugin('static/css/styles.[hash:7].css'),
+            new ExtractTextPlugin('static/css/[name].[hash:7].css'),
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'vendor',
                 minChunks: function(module, count) {
@@ -76,6 +72,30 @@ if (process.env.NODE_ENV === 'production') {
                 filename: 'server/service-worker.js',
                 dontCacheBustUrlsMatching: /./,
                 staticFileGlobsIgnorePatterns: [/index\.html$/, /\.map$/]
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'manifest', 'vendor', 'app',
+                ],
+                filename: 'server.html',
+                template: 'src/template/server.html',
+                inject: true,
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'manifest', 'vendor', 'app',
+                ],
+                filename: 'main.html',
+                template: 'src/template/index.html',
+                inject: true,
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'manifest', 'vendor', 'login',
+                ],
+                filename: 'login.html',
+                template: 'src/template/login.html',
+                inject: true,
             })
         ]
     })
@@ -96,15 +116,32 @@ if (process.env.NODE_ENV === 'production') {
         plugins: [
             new webpack.optimize.CommonsChunkPlugin({
                 names: ["vendor"]
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'vendor', 'app',
+                ],
+                filename: 'server.html',
+                template: 'src/template/server.html',
+                inject: true,
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'vendor', 'app',
+                ],
+                filename: 'main.html',
+                template: 'src/template/index.html',
+                inject: true,
+            }),
+            new HtmlWebpackPlugin({
+                chunks: [
+                    'vendor', 'login',
+                ],
+                filename: 'login.html',
+                template: 'src/template/login.html',
+                inject: true,
             })
-        ],
-        proxy: {
-            '/api/**': {
-                target: 'http://localhost:3000/',
-                secure: false,
-                changeOrigin: true
-            }
-        }
+        ]
     })
 }
 module.exports = config

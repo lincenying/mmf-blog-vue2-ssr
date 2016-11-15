@@ -10,36 +10,49 @@
                 type    : String,
                 required: true
             },
-            'method' : {
-                type     : String,
-                required : true
+            'method': {
+                type: String,
+                default() {
+                    return 'POST'
+                }
             },
-            'enctype': String,
-            'beforeFormSubmit': {
+            'enctype': {
+                type: String,
+                default() {
+                    return 'multipart/form-data'
+                }
+            },
+            'responsetype': {
+                type: String,
+                default() {
+                    return 'json'
+                }
+            },
+            'before': {
                 type: Function,
                 default() {
                     return function(){}
                 }
             },
-            'onFormError': {
+            'error': {
                 type: Function,
                 default() {
                     return function(){}
                 }
             },
-            'onFormComplete': {
+            'complete': {
                 type: Function,
                 default() {
                     return function(){}
                 }
             },
-            'onFormProgress': {
+            'progress': {
                 type: Function,
                 default() {
                     return function(){}
                 }
             },
-            'afterFormSubmit': {
+            'after': {
                 type: Function,
                 default() {
                     return function(){}
@@ -48,9 +61,9 @@
         },
         methods: {
             handleAjaxFormSubmit () {
-                this.beforeFormSubmit()
+                this.before()
                 var handleError = err => {
-                    this.onFormError(err)
+                    this.error(err)
                 }
                 if (!this.method) {
                     this.method = 'post'
@@ -60,26 +73,22 @@
                 var handleFinish = () => {
                     if (xhr.readyState === 4) {
                         if (xhr.status < 400) {
-                            this.onFormComplete(xhr.response)
+                            this.complete(xhr.response)
                         } else {
-                            this.onFormError(xhr.statusText)
+                            this.error(xhr.statusText)
                         }
                     }
                 }
                 var handleProgress = evt => {
                     if (evt.lengthComputable) {
                         evt.percent = evt.loaded / evt.total * 100
-                        this.onFormProgress(evt)
+                        this.progress(evt)
                     }
                 }
                 xhr.open(this.method, this.action, true)
                 xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
                 xhr.setRequestHeader('Authorization', 'Basic dGVzdDpwYXNzd2Q=')
-                if (this.vResponseType) {
-                    xhr.responseType = this.vResponseType
-                } else {
-                    xhr.responseType = 'json'
-                }
+                xhr.responseType = this.responsetype
                 if (xhr.upload) xhr.upload.addEventListener('progress', handleProgress)
                 xhr.addEventListener('readystatechange', handleFinish)
                 xhr.addEventListener('error', handleError)
@@ -87,7 +96,7 @@
                 // eslint-disable-next-line
                 var data = new FormData(event.target)
                 xhr.send(data)
-                this.afterFormSubmit()
+                this.after()
             }
         }
     }

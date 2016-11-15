@@ -22,5 +22,4 @@ var config = Object.assign({}, base, {
         })
     ]
 })
-console.log(config)
 module.exports = config

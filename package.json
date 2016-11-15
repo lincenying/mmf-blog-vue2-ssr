@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.15.2",
     "jquery": "^3.1.0",
+    "js-cookie": "^2.1.3",
     "leancloud-storage": "^1.4.0",
     "nprogress": "^0.2.0",
     "store2": "^2.3.2",
@@ -31,6 +32,7 @@
     "vue-router": "^2.0.0",
     "vue-server-renderer": "^2.0.1",
     "vue-template-compiler": "^2.0.1",
+    "vue2-ajax-form": "^1.0.0",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0",
     "webpack": "2.1.0-beta.25"

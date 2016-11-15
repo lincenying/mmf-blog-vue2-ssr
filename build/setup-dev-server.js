@@ -4,22 +4,29 @@ const MFS = require('memory-fs')
 const clientConfig = require('./webpack.client.config')
 const serverConfig = require('./webpack.server.config')
 
-module.exports = function setupDevServer(app, onUpdate) {
-    // setup on the fly compilation + hot-reload
+module.exports = function setupDevServer(app, opts) {
+    // modify client config to work with hot middleware
     clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
-    clientConfig.plugins.push(
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
-    )
+    clientConfig.output.filename = '[name].js'
+    clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin(), new webpack.NoErrorsPlugin())
 
+    // dev middleware
     const clientCompiler = webpack(clientConfig)
-    app.use(require('webpack-dev-middleware')(clientCompiler, {
+    const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
         publicPath: clientConfig.output.publicPath,
         stats: {
             colors: true,
             chunks: false
         }
-    }))
+    })
+    app.use(devMiddleware)
+    clientCompiler.plugin('done', () => {
+        const filePath = path.join(clientConfig.output.path, 'server.html')
+        const index = devMiddleware.fileSystem.readFileSync(filePath, 'utf-8')
+        opts.indexUpdated(index)
+    })
+
+    // hot middleware
     app.use(require('webpack-hot-middleware')(clientCompiler))
 
     // watch and update server renderer
@@ -28,17 +35,11 @@ module.exports = function setupDevServer(app, onUpdate) {
     const outputPath = path.join(serverConfig.output.path, serverConfig.output.filename)
     serverCompiler.outputFileSystem = mfs
     serverCompiler.watch({}, (err, stats) => {
-        if (err) throw err
-        process.stdout.write(stats.toString({
-            colors: true,
-            modules: false,
-            children: false,
-            chunks: false,
-            chunkModules: false
-        }))
+        if (err)
+            throw err
         stats = stats.toJson()
         stats.errors.forEach(err => console.error(err))
         stats.warnings.forEach(err => console.warn(err))
-        onUpdate(mfs.readFileSync(outputPath, 'utf-8'))
+        opts.bundleUpdated(mfs.readFileSync(outputPath, 'utf-8'))
     })
 }

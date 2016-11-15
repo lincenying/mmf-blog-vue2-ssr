@@ -2763,6 +2763,10 @@ js-beautify@^1.6.3:
     mkdirp "~0.5.0"
     nopt "~3.0.1"
 
+js-cookie:
+  version "2.1.3"
+  resolved "http://registry.npm.taobao.org/js-cookie/download/js-cookie-2.1.3.tgz#48071625217ac9ecfab8c343a13d42ec09ff0526"
+
 js-tokens@^2.0.0:
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/js-tokens/download/js-tokens-2.0.0.tgz#79903f5563ee778cc1162e6dcf1a0027c97f9cb5"
@@ -4965,6 +4969,10 @@ vue-template-es2015-compiler@^1.2.2:
 vue@^2.0.1:
   version "2.0.5"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.0.5.tgz#b99dc7180a802d1148a508db3d84b52c09b5ca8e"
+
+vue2-ajax-form:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/vue2-ajax-form/download/vue2-ajax-form-1.0.0.tgz#95aa8030801b308e6f540d58bf2fc8fca03aca76"
 
 vuex-router-sync@^3.0.0:
   version "3.0.0"

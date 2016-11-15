@@ -36,7 +36,7 @@ let renderer
 if (isProd) {
     // in production: create server renderer and index HTML from real fs
     renderer = createRenderer(fs.readFileSync(resolve('./dist/server/server-bundle.js'), 'utf-8'))
-    indexHTML = parseIndex(fs.readFileSync(resolve('./dist/index.html'), 'utf-8'))
+    indexHTML = parseIndex(fs.readFileSync(resolve('./dist/server.html'), 'utf-8'))
 } else {
     // in development: setup the dev server with watch and hot-reload,
     // and update renderer / index HTML on file change.

@@ -9,6 +9,7 @@ module.exports = {
     devtool: '#source-map',
     entry: {
         app: './src/client-entry.js',
+        login: './src/login.js',
         vendor: ['vue', 'vue-router', 'vuex', 'vuex-router-sync', 'axios']
     },
     output: {
