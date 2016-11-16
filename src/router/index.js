@@ -1,10 +1,15 @@
 import Vue from 'vue'
-import Home from '../components/Home.vue'
-import Article from '../components/Article.vue'
-import AdminList from '../components/AdminList.vue'
 import VueRouter from 'vue-router'
-import api from '../api'
-import {inBrowser} from '../tools/command'
+import ls from 'store2'
+import cookies from 'js-cookie'
+
+import inBrowser from '../utils'
+
+import index from '../pages/index.vue'
+import article from '../pages/article.vue'
+import adminPost from '../pages/admin-post.vue'
+import adminEdit from '../pages/admin-edit.vue'
+import adminList from '../pages/admin-list.vue'
 
 Vue.use(VueRouter)
 
@@ -20,10 +25,10 @@ const scrollBehavior = to => {
     return position
 }
 
-const requireAuth = (to, from, next) => {
-    const currentUser = api.getUser()
-    if (!currentUser && inBrowser) {
-        next({path: '/'})
+const guardRoute = (to, from, next) => {
+    var token = ls.get('token') && cookies.get('user') || !inBrowser
+    if (!token) {
+        next('/')
     } else {
         next()
     }
@@ -34,12 +39,16 @@ const router = new VueRouter({
     base: __dirname,
     scrollBehavior,
     routes: [
-        { path: '/', component: Home, meta: { needLogin: false } },
-        { path: '/category/:id(\\d+)', component: Home, meta: { needLogin: false } },
-        { path: '/search/:qs', component: Home, meta: { needLogin: false } },
-        { path: '/article/:id', component: Article, meta: { needLogin: false } },
-        { path: '/admin/list/:page(\\d+)', component: AdminList, meta: { needLogin: true }, beforeEnter: requireAuth }
+        { name:'index', path: '/', component: index },
+        { name:'category', path: '/category/:id(\\d+)', component: index },
+        { name:'search', path: '/search/:qs', component: index },
+        { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },
+        { name:'list', path: '/admin/list/:page(\\d+)', component: adminList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'post', path: '/admin/post', component: adminPost, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'edit', path: '/admin/edit/:id/:page', component: adminEdit, meta: { scrollToTop: true }, beforeEnter: guardRoute }
     ]
 })
+
+
 
 export default router

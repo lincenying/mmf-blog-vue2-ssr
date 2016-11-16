@@ -1,10 +1,4 @@
 .DS_Store
-.happypack/
 node_modules/
-dist/js
-dist/css
-dist/server
-dist/images
 npm-debug.log
 .vscode/
-proxy.js

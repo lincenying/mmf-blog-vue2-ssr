@@ -1,113 +1,46 @@
 <template>
-<div id="app">
-    <div class="g-doc">
-        <div class="g-hd">
-            <About></About>
-            <div v-if="visit" class="box menu">
-                <div class="m-sch">
-                    <input @keyup.enter="search($event)" id="search_content" class="sch" type="text" name="q" placeholder="记得按回车哦" />
-                </div>
-                <div class="m-nav">
-                    <ul class="menuOpen">
-                        <li class="tag-all">
-                            <router-link to="/" exact><i></i>All</router-link>
-                        </li>
-                        <li class="tag-life">
-                            <router-link to="/category/1"><i></i>Life</router-link>
-                        </li>
-                        <li class="tag-study">
-                            <router-link to="/category/2"><i></i>Study</router-link>
-                        </li>
-                        <li class="tag-other">
-                            <router-link to="/category/3"><i></i>Other</router-link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div v-if="!visit" class="box menu">
-                <div class="m-nav">
-                    <ul class="menuOpen">
-                        <li class="tag-all">
-                            <router-link to="/" exact><i></i>All</router-link>
-                        </li>
-                        <li class="tag-life">
-                            <router-link to="/admin/list/1"><i></i>List</router-link>
-                        </li>
-                        <li class="tag-study">
-                            <router-link to="/admin/post"><i></i>Post</router-link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <transition name="fade" mode="out-in">
-            <router-view class="router"></router-view>
-        </transition>
-        <div class="g-ft">
-            <span class="copy"><span title="Copyright">©</span> <a href="/">M·M·F 小屋</a> 2016.06
-                <a v-if="!global.sessionToken" @click="handleLogin" href="javascript:;"> | 登录</a>
-                <a v-else @click="handleLogout" href="javascript:;"> | 退出</a>
-            </span>
-            <span class="beian"><i></i> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000">浙公网安备 000000000000号</a></span>
-        </div>
-        <div class="arrow">
-            <a class="go-top" href="javascript:;" @click="goTop"></a>
-            <a class="go-back" href="javascript:;" @click="goBack"></a>
-        </div>
+<div id="app" class="g-doc">
+    <div class="g-hd">
+        <About></About>
+        <Navigation :visit="visit" :search="search"></Navigation>
     </div>
-    <Login v-if="global.showLoginBox" />
+    <transition name="fade" mode="out-in">
+        <router-view class="router"></router-view>
+    </transition>
+    <Copyright></Copyright>
+    <Arrow></Arrow>
 </div>
 </template>
-
-<script>
+<script lang="babel">
 import { mapGetters } from 'vuex'
-import api from './api'
 import NProgress from 'nprogress'
-import About from './components/About.vue'
-import Login from './components/Login.vue'
+import About from './components/about.vue'
+import Navigation from './components/navigation.vue'
+import Copyright from './components/copyright.vue'
+import Arrow from './components/arrow.vue'
 
 export default {
-    components: {
-        About,
-        Login
-    },
     computed: {
         ...mapGetters({
             global: 'getGlobal'
         }),
         visit() {
-            return !this.$route.meta.needLogin
+            return ['index', 'article', 'category', 'search'].includes(this.$route.name)
         }
     },
+    components: {
+        About,
+        Navigation,
+        Copyright,
+        Arrow
+    },
     methods: {
-        goBack() {
-            this.$router.go(-1)
-        },
-        goTop() {
-            window.scrollTo(0, 0)
-        },
-        handleLogin() {
-            this.$store.commit('GLOBAL_LOGIN_FORM', !this.global.showLoginBox)
-        },
-        handleLogout() {
-            api.logout().then(() => {
-                this.$store.commit('GLOBAL_LOGIN_STATUS', '')
-                this.$router.replace('/')
-            })
-        },
         search(e) {
             var qs = e.target.value
             if (qs === "") {
                 return false
             }
             this.$router.replace('/search/' + qs)
-        }
-    },
-    mounted() {
-        const currentUser = api.getUser()
-        if (currentUser && currentUser._sessionToken) {
-            console.log('session')
-            this.$store.commit('GLOBAL_LOGIN_STATUS', currentUser._sessionToken)
         }
     },
     watch: {
@@ -125,4 +58,31 @@ export default {
     }
 }
 </script>
-<style src="./App.css"></style>
+<style src="./assets/css/hljs/googlecode.css"></style>
+<style src="./assets/css/style.css"></style>
+<style src="../node_modules/toastr/build/toastr.css"></style>
+<style src="../node_modules/nprogress/nprogress.css"></style>
+<style media="screen">
+    .fade-enter-active, .fade-leave-active {
+        transition: all 0.3s ease;
+    }
+    .fade-enter {
+        opacity: 1;
+        transform: translate3d(0, 100px, 0);
+    }
+    .fade-leave-active {
+        opacity: 0;
+        transform: translate3d(100px, 0, 0);
+    }
+    .beian {
+        float: right;
+    }
+    .beian i {
+        width: 14px;
+        height: 14px;
+        background: url(http://beian.gov.cn/img/ghs.png);
+        background-size: cover;
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>

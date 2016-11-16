@@ -1,16 +1,16 @@
 const webpack = require('webpack')
-var utils = require('./utils')
-var merge = require('webpack-merge')
+const merge = require('webpack-merge')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const base = require('./webpack.base.config')
 
-var config = Object.assign({}, base, {
+var config = merge(base, {
     target: 'node',
-    devtool: null,
+    devtool: false,
     entry: './src/server-entry.js',
-    output: Object.assign({}, base.output, {
+    output: {
         filename: 'server/server-bundle.js',
         libraryTarget: 'commonjs2'
-    }),
+    },
     node: {
         __dirname: true,
     },
@@ -23,5 +23,4 @@ var config = Object.assign({}, base, {
         })
     ]
 })
-
 module.exports = config
