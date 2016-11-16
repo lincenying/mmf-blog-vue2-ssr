@@ -8,7 +8,7 @@
         <div class="cont cont-1">
             <div class="text">
                 <h2><router-link :to="'/article/' + item._id" v-text="item.title"></router-link></h2>
-                <div v-if="ispc" class="markdown-body" :class="!showMore ? 'showless' : ''" v-html="item.html"></div>
+                <div v-if="ispc" class="markdown-body" :class="!showMore ? 'showless' : ''" v-html="addTarget(item.html)"></div>
                 <div v-if="ispc" class="more-less">
                     <a v-if="!showMore" @click="open($event)" class="more" href="javascript:;">展开 ↓</a>
                     <a v-else @click="open($event)" class="less" href="javascript:;">收起 ↑</a>
@@ -34,6 +34,9 @@
                 $("body").animate({
                     scrollTop: offset.top
                 }, 500 )
+            },
+            addTarget(content) {
+                return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=')
             }
         }
     }
