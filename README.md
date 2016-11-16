@@ -22,7 +22,7 @@ vue2-template 服务端渲染: [https://github.com/lincenying/mmf-blog-vue2-ssr]
 
 ```
 配置文件: src/api/config.js
-api: api地址, 由于 axios 的原因, 必须要带上域名, 不然访问不了
+api: api地址, 由于需要 nodejs 环境访问api的原因, 必须要带上域名, 不然访问不了
 proxy: 反向代理地址
 
 ```
