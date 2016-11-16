@@ -369,7 +369,7 @@ module.exports = { "default": __webpack_require__(77), __esModule: true };
 
 var port = 8080;
 module.exports = {
-    api: 'http://www.mmxiaowu.com/api/?api=true',
+    api: 'http://localhost:' + port + '/api/?api=true',
     proxy: 'localhost:3000',
     port: port
 };
@@ -4768,6 +4768,8 @@ module.exports = __vue_exports__
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
+/* styles */
+
 /* script */
 __vue_exports__ = __webpack_require__(61)
 
@@ -5258,9 +5260,9 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.slideToggle
     }
-  }, ["查看个人介绍"])]), " ", _vm._h('div', {
+  }, ["查看个人介绍"]), " ", _vm._m(0)]), " ", _vm._h('div', {
     staticClass: "box box-do m-about"
-  }, [_vm._m(0), " ", _vm._m(1), " ", _vm._m(2), " ", _vm._m(3), " ", _vm._m(4), " ", _vm._h('a', {
+  }, [_vm._m(1), " ", _vm._m(2), " ", _vm._m(3), " ", _vm._m(4), " ", _vm._m(5), " ", _vm._h('a', {
     staticClass: "w-icon",
     attrs: {
       "href": "javascript:;"
@@ -5270,6 +5272,14 @@ module.exports={render:function (){var _vm=this;
     }
   }, ["收起个人介绍"])])])
 },staticRenderFns: [function (){var _vm=this;
+  return _vm._h('a', {
+    staticClass: "github",
+    attrs: {
+      "href": "https://github.com/lincenying/mmf-blog-vue2-ssr",
+      "target": "_blank"
+    }
+  })
+},function (){var _vm=this;
   return _vm._h('div', {
     staticClass: "logo"
   }, [_vm._h('a', {
