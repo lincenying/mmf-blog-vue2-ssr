@@ -3,6 +3,7 @@
         <div class="box m-tit">
             <h1><a @click="slideToggle" href="javascript:;"></a></h1>
             <a @click="slideToggle" href="javascript:;" class="w-icon">查看个人介绍</a>
+            <a href="https://github.com/lincenying/mmf-blog-vue2-ssr" class="github" target="_blank"></a>
         </div>
         <div class="box box-do m-about">
             <div class="logo">
@@ -17,11 +18,23 @@
     </div>
 </template>
 <script>
-    export default {
-        methods: {
-            slideToggle() {
-                $(".m-about").slideToggle("800")
-            }
+export default {
+    methods: {
+        slideToggle() {
+            $(".m-about").slideToggle("800")
         }
     }
+}
 </script>
+<style media="screen">
+.github {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    background: url(http://ww1.sinaimg.cn/large/005uQRNCgw1f9txgzja9sj303c03c746.jpg);
+    background-size: cover;
+    display: inline-block;
+    width: 52px;
+    height: 52px;
+}
+</style>
