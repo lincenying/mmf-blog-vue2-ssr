@@ -2185,6 +2185,7 @@ exports.default = {
             }, 500);
         },
         addTarget: function addTarget(content) {
+            if (!content) return '';
             return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=');
         }
     }
@@ -2554,6 +2555,7 @@ exports.default = {
     },
     methods: {
         addTarget: function addTarget(content) {
+            if (!content) return '';
             return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=');
         }
     },
