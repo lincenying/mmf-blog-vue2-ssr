@@ -8,7 +8,7 @@ const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
 const proxy = require('express-http-proxy')
-const config = require('./src/api/config')
+const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
 
 function createRenderer(bundle) {
@@ -59,12 +59,6 @@ const serve = (path, cache) => express.static(resolve(path), {
         : 0
 })
 
-var apiProxy = proxy(config.proxy, {
-    forwardPath (req) {
-        return req._parsedUrl.path
-    }
-})
-
 app.set('views', path.join(__dirname, 'dist'))
 app.engine('.html', require('ejs').__express)
 app.set('view engine', 'ejs')
@@ -73,8 +67,16 @@ app.use(favicon('./favicon.ico'))
 app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
-app.use('/public', serve('./public'))
-app.use('/api**', apiProxy)
+
+// 利用 express-http-proxy 做 api 反向代理
+if (!isProd) {
+    var apiProxy = proxy(config.proxy, {
+        forwardPath (req) {
+            return req._parsedUrl.path
+        }
+    })
+    app.use('/api**', apiProxy)
+}
 
 app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })

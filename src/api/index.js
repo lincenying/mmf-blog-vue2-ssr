@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '../store'
-import config from './config'
+import config from 'api-config'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
@@ -45,8 +45,5 @@ export default {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         }).then(checkStatus)
-    },
-    getData(data) {
-        return axios.post('/', data).then(checkStatus)
     }
 }

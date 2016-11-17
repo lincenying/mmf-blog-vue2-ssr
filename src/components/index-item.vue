@@ -20,6 +20,7 @@
 </template>
 <script lang="babel">
     export default {
+        name: 'index-item',
         props: ['item', 'ispc'],
         data () {
             return {
@@ -39,6 +40,9 @@
                 if (!content) return ''
                 return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=')
             }
+        },
+        serverCacheKey: props => {
+            return `${ props.item._id }::${ props.item.creat_date }`
         }
     }
 </script>

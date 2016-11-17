@@ -9,6 +9,11 @@ const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var config = merge(baseConfig, {
+    resolve: {
+        alias: {
+            'api-config': path.resolve(__dirname, '../src/api/config-client')
+        }
+    },
     module: {
         rules: utils.styleLoaders()
     },
