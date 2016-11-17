@@ -3,6 +3,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const fs = require('fs')
 const path = require('path')
+const favicon = require('serve-favicon')
 const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
@@ -68,6 +69,7 @@ app.set('views', path.join(__dirname, 'dist'))
 app.engine('.html', require('ejs').__express)
 app.set('view engine', 'ejs')
 
+app.use(favicon('./favicon.ico'))
 app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
