@@ -19,10 +19,14 @@
 </template>
 <script>
 export default {
+    name: 'about',
     methods: {
         slideToggle() {
             $(".m-about").slideToggle("800")
         }
+    },
+    serverCacheKey: () => {
+        return `components::about`
     }
 }
 </script>

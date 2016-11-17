@@ -1,3 +1,4 @@
+const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -10,6 +11,11 @@ var config = merge(base, {
     output: {
         filename: 'server/server-bundle.js',
         libraryTarget: 'commonjs2'
+    },
+    resolve: {
+        alias: {
+            'api-config': path.resolve(__dirname, '../src/api/config-server')
+        }
     },
     node: {
         __dirname: true,
