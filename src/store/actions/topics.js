@@ -11,14 +11,15 @@ export const getTopics = ({commit, state: {route: { path }}}, config) => {
     })
 }
 
-export const getArticle = ({ commit, state: {route: { params: { id }}} }) => {
+export const getArticle = ({ commit, state: {route: { path, params: { id }}} }) => {
     return api.getFromConfig({
         action: "article",
         markdown: 1,
         id
     }).then(({data}) => {
         commit(types.RECEIVE_ARTICLE, {
-            ...data
+            ...data,
+            path
         })
     })
 }
