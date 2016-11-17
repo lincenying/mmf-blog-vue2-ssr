@@ -58,11 +58,11 @@ const serve = (path, cache) => express.static(resolve(path), {
         : 0
 })
 
-var apiProxy = proxy(config.proxy, {
-    forwardPath (req) {
-        return req._parsedUrl.path
-    }
-})
+// var apiProxy = proxy(config.proxy, {
+//     forwardPath (req) {
+//         return req._parsedUrl.path
+//     }
+// })
 
 app.set('views', path.join(__dirname, 'dist'))
 app.engine('.html', require('ejs').__express)
@@ -72,7 +72,7 @@ app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
 app.use('/public', serve('./public'))
-app.use('/api**', apiProxy)
+// app.use('/api**', apiProxy)
 
 app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })
