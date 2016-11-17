@@ -1566,7 +1566,9 @@ var getTopics = exports.getTopics = function getTopics(_ref, config) {
 
 var getArticle = exports.getArticle = function getArticle(_ref3) {
     var commit = _ref3.commit,
-        id = _ref3.state.route.params.id;
+        _ref3$state$route = _ref3.state.route,
+        path = _ref3$state$route.path,
+        id = _ref3$state$route.params.id;
 
     return _api2.default.getFromConfig({
         action: "article",
@@ -1575,7 +1577,9 @@ var getArticle = exports.getArticle = function getArticle(_ref3) {
     }).then(function (_ref4) {
         var data = _ref4.data;
 
-        commit(types.RECEIVE_ARTICLE, (0, _extends3.default)({}, data));
+        commit(types.RECEIVE_ARTICLE, (0, _extends3.default)({}, data, {
+            path: path
+        }));
     });
 };
 
@@ -2560,7 +2564,11 @@ exports.default = {
         }
     },
     mounted: function mounted() {
-        fetchInitialData(this.$store);
+        if (this.$route.path !== this.article.path) {
+            fetchInitialData(this.$store);
+        } else {
+            this.$store.dispatch('gProgress', 100);
+        }
     },
 
     watch: {
