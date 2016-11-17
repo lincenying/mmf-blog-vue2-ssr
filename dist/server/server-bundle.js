@@ -1807,7 +1807,8 @@ var state = {
     article: {
         data: {},
         prev: {},
-        next: {}
+        next: {},
+        path: ''
     },
     comment: {
         list: [],
@@ -1834,10 +1835,11 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
 }), (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_ARTICLE, function (state, _ref2) {
     var data = _ref2.data,
         prev = _ref2.prev,
-        next = _ref2.next;
+        next = _ref2.next,
+        path = _ref2.path;
 
     state.article = {
-        data: data, prev: prev, next: next
+        data: data, prev: prev, next: next, path: path
     };
 }), (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_COMMENT, function (state, _ref3) {
     var hasNext = _ref3.hasNext,
