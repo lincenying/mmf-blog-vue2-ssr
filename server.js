@@ -6,7 +6,7 @@ const path = require('path')
 const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
-const proxy = require('express-http-proxy')
+// const proxy = require('express-http-proxy')
 const config = require('./src/api/config')
 const resolve = file => path.resolve(__dirname, file)
 
