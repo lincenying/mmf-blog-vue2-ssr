@@ -56,7 +56,11 @@ export default {
         }
     },
     mounted() {
-        fetchInitialData(this.$store)
+        if (this.$route.path !== this.article.path) {
+            fetchInitialData(this.$store)
+        } else {
+            this.$store.dispatch('gProgress', 100)
+        }
     },
     watch: {
         '$route'() {
