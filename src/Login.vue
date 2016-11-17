@@ -19,7 +19,7 @@
 </template>
 <script lang="babel">
 /* global window */
-import config from './api/config'
+import config from 'api-config'
 import { mapGetters } from 'vuex'
 import ls from 'store2'
 import ajaxForm from './components/app/ajax-form.vue'

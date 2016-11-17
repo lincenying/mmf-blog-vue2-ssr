@@ -28,7 +28,7 @@
 /* global editormd */
 import { mapGetters } from 'vuex'
 import ajaxForm from '../components/app/ajax-form.vue'
-import config from '../api/config'
+import config from 'api-config'
 export default {
     computed: {
         ...mapGetters({
