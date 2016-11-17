@@ -11,8 +11,8 @@
             </div>
             <p>姓名: 林岑影</p>
             <p>年龄: 1987.09</p>
-            <p>职业: 前端开发</p>
-            <p>技能: HTML5 + CSS3 + jQuery + Gulp + WebPack + ES6 + Vue + NodeJS + PHP</p>
+            <p>职业: 前端开发 | Github: <a href="https://github.com/lincenying" target="_blank">https://github.com/lincenying</a></p>
+            <p>技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP</p>
             <a @click="slideToggle" href="javascript:;" class="w-icon">收起个人介绍</a>
         </div>
     </div>
