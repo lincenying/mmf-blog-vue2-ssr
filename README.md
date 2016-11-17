@@ -21,10 +21,12 @@ vue2-template 服务端渲染: [https://github.com/lincenying/mmf-blog-vue2-ssr]
 先安装 api server: https://github.com/lincenying/mmf-blog-api
 
 ```
-配置文件: src/api/config.js
-api: api地址, 由于 axios 的原因, 必须要带上域名, 不然访问不了
+配置文件: src/api/config-client.js (浏览器端)
+api: api地址
+配置文件: src/api/config-server.js (服务器端)
+api: api地址
 proxy: 反向代理地址
-
+port: 启动端口
 ```
 
 ```
