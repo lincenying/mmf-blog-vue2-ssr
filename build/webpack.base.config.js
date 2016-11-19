@@ -38,27 +38,27 @@ module.exports = {
     module: {
         rules: [{
             test: /\.vue$/,
-            loader: 'eslint',
+            loader: 'eslint-loader',
             enforce: "pre",
             include: projectRoot,
             exclude: /node_modules/
         }, {
             test: /\.js$/,
-            loader: 'eslint',
+            loader: 'eslint-loader',
             enforce: "pre",
             include: projectRoot,
             exclude: /node_modules/
         }, {
             test: /\.vue$/,
-            loader: 'vue',
+            loader: 'vue-loader',
             options: vueConfig
         }, {
             test: /\.js$/,
-            loader: 'babel',
+            loader: 'babel-loader',
             exclude: /node_modules/
         }, {
             test: /\.json$/,
-            loader: 'json'
+            loader: 'json-loader'
         }]
     }
 }
