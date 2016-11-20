@@ -22,11 +22,7 @@
 <script lang="babel">
 import { mapGetters } from 'vuex'
 const fetchInitialData = async store => {
-    const base = {
-        action: 'getAdminArticle',
-        limit: 20
-    }
-    await store.dispatch('getAdminTopics', base)
+    await store.dispatch('getAdminTopics', {limit: 20})
 }
 export default {
     prefetch: fetchInitialData,
@@ -47,14 +43,12 @@ export default {
     methods: {
         mdel(id) {
             this.$store.dispatch('deleteArticle', {
-                id,
-                action: 'delete'
+                id
             })
         },
         recover(id) {
             this.$store.dispatch('recoverArticle', {
-                id,
-                action: 'recover'
+                id
             })
         }
     },

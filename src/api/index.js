@@ -33,16 +33,24 @@ function checkStatus(response) {
 }
 
 export default {
-    getFromConfig(data) {
+    post(url, data) {
         return axios({
             method: 'post',
-            url: config.api,
+            url: config.api + url,
             data: qs.stringify(data),
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: 'X-CSRFToken',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then(checkStatus)
+    },
+    get(url, params) {
+        return axios({
+            method: 'get',
+            url: config.api + url,
+            params,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
         }).then(checkStatus)
     }

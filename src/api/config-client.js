@@ -1,3 +1,3 @@
 module.exports = {
-    api: '/api/?api=true'
+    api: '/api/'
 }
