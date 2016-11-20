@@ -368,7 +368,7 @@ module.exports = { "default": __webpack_require__(79), __esModule: true };
 'use strict';
 
 module.exports = {
-    api: 'http://localhost:3000/api/?api=true',
+    api: 'http://localhost:3000/api/',
     proxy: 'localhost:3000',
     port: 8080
 };
@@ -614,16 +614,24 @@ function checkStatus(response) {
 }
 
 exports.default = {
-    getFromConfig: function getFromConfig(data) {
+    post: function post(url, data) {
         return (0, _axios2.default)({
             method: 'post',
-            url: _apiConfig2.default.api,
+            url: _apiConfig2.default.api + url,
             data: _qs2.default.stringify(data),
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: 'X-CSRFToken',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then(checkStatus);
+    },
+    get: function get(url, params) {
+        return (0, _axios2.default)({
+            method: 'get',
+            url: _apiConfig2.default.api + url,
+            params: params,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
         }).then(checkStatus);
     }
@@ -1379,7 +1387,7 @@ var getAdminTopics = exports.getAdminTopics = function getAdminTopics(_ref, conf
         page = _ref$state$route.params.page;
 
     config.page = page;
-    return _api2.default.getFromConfig(config).then(function (_ref2) {
+    return _api2.default.get('admin/topics', config).then(function (_ref2) {
         var data = _ref2.data;
 
         commit(types.RECEIVE_ADMIN_TOPICS, (0, _extends3.default)({}, data.data, {
@@ -1390,8 +1398,7 @@ var getAdminTopics = exports.getAdminTopics = function getAdminTopics(_ref, conf
 var getAdminArticle = exports.getAdminArticle = function getAdminArticle(_ref3) {
     var id = _ref3.state.route.params.id;
 
-    return _api2.default.getFromConfig({
-        action: "getArticle",
+    return _api2.default.get('admin/article', {
         id: id
     });
 };
@@ -1399,7 +1406,7 @@ var getAdminArticle = exports.getAdminArticle = function getAdminArticle(_ref3) 
 var deleteArticle = exports.deleteArticle = function deleteArticle(_ref4, config) {
     var commit = _ref4.commit;
 
-    _api2.default.getFromConfig(config).then(function () {
+    _api2.default.get('admin/article/delete', config).then(function () {
         commit(types.DELETE_ARTICLE, config.id);
     });
 };
@@ -1407,7 +1414,7 @@ var deleteArticle = exports.deleteArticle = function deleteArticle(_ref4, config
 var recoverArticle = exports.recoverArticle = function recoverArticle(_ref5, config) {
     var commit = _ref5.commit;
 
-    _api2.default.getFromConfig(config).then(function () {
+    _api2.default.get('admin/article/recover', config).then(function () {
         commit(types.RECOVER_ARTICLE, config.id);
     });
 };
@@ -1551,7 +1558,7 @@ var getTopics = exports.getTopics = function getTopics(_ref, config) {
     var commit = _ref.commit,
         path = _ref.state.route.path;
 
-    return _api2.default.getFromConfig(config).then(function (_ref2) {
+    return _api2.default.get('frontend/topics', config).then(function (_ref2) {
         var data = _ref2.data;
 
         commit(types.RECEIVE_TOPICS, (0, _extends3.default)({}, config, data.data, {
@@ -1566,8 +1573,7 @@ var getArticle = exports.getArticle = function getArticle(_ref3) {
         path = _ref3$state$route.path,
         id = _ref3$state$route.params.id;
 
-    return _api2.default.getFromConfig({
-        action: "article",
+    return _api2.default.get('frontend/article', {
         markdown: 1,
         id: id
     }).then(function (_ref4) {
@@ -1587,8 +1593,7 @@ var getComment = exports.getComment = function getComment(_ref5, _ref6) {
     var page = _ref6.page,
         limit = _ref6.limit;
 
-    return _api2.default.getFromConfig({
-        action: "comment",
+    return _api2.default.get('frontend/comment/list', {
         page: page,
         id: id,
         limit: limit
@@ -1608,7 +1613,7 @@ var postComment = exports.postComment = function postComment(_ref8, config) {
         path = _ref8$state$route.path,
         id = _ref8$state$route.params.id;
 
-    return _api2.default.getFromConfig(config).then(function (_ref9) {
+    return _api2.default.post('frontend/comment/post', config).then(function (_ref9) {
         var data = _ref9.data;
 
         if (data.code === 200) {
@@ -2169,7 +2174,6 @@ exports.default = {
                 this.$store.dispatch('showMsg', '请输入评论内容!');
             } else {
                 this.$store.dispatch('postComment', {
-                    action: 'postComment',
                     id: this.$route.params.id,
                     content: this.form.content,
                     username: this.form.username
@@ -2302,7 +2306,7 @@ exports.default = {
     },
     data: function data() {
         return {
-            api: _apiConfig2.default.api,
+            api: _apiConfig2.default.api + 'admin/article/modify',
             form: {
                 _id: '',
                 title: '',
@@ -2403,19 +2407,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fetchInitialData = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(store) {
-        var base;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        base = {
-                            action: 'getAdminArticle',
-                            limit: 20
-                        };
-                        _context.next = 3;
-                        return store.dispatch('getAdminTopics', base);
+                        _context.next = 2;
+                        return store.dispatch('getAdminTopics', { limit: 20 });
 
-                    case 3:
+                    case 2:
                     case 'end':
                         return _context.stop();
                 }
@@ -2445,14 +2444,12 @@ exports.default = {
     methods: {
         mdel: function mdel(id) {
             this.$store.dispatch('deleteArticle', {
-                id: id,
-                action: 'delete'
+                id: id
             });
         },
         recover: function recover(id) {
             this.$store.dispatch('recoverArticle', {
-                id: id,
-                action: 'recover'
+                id: id
             });
         }
     },
@@ -2494,7 +2491,7 @@ exports.default = {
     },
     data: function data() {
         return {
-            api: _apiConfig2.default.api,
+            api: _apiConfig2.default.api + 'admin/article/post',
             editors: null,
             title: '',
             category: '',
@@ -2679,7 +2676,6 @@ var fetchInitialData = function () {
                     case 0:
                         _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, qs = _store$state$route$pa.qs, path = _store$state$route.path;
                         base = (0, _extends3.default)({}, config, {
-                            action: 'getArticleList',
                             markdown: 1,
                             limit: 10,
                             id: id,
@@ -5269,7 +5265,7 @@ module.exports={render:function (){var _vm=this;
       "href": "https://github.com/lincenying",
       "target": "_blank"
     }
-  }, ["https://github.com/lincenying"])])
+  }, ["@lincenying"])])
 },function (){var _vm=this;
   return _vm._h('p', ["技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP"])
 }]}
