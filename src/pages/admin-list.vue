@@ -25,7 +25,6 @@ const fetchInitialData = async store => {
     await store.dispatch('getAdminTopics', {limit: 20})
 }
 export default {
-    prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
             topics: 'getAdminTopics'
