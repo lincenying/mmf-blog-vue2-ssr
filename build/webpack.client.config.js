@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
         module: {
             rules: [{
                 test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-                loader: 'file',
+                loader: 'file-loader',
                 query: {
                     limit: 10000,
                     name: 'static/img/[name].[hash:7].[ext]'
@@ -97,7 +97,7 @@ if (process.env.NODE_ENV === 'production') {
         module: {
             rules: [{
                 test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-                loader: 'file'
+                loader: 'file-loader'
             }]
         },
         plugins: [
