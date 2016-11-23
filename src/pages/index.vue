@@ -63,9 +63,7 @@ export default {
         const scrollTop = document.body.scrollTop
         const path = this.$route.path
         if (scrollTop) ls.set(path, scrollTop)
-        else {
-            if (ls.get(path)) ls.remove(path)
-        }
+        else ls.remove(path)
         next()
     }
 }

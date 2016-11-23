@@ -736,18 +736,17 @@ var ua = exports.ua = function ua() {
 };
 
 var ssp = exports.ssp = function ssp(path) {
-    if (inBrowser) {
-        var clientHeight = document.documentElement.clientHeight,
-            scrollTop = _store2.default.get(path);
-        if (scrollTop) {
-            _vue2.default.nextTick(function () {
-                if (document.body.clientHeight >= scrollTop + clientHeight) {
-                    window.scrollTo(0, scrollTop);
-                } else {
-                    _store2.default.remove(path);
-                }
-            });
-        }
+    if (!inBrowser) return;
+    var clientHeight = document.documentElement.clientHeight,
+        scrollTop = _store2.default.get(path);
+    if (scrollTop) {
+        _vue2.default.nextTick().then(function () {
+            if (document.body.clientHeight >= scrollTop + clientHeight) {
+                window.scrollTo(0, scrollTop);
+            } else {
+                _store2.default.remove(path);
+            }
+        });
     }
 };
 
@@ -2738,9 +2737,7 @@ exports.default = {
     beforeRouteLeave: function beforeRouteLeave(to, from, next) {
         var scrollTop = document.body.scrollTop;
         var path = this.$route.path;
-        if (scrollTop) _store2.default.set(path, scrollTop);else {
-            if (_store2.default.get(path)) _store2.default.remove(path);
-        }
+        if (scrollTop) _store2.default.set(path, scrollTop);else _store2.default.remove(path);
         next();
     }
 };
