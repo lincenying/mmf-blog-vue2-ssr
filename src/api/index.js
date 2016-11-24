@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '../store'
+import { inBrowser } from '../utils'
 import config from 'api-config'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -21,7 +22,11 @@ axios.interceptors.response.use(response => {
 })
 
 function checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status === 200 || response.status === 304) {
+        if (inBrowser && response.data.code === -500) {
+            window.location.href = '/login'
+            return
+        }
         return response
     }
     return {
