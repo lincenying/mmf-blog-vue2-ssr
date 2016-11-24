@@ -51,6 +51,8 @@ export default {
                 setTimeout(() => {
                     window.location.href = "/admin/post"
                 }, 1000)
+            } else {
+                this.$store.dispatch('showMsg', res.message)
             }
         }
     }
