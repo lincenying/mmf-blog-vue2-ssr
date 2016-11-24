@@ -4,8 +4,6 @@ import store from '../store'
 import { inBrowser } from '../utils'
 import config from 'api-config'
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-
 axios.interceptors.request.use(config => {
     store.dispatch('gProgress', 50)
     return config
@@ -23,10 +21,6 @@ axios.interceptors.response.use(response => {
 
 function checkStatus(response) {
     if (response.status === 200 || response.status === 304) {
-        if (inBrowser && response.data.code === -500) {
-            window.location.href = '/login'
-            return
-        }
         return response
     }
     return {
@@ -35,6 +29,16 @@ function checkStatus(response) {
             message: response.statusText
         }
     }
+}
+
+function checkCode(res) {
+    if (inBrowser && res.data.code === -500) {
+        window.location.href = '/login'
+        return
+    } else if (res.data.code !== 200) {
+        store.dispatch('showMsg', res.data.message)
+    }
+    return res
 }
 
 export default {
@@ -47,7 +51,7 @@ export default {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             }
-        }).then(checkStatus)
+        }).then(checkStatus).then(checkCode)
     },
     get(url, params) {
         return axios({
@@ -57,6 +61,6 @@ export default {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        }).then(checkStatus)
+        }).then(checkStatus).then(checkCode)
     }
 }
