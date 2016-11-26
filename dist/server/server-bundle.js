@@ -665,6 +665,7 @@ exports.default = {
             method: 'post',
             url: _apiConfig2.default.api + url,
             data: _qs2.default.stringify(data),
+            timeout: 3000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -676,6 +677,7 @@ exports.default = {
             method: 'get',
             url: _apiConfig2.default.api + url,
             params: params,
+            timeout: 3000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }

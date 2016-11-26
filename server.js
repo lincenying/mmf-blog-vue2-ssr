@@ -107,7 +107,7 @@ app.get('*', (req, res) => {
             res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
         }
         res.end(indexHTML.tail)
-        console.log(`whole request: ${Date.now() - s}ms`)
+        console.log(`${req.url}: ${Date.now() - s}ms`)
     })
     renderStream.on('error', err => {
         if (err && err.code === '404') {
