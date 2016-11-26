@@ -68,20 +68,7 @@ app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
 
-// 利用 express-http-proxy 做 api 反向代理
-if (!isProd) {
-    var apiProxy = proxy(config.proxy, {
-        forwardPath (req) {
-            return req._parsedUrl.path
-        }
-    })
-    app.use('/api**', apiProxy)
-}
-
-app.get('/login', (req, res) => {
-    res.render('login.html', { title: '登录' })
-})
-app.get('*', (req, res) => {
+const r = (req, res) => {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
@@ -119,9 +106,59 @@ app.get('*', (req, res) => {
         console.error(`error during render : ${req.url}`)
         console.error(err)
     })
+}
+
+// 利用 express-http-proxy 做 api 反向代理
+if (!isProd) {
+    var apiProxy = proxy(config.proxy, {
+        forwardPath (req) {
+            return req._parsedUrl.path
+        }
+    })
+    app.use('/api**', apiProxy)
+}
+
+app.get('/login', (req, res) => {
+    res.render('login.html', { title: '登录' })
+})
+app.get('/', (req, res) => {
+    r(req, res)
+})
+app.get('/category/:id', (req, res) => {
+    r(req, res)
+})
+app.get('/search/:qs', (req, res) => {
+    r(req, res)
+})
+app.get('/article/:id', (req, res) => {
+    r(req, res)
+})
+app.get('/admin/list/:page', (req, res) => {
+    r(req, res)
+})
+app.get('/admin/post', (req, res) => {
+    r(req, res)
+})
+app.get('/admin/edit/:id/:page', (req, res) => {
+    r(req, res)
+})
+
+app.use(function(req, res, next) {
+    var err = new Error('Not Found')
+    err.status = 404
+    next(err)
+})
+
+app.use(function(err, req, res) {
+    res.status(err.status || 500)
+    res.send(err.message)
 })
 
 const port = process.env.PORT || config.port || 8080
-app.listen(port, () => {
+app.listen(port, err => {
+    if (err) {
+        console.log(err)
+        return
+    }
     console.log(`server started at localhost:${port}`)
 })

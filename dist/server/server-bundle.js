@@ -5365,7 +5365,7 @@ module.exports={render:function (){var _vm=this;
       "to": '/article/' + _vm.article.prev.prev_id,
       "id": "__prev_permalink__"
     }
-  }, ["上一篇"]) : _vm._h('span', {
+  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _vm._h('span', {
     staticClass: "prev"
   }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _vm._h('router-link', {
     staticClass: "next",
@@ -5373,7 +5373,7 @@ module.exports={render:function (){var _vm=this;
       "to": '/article/' + _vm.article.next.next_id,
       "id": "__next_permalink__"
     }
-  }, ["下一篇"]) : _vm._h('span', {
+  }, [_vm._s(_vm.article.prev.prev_title) + " < 下一篇"]) : _vm._h('span', {
     staticClass: "next"
   }, ["下一篇"]), " "])])
 },staticRenderFns: []}
