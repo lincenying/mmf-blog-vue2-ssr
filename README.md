@@ -22,14 +22,11 @@ vue2 服务端渲染版本: [https://github.com/lincenying/mmf-blog-vue2-ssr](ht
 
 ---
 
-先安装 api server: https://github.com/lincenying/mmf-blog-api
-
 ```
 配置文件: src/api/config-client.js (浏览器端)
-api: api地址
+api: api地址 (如果 api 服务器和网站服务器是同一个域名, 或者用了反向代理, 可以直接用省去域名的绝对路径, 如: /api/)
 配置文件: src/api/config-server.js (服务器端)
-api: api地址
-proxy: 反向代理地址
+api: api地址 (如果 api 服务器 和网站服务器在同一台主机, 可以用本地地址, 如: http://localhost:8080)
 port: 启动端口
 ```
 
