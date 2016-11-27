@@ -382,7 +382,6 @@ module.exports = { "default": __webpack_require__(72), __esModule: true };
 
 module.exports = {
     api: 'http://localhost:8080/api/',
-    proxy: 'localhost:3000',
     port: 8080
 };
 

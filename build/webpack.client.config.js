@@ -22,6 +22,9 @@ var config = merge(baseConfig, {
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         }),
         new CopyWebpackPlugin([{
+            from: 'robots.txt',
+            to: path.join(__dirname, '../dist')
+        }, {
             from: 'favicon.ico',
             to: path.join(__dirname, '../dist')
         }, {
