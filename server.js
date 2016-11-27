@@ -135,25 +135,7 @@ const r = (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })
 })
-app.get('/', (req, res) => {
-    r(req, res)
-})
-app.get('/category/:id', (req, res) => {
-    r(req, res)
-})
-app.get('/search/:qs', (req, res) => {
-    r(req, res)
-})
-app.get('/article/:id', (req, res) => {
-    r(req, res)
-})
-app.get('/admin/list/:page', (req, res) => {
-    r(req, res)
-})
-app.get('/admin/post', (req, res) => {
-    r(req, res)
-})
-app.get('/admin/edit/:id/:page', (req, res) => {
+app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page', '/admin/post', '/admin/edit/:id/:page'], (req, res) => {
     r(req, res)
 })
 
