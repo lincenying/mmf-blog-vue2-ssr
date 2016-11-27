@@ -7,9 +7,17 @@ const favicon = require('serve-favicon')
 const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
-const proxy = require('express-http-proxy')
+//const proxy = require('express-http-proxy')
 const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+
+require('./server/models/user')
+require('./server/models/article')
+require('./server/models/comment')
+
+const routes = require('./server/routes/index')
 
 function createRenderer(bundle) {
     // https://github.com/vuejs/vue/blob/next/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -63,10 +71,16 @@ app.set('views', path.join(__dirname, 'dist'))
 app.engine('.html', require('ejs').__express)
 app.set('view engine', 'ejs')
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+
 app.use(favicon('./favicon.ico'))
 app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
+
+app.use('/api', routes)
 
 const r = (req, res) => {
     if (!renderer) {
@@ -109,14 +123,14 @@ const r = (req, res) => {
 }
 
 // 利用 express-http-proxy 做 api 反向代理
-if (!isProd) {
-    var apiProxy = proxy(config.proxy, {
-        forwardPath (req) {
-            return req._parsedUrl.path
-        }
-    })
-    app.use('/api**', apiProxy)
-}
+// if (!isProd) {
+//     var apiProxy = proxy(config.proxy, {
+//         forwardPath (req) {
+//             return req._parsedUrl.path
+//         }
+//     })
+//     app.use('/api**', apiProxy)
+// }
 
 app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })

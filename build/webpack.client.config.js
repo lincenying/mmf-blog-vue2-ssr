@@ -27,6 +27,9 @@ var config = merge(baseConfig, {
         }, {
             from: 'static/editor.md/**/*',
             to: path.join(__dirname, '../dist')
+        }, {
+            from: 'src/template/admin.html',
+            to: path.join(__dirname, '../dist')
         }]),
         new webpack.ProvidePlugin({
             $: 'jquery',
