@@ -7,11 +7,11 @@ const favicon = require('serve-favicon')
 const express = require('express')
 const compression = require('compression')
 const serialize = require('serialize-javascript')
-//const proxy = require('express-http-proxy')
-const config = require('./src/api/config-server')
-const resolve = file => path.resolve(__dirname, file)
+const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const config = require('./src/api/config-server')
+const resolve = file => path.resolve(__dirname, file)
 
 require('./server/models/user')
 require('./server/models/article')
@@ -71,18 +71,18 @@ app.set('views', path.join(__dirname, 'dist'))
 app.engine('.html', require('ejs').__express)
 app.set('view engine', 'ejs')
 
+app.use(favicon('./favicon.ico'))
+app.use(compression({threshold: 0}))
+app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-app.use(favicon('./favicon.ico'))
-app.use(compression({threshold: 0}))
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
-
 app.use('/api', routes)
 
-const r = (req, res) => {
+app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page', '/admin/post', '/admin/edit/:id/:page'], (req, res) => {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
@@ -120,23 +120,10 @@ const r = (req, res) => {
         console.error(`error during render : ${req.url}`)
         console.error(err)
     })
-}
-
-// 利用 express-http-proxy 做 api 反向代理
-// if (!isProd) {
-//     var apiProxy = proxy(config.proxy, {
-//         forwardPath (req) {
-//             return req._parsedUrl.path
-//         }
-//     })
-//     app.use('/api**', apiProxy)
-// }
+})
 
 app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })
-})
-app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page', '/admin/post', '/admin/edit/:id/:page'], (req, res) => {
-    r(req, res)
 })
 
 app.use(function(req, res, next) {
