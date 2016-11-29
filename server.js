@@ -140,7 +140,7 @@ app.use(function(err, req, res) {
 
 const port = process.env.PORT || config.port || 8080
 app.listen(port, err => {
-    if (err) {
+    if (err && err.status !== 400) {
         console.log(err)
         return
     }
