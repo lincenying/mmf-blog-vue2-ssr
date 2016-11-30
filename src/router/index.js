@@ -39,9 +39,9 @@ const router = new VueRouter({
     base: __dirname,
     scrollBehavior,
     routes: [
-        { name:'index', path: '/', component: index },
-        { name:'category', path: '/category/:id(\\d+)', component: index },
-        { name:'search', path: '/search/:qs', component: index },
+        { name:'index', path: '/:page(\\d+)?', component: index },
+        { name:'category', path: '/category/:id(\\d+)/:page(\\d+)?', component: index },
+        { name:'search', path: '/search/:qs/:page(\\d+)?', component: index },
         { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },
         { name:'list', path: '/admin/list/:page(\\d+)', component: adminList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
         { name:'post', path: '/admin/post', component: adminPost, meta: { scrollToTop: true }, beforeEnter: guardRoute },

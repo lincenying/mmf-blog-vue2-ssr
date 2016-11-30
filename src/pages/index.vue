@@ -6,8 +6,10 @@
         <div class="box m-page box-do">
             <div class="w-icon w-icon-2"></div>
             <div class="w-icon w-icon-3"></div>
-            <a v-if="topics.hasNext" @click="loadMore()" href="javascript:;">加载更多</a>
-            <span v-else>好厉害, 竟然翻到最后一页了...</span>
+            <!-- <a v-if="topics.hasNext" @click="loadMore()" href="javascript:;">加载更多</a>
+            <span v-else>好厉害, 竟然翻到最后一页了...</span> -->
+            <router-link v-if="topics.hasPrev" :to="prevPageUrl" id="__prev_permalink__" class="prev">上一页</router-link>
+            <router-link v-if="topics.hasNext" :to="nextPageUrl" id="__next_permalink__" class="next">下一页</router-link>
         </div>
     </div>
 </template>
@@ -16,8 +18,9 @@ import ls from 'store2'
 import { mapGetters } from 'vuex'
 import indexItem from '../components/index-item.vue'
 import { ua, ssp } from '../utils'
-const fetchInitialData = async (store, config = { page: 1}) => {
-    const {params: {id, qs}, path} = store.state.route
+const fetchInitialData = async (store, config = {}) => {
+    const {params: {id, qs, page}, path} = store.state.route
+    config.page = page || 1
     const base = {
         ...config,
         markdown: 1,
@@ -39,6 +42,23 @@ export default {
         }),
         isPC() {
             return ua() === "PC"
+        },
+        nextPageUrl() {
+            const {params: {id, qs}} = this.$store.state.route
+            const nextPage = +this.topics.page + 1
+            if (id) return '/category/' + nextPage
+            else if (qs) return '/search/' + nextPage
+            return '/' + nextPage
+        },
+        prevPageUrl() {
+            const {params: {id, qs}} = this.$store.state.route
+            let prevPage = +this.topics.page - 1, url
+            if (prevPage === 1) prevPage = ''
+            else prevPage = '/' + prevPage
+            if (id) url = '/category' + prevPage
+            else if (qs) url = '/search' + prevPage
+            url = '' + prevPage
+            return url === '' ? '/' : url
         }
     },
     methods: {
@@ -48,7 +68,7 @@ export default {
     },
     mounted() {
         if (this.topics.list.length <= 0 || this.$route.path !== this.topics.path) {
-            fetchInitialData(this.$store, {page: 1})
+            fetchInitialData(this.$store)
         } else {
             ssp(this.$route.path)
             this.$store.dispatch('gProgress', 100)
@@ -56,7 +76,7 @@ export default {
     },
     watch: {
         '$route'() {
-            fetchInitialData(this.$store, {page: 1})
+            fetchInitialData(this.$store)
         }
     },
     beforeRouteLeave (to, from, next) {
