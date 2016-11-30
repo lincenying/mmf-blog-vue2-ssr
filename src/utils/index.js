@@ -18,15 +18,8 @@ export const ua = () => {
 
 export const ssp = path => {
     if (!inBrowser) return
-    var clientHeight = document.documentElement.clientHeight,
-        scrollTop = ls.get(path)
-    if (scrollTop) {
-        Vue.nextTick().then(() => {
-            if (document.body.clientHeight >= scrollTop + clientHeight) {
-                window.scrollTo(0, scrollTop)
-            } else {
-                ls.remove(path)
-            }
-        })
-    }
+    var scrollTop = ls.get(path) || 0
+    Vue.nextTick().then(() => {
+        window.scrollTo(0, scrollTop)
+    })
 }
