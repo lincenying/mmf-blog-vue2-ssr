@@ -230,17 +230,10 @@ var ua = exports.ua = function ua() {
 
 var ssp = exports.ssp = function ssp(path) {
     if (!inBrowser) return;
-    var clientHeight = document.documentElement.clientHeight,
-        scrollTop = _store2.default.get(path);
-    if (scrollTop) {
-        _vue2.default.nextTick().then(function () {
-            if (document.body.clientHeight >= scrollTop + clientHeight) {
-                window.scrollTo(0, scrollTop);
-            } else {
-                _store2.default.remove(path);
-            }
-        });
-    }
+    var scrollTop = _store2.default.get(path) || 0;
+    _vue2.default.nextTick().then(function () {
+        window.scrollTo(0, scrollTop);
+    });
 };
 
 /***/ },
