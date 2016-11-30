@@ -126,7 +126,8 @@ exports.getTopics = (req, res) => {
             data: {
                 list: result[0],
                 total,
-                hasNext: totalPage > page ? 1 : 0
+                hasNext: totalPage > page ? 1 : 0,
+                hasPrev: page > 1
             }
         }
         res.json(json)

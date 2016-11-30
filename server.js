@@ -89,7 +89,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page
     }
 
     res.setHeader("Content-Type", "text/html")
-    var s = Date.now()
+    //var s = Date.now()
     const context = {
         url: req.url
     }
@@ -109,7 +109,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page
             res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
         }
         res.end(indexHTML.tail)
-        console.log(`${req.url}: ${Date.now() - s}ms`)
+        //console.log(`${req.url}: ${Date.now() - s}ms`)
     })
     renderStream.on('error', err => {
         if (err && err.code === '404') {
@@ -127,6 +127,10 @@ app.get('/login', (req, res) => {
     res.render('login.html', { title: '登录' })
 })
 
+app.get('*', (req, res) => {
+    res.send('HTTP STATUS: 404')
+})
+
 app.use(function(req, res, next) {
     var err = new Error('Not Found')
     err.status = 404
@@ -140,7 +144,7 @@ app.use(function(err, req, res) {
 
 const port = process.env.PORT || config.port || 8080
 app.listen(port, err => {
-    if (err && err.status !== 400) {
+    if (err) {
         console.log(err)
         return
     }
