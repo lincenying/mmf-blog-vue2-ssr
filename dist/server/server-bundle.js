@@ -2570,7 +2570,7 @@ var fetchInitialData = function () {
                         return store.dispatch('frontend/getTopics', base);
 
                     case 5:
-                        if (config.page === 1) (0, _utils.ssp)(path);
+                        (0, _utils.ssp)(path);
 
                     case 6:
                     case 'end':
