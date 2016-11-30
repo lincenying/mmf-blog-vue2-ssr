@@ -46,8 +46,8 @@ export default {
         nextPageUrl() {
             const {params: {id, qs}} = this.$store.state.route
             const nextPage = +this.topics.page + 1
-            if (id) return '/category/' + nextPage
-            else if (qs) return '/search/' + nextPage
+            if (id) return '/category/' + id + '/' + nextPage
+            else if (qs) return '/search/' + qs + '/' + nextPage
             return '/' + nextPage
         },
         prevPageUrl() {
@@ -55,9 +55,9 @@ export default {
             let prevPage = +this.topics.page - 1, url
             if (prevPage === 1) prevPage = ''
             else prevPage = '/' + prevPage
-            if (id) url = '/category' + prevPage
-            else if (qs) url = '/search' + prevPage
-            url = '' + prevPage
+            if (id) url = '/category/' + id + prevPage
+            else if (qs) url = '/search/' + qs + prevPage
+            else url = prevPage
             return url === '' ? '/' : url
         }
     },
