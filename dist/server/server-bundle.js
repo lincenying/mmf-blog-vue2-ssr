@@ -1216,7 +1216,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(56)
 
 /* template */
-var __vue_template__ = __webpack_require__(130)
+var __vue_template__ = __webpack_require__(137)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1363,11 +1363,11 @@ var router = new _vueRouter2.default({
     mode: 'history',
     base: __dirname,
     scrollBehavior: scrollBehavior,
-    routes: [{ name: 'index', path: '/:page(\\d+)?', component: _index2.default }, { name: 'category', path: '/category/:id(\\d+)/:page(\\d+)?', component: _index2.default }, { name: 'search', path: '/search/:qs/:page(\\d+)?', component: _index2.default }, { name: 'article', path: '/article/:id', component: _article2.default, meta: { scrollToTop: true } }, { name: 'list', path: '/admin/list/:page(\\d+)', component: _adminList2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'post', path: '/admin/post', component: _adminPost2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'edit', path: '/admin/edit/:id/:page', component: _adminEdit2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }]
+    routes: [{ name: 'index', path: '/', component: _index2.default }, { name: 'category', path: '/category/:id(\\d+)', component: _index2.default }, { name: 'search', path: '/search/:qs', component: _index2.default }, { name: 'article', path: '/article/:id', component: _article2.default, meta: { scrollToTop: true } }, { name: 'list', path: '/admin/list/:page(\\d+)', component: _adminList2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'post', path: '/admin/post', component: _adminPost2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'edit', path: '/admin/edit/:id/:page', component: _adminEdit2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }]
 });
 
 exports.default = router;
-/* WEBPACK VAR INJECTION */}.call(exports, "src/router"))
+/* WEBPACK VAR INJECTION */}.call(exports, "src\\router"))
 
 /***/ },
 /* 51 */
@@ -1603,16 +1603,18 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
 }), _actions);
 
 var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_TOPICS, function (state, _ref10) {
-    var list = _ref10.list,
-        hasNext = _ref10.hasNext,
-        hasPrev = _ref10.hasPrev,
+    var hasNext = _ref10.hasNext,
+        list = _ref10.list,
         page = _ref10.page,
         path = _ref10.path;
 
-    list = [].concat(list);
-
+    if (page === 1) {
+        list = [].concat(list);
+    } else {
+        list = state.topic.list.concat(list);
+    }
     state.topic = {
-        list: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
+        list: list, hasNext: hasNext, page: page, path: path
     };
 }), (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_ARTICLE, function (state, _ref11) {
     var data = _ref11.data,
@@ -2549,30 +2551,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fetchInitialData = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(store) {
-        var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { page: 1 };
 
-        var _store$state$route, _store$state$route$pa, id, qs, page, path, base;
+        var _store$state$route, _store$state$route$pa, id, qs, path, base;
 
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, qs = _store$state$route$pa.qs, page = _store$state$route$pa.page, path = _store$state$route.path;
-
-                        config.page = page || 1;
+                        _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, qs = _store$state$route$pa.qs, path = _store$state$route.path;
                         base = (0, _extends3.default)({}, config, {
                             markdown: 1,
                             limit: 10,
                             id: id,
                             qs: qs
                         });
-                        _context.next = 5;
+                        _context.next = 4;
                         return store.dispatch('frontend/getTopics', base);
 
-                    case 5:
+                    case 4:
                         if (config.page === 1) (0, _utils.ssp)(path);
 
-                    case 6:
+                    case 5:
                     case 'end':
                         return _context.stop();
                 }
@@ -2594,27 +2594,6 @@ exports.default = {
     }), {
         isPC: function isPC() {
             return (0, _utils.ua)() === "PC";
-        },
-        nextPageUrl: function nextPageUrl() {
-            var _$store$state$route$p = this.$store.state.route.params,
-                id = _$store$state$route$p.id,
-                qs = _$store$state$route$p.qs;
-
-            var nextPage = +this.topics.page + 1;
-            if (id) return '/category/' + nextPage;else if (qs) return '/search/' + nextPage;
-            return '/' + nextPage;
-        },
-        prevPageUrl: function prevPageUrl() {
-            var _$store$state$route$p2 = this.$store.state.route.params,
-                id = _$store$state$route$p2.id,
-                qs = _$store$state$route$p2.qs;
-
-            var prevPage = +this.topics.page - 1,
-                url = void 0;
-            if (prevPage === 1) prevPage = '';else prevPage = '/' + prevPage;
-            if (id) url = '/category' + prevPage;else if (qs) url = '/search' + prevPage;
-            url = '' + prevPage;
-            return url === '' ? '/' : url;
         }
     }),
     methods: {
@@ -2626,7 +2605,7 @@ exports.default = {
     },
     mounted: function mounted() {
         if (this.topics.list.length <= 0 || this.$route.path !== this.topics.path) {
-            fetchInitialData(this.$store);
+            fetchInitialData(this.$store, { page: 1 });
         } else {
             (0, _utils.ssp)(this.$route.path);
             this.$store.dispatch('gProgress', 100);
@@ -2635,7 +2614,7 @@ exports.default = {
 
     watch: {
         '$route': function $route() {
-            fetchInitialData(this.$store);
+            fetchInitialData(this.$store, { page: 1 });
         }
     },
     beforeRouteLeave: function beforeRouteLeave(to, from, next) {
@@ -4687,7 +4666,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(54)
 
 /* template */
-var __vue_template__ = __webpack_require__(131)
+var __vue_template__ = __webpack_require__(129)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4718,7 +4697,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(55)
 
 /* template */
-var __vue_template__ = __webpack_require__(128)
+var __vue_template__ = __webpack_require__(126)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4747,7 +4726,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(57)
 
 /* template */
-var __vue_template__ = __webpack_require__(126)
+var __vue_template__ = __webpack_require__(127)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4776,7 +4755,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(58)
 
 /* template */
-var __vue_template__ = __webpack_require__(135)
+var __vue_template__ = __webpack_require__(131)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4834,7 +4813,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(60)
 
 /* template */
-var __vue_template__ = __webpack_require__(132)
+var __vue_template__ = __webpack_require__(125)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4863,7 +4842,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(61)
 
 /* template */
-var __vue_template__ = __webpack_require__(137)
+var __vue_template__ = __webpack_require__(130)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4892,7 +4871,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(62)
 
 /* template */
-var __vue_template__ = __webpack_require__(129)
+var __vue_template__ = __webpack_require__(128)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4921,7 +4900,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(63)
 
 /* template */
-var __vue_template__ = __webpack_require__(134)
+var __vue_template__ = __webpack_require__(135)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5008,7 +4987,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(66)
 
 /* template */
-var __vue_template__ = __webpack_require__(127)
+var __vue_template__ = __webpack_require__(134)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5037,7 +5016,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(67)
 
 /* template */
-var __vue_template__ = __webpack_require__(125)
+var __vue_template__ = __webpack_require__(132)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5060,80 +5039,32 @@ module.exports = __vue_exports__
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
+  return _vm._m(0)
+},staticRenderFns: [function (){var _vm=this;
   return _vm._h('div', {
-    staticClass: "g-mn"
-  }, [_vm._h('div', {
-    staticClass: "posts"
-  }, [_vm._l((_vm.topics.list), function(item) {
-    return _vm._h('index-item', {
-      attrs: {
-        "item": item,
-        "ispc": _vm.isPC
-      }
-    })
-  })]), " ", _vm._h('div', {
-    staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
-    staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
-    staticClass: "w-icon w-icon-3"
-  }), " ", " ", (_vm.topics.hasPrev) ? _vm._h('router-link', {
-    staticClass: "prev",
+    staticClass: "g-ft"
+  }, [_vm._h('span', {
+    staticClass: "copy"
+  }, [_vm._h('span', {
     attrs: {
-      "to": _vm.prevPageUrl,
-      "id": "__prev_permalink__"
+      "title": "Copyright"
     }
-  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _vm._h('router-link', {
-    staticClass: "next",
+  }, ["©"]), " ", _vm._h('a', {
     attrs: {
-      "to": _vm.nextPageUrl,
-      "id": "__next_permalink__"
+      "href": "/"
     }
-  }, ["下一页"]) : _vm._e()])])
-},staticRenderFns: []}
+  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _vm._h('span', {
+    staticClass: "beian"
+  }, [_vm._h('i'), " ", _vm._h('a', {
+    attrs: {
+      "target": "_blank",
+      "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000"
+    }
+  }, ["浙公网安备 000000000000号"])])])
+}]}
 
 /***/ },
 /* 126 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "arrow"
-  }, [_vm._h('a', {
-    staticClass: "go-top",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.goTop
-    }
-  }), " ", _vm._h('a', {
-    staticClass: "go-back",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.goBack
-    }
-  })])
-},staticRenderFns: []}
-
-/***/ },
-/* 127 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "g-mn"
-  }, [(_vm.article.data) ? [_vm._h('article-item', {
-    attrs: {
-      "article": _vm.article
-    }
-  }), " ", _vm._h('comment')] : _vm._e()])
-},staticRenderFns: []}
-
-/***/ },
-/* 128 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
@@ -5193,7 +5124,33 @@ module.exports={render:function (){var _vm=this;
 }]}
 
 /***/ },
-/* 129 */
+/* 127 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._h('div', {
+    staticClass: "arrow"
+  }, [_vm._h('a', {
+    staticClass: "go-top",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.goTop
+    }
+  }), " ", _vm._h('a', {
+    staticClass: "go-back",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.goBack
+    }
+  })])
+},staticRenderFns: []}
+
+/***/ },
+/* 128 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
@@ -5273,27 +5230,7 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
-/* 130 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('form', {
-    attrs: {
-      "action": _vm.action,
-      "method": _vm.method,
-      "enctype": _vm.enctype
-    },
-    on: {
-      "submit": function($event) {
-        $event.preventDefault();
-        _vm.handleAjaxFormSubmit($event)
-      }
-    }
-  }, [_vm._t("default")])
-},staticRenderFns: []}
-
-/***/ },
-/* 131 */
+/* 129 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
@@ -5321,33 +5258,191 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
+/* 130 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._h('div', {
+    staticClass: "index m-post box article"
+  }, [_vm._h('a', {
+    staticClass: "w-icon w-icon-1",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _vm._h('a', {
+    staticClass: "w-icon2",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _vm._h('div', {
+    staticClass: "info"
+  }, [_vm._h('a', {
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.creat_date)
+    }
+  })]), " ", _vm._h('div', {
+    staticClass: "cont cont-1"
+  }, [_vm._h('div', {
+    staticClass: "text"
+  }, [_vm._h('h2', [_vm._h('router-link', {
+    attrs: {
+      "to": '/article/' + _vm.item._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.title)
+    }
+  })]), " ", (_vm.ispc) ? _vm._h('div', {
+    staticClass: "markdown-body",
+    class: !_vm.showMore ? 'showless' : '',
+    domProps: {
+      "innerHTML": _vm._s(_vm.addTarget(_vm.item.html))
+    }
+  }) : _vm._e(), " ", (_vm.ispc) ? _vm._h('div', {
+    staticClass: "more-less"
+  }, [(!_vm.showMore) ? _vm._h('a', {
+    staticClass: "more",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.open($event)
+      }
+    }
+  }, ["展开 ↓"]) : _vm._h('a', {
+    staticClass: "less",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.open($event)
+      }
+    }
+  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _vm._h('div', {
+    staticClass: "info info-1"
+  })])
+},staticRenderFns: []}
+
+/***/ },
+/* 131 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._h('div', [_vm._h('div', {
+    staticClass: "posts"
+  }, [_vm._h('div', {
+    staticClass: "m-post box article"
+  }, [_vm._h('a', {
+    staticClass: "w-icon w-icon-1",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _vm._h('a', {
+    staticClass: "w-icon2",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _vm._h('div', {
+    staticClass: "info"
+  }, [_vm._h('a', {
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.creat_date)
+    }
+  }), " ", _vm._h('a', {
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _vm._h('a', {
+    staticClass: "comnum",
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.comment_count)
+    }
+  })]), " ", _vm._h('div', {
+    staticClass: "cont cont-1"
+  }, [_vm._h('div', {
+    staticClass: "text"
+  }, [_vm._h('h2', [_vm._h('router-link', {
+    attrs: {
+      "to": '/article/' + _vm.article.data._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.title)
+    }
+  })]), " ", _vm._h('div', {
+    staticClass: "markdown-body",
+    domProps: {
+      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
+    }
+  })])]), " ", _vm._h('div', {
+    staticClass: "info info-1"
+  })])]), " ", _vm._h('div', {
+    staticClass: "box m-page box-do"
+  }, [_vm._h('div', {
+    staticClass: "w-icon w-icon-2"
+  }), " ", _vm._h('div', {
+    staticClass: "w-icon w-icon-3"
+  }), " ", (_vm.article.prev.prev_id) ? _vm._h('router-link', {
+    staticClass: "prev",
+    attrs: {
+      "to": '/article/' + _vm.article.prev.prev_id,
+      "id": "__prev_permalink__"
+    }
+  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _vm._h('span', {
+    staticClass: "prev"
+  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _vm._h('router-link', {
+    staticClass: "next",
+    attrs: {
+      "to": '/article/' + _vm.article.next.next_id,
+      "id": "__next_permalink__"
+    }
+  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _vm._h('span', {
+    staticClass: "next"
+  }, ["下一篇"]), " "])])
+},staticRenderFns: []}
+
+/***/ },
 /* 132 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;
   return _vm._h('div', {
-    staticClass: "g-ft"
-  }, [_vm._h('span', {
-    staticClass: "copy"
-  }, [_vm._h('span', {
+    staticClass: "g-mn"
+  }, [_vm._h('div', {
+    staticClass: "posts"
+  }, [_vm._l((_vm.topics.list), function(item) {
+    return _vm._h('index-item', {
+      attrs: {
+        "item": item,
+        "ispc": _vm.isPC
+      }
+    })
+  })]), " ", _vm._h('div', {
+    staticClass: "box m-page box-do"
+  }, [_vm._h('div', {
+    staticClass: "w-icon w-icon-2"
+  }), " ", _vm._h('div', {
+    staticClass: "w-icon w-icon-3"
+  }), " ", (_vm.topics.hasNext) ? _vm._h('a', {
     attrs: {
-      "title": "Copyright"
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.loadMore()
+      }
     }
-  }, ["©"]), " ", _vm._h('a', {
-    attrs: {
-      "href": "/"
-    }
-  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _vm._h('span', {
-    staticClass: "beian"
-  }, [_vm._h('i'), " ", _vm._h('a', {
-    attrs: {
-      "target": "_blank",
-      "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000"
-    }
-  }, ["浙公网安备 000000000000号"])])])
-}]}
+  }, ["加载更多"]) : _vm._h('span', ["好厉害, 竟然翻到最后一页了..."]), " "])])
+},staticRenderFns: []}
 
 /***/ },
 /* 133 */
@@ -5534,6 +5629,20 @@ module.exports={render:function (){var _vm=this;
 module.exports={render:function (){var _vm=this;
   return _vm._h('div', {
     staticClass: "g-mn"
+  }, [(_vm.article.data) ? [_vm._h('article-item', {
+    attrs: {
+      "article": _vm.article
+    }
+  }), " ", _vm._h('comment')] : _vm._e()])
+},staticRenderFns: []}
+
+/***/ },
+/* 135 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._h('div', {
+    staticClass: "g-mn"
   }, [_vm._h('div', {
     staticClass: "box"
   }, [_vm._h('ajax-form', {
@@ -5644,89 +5753,6 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
-/* 135 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [_vm._h('div', {
-    staticClass: "posts"
-  }, [_vm._h('div', {
-    staticClass: "m-post box article"
-  }, [_vm._h('a', {
-    staticClass: "w-icon w-icon-1",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('a', {
-    staticClass: "w-icon2",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('div', {
-    staticClass: "info"
-  }, [_vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.creat_date)
-    }
-  }), " ", _vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _vm._h('a', {
-    staticClass: "comnum",
-    attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.comment_count)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "cont cont-1"
-  }, [_vm._h('div', {
-    staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
-    attrs: {
-      "to": '/article/' + _vm.article.data._id
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.title)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "markdown-body",
-    domProps: {
-      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
-    }
-  })])]), " ", _vm._h('div', {
-    staticClass: "info info-1"
-  })])]), " ", _vm._h('div', {
-    staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
-    staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
-    staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.article.prev.prev_id) ? _vm._h('router-link', {
-    staticClass: "prev",
-    attrs: {
-      "to": '/article/' + _vm.article.prev.prev_id,
-      "id": "__prev_permalink__"
-    }
-  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _vm._h('span', {
-    staticClass: "prev"
-  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _vm._h('router-link', {
-    staticClass: "next",
-    attrs: {
-      "to": '/article/' + _vm.article.next.next_id,
-      "id": "__next_permalink__"
-    }
-  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _vm._h('span', {
-    staticClass: "next"
-  }, ["下一篇"]), " "])])
-},staticRenderFns: []}
-
-/***/ },
 /* 136 */
 /***/ function(module, exports) {
 
@@ -5800,69 +5826,19 @@ module.exports={render:function (){var _vm=this;
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "index m-post box article"
-  }, [_vm._h('a', {
-    staticClass: "w-icon w-icon-1",
+  return _vm._h('form', {
     attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('a', {
-    staticClass: "w-icon2",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('div', {
-    staticClass: "info"
-  }, [_vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.item.creat_date)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "cont cont-1"
-  }, [_vm._h('div', {
-    staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
-    attrs: {
-      "to": '/article/' + _vm.item._id
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.item.title)
-    }
-  })]), " ", (_vm.ispc) ? _vm._h('div', {
-    staticClass: "markdown-body",
-    class: !_vm.showMore ? 'showless' : '',
-    domProps: {
-      "innerHTML": _vm._s(_vm.addTarget(_vm.item.html))
-    }
-  }) : _vm._e(), " ", (_vm.ispc) ? _vm._h('div', {
-    staticClass: "more-less"
-  }, [(!_vm.showMore) ? _vm._h('a', {
-    staticClass: "more",
-    attrs: {
-      "href": "javascript:;"
+      "action": _vm.action,
+      "method": _vm.method,
+      "enctype": _vm.enctype
     },
     on: {
-      "click": function($event) {
-        _vm.open($event)
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.handleAjaxFormSubmit($event)
       }
     }
-  }, ["展开 ↓"]) : _vm._h('a', {
-    staticClass: "less",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": function($event) {
-        _vm.open($event)
-      }
-    }
-  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _vm._h('div', {
-    staticClass: "info info-1"
-  })])
+  }, [_vm._t("default")])
 },staticRenderFns: []}
 
 /***/ },
