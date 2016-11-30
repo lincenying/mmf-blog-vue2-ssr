@@ -73,7 +73,7 @@ app.set('view engine', 'ejs')
 
 app.use(favicon('./favicon.ico'))
 app.use(compression({threshold: 0}))
-app.use(logger('dev'))
+app.use(logger('[:date[clf]] :remote-addr ":method :url" :status :res[content-length] ":referrer" ":user-agent"'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())

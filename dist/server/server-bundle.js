@@ -1216,7 +1216,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(56)
 
 /* template */
-var __vue_template__ = __webpack_require__(137)
+var __vue_template__ = __webpack_require__(130)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1367,7 +1367,7 @@ var router = new _vueRouter2.default({
 });
 
 exports.default = router;
-/* WEBPACK VAR INJECTION */}.call(exports, "src\\router"))
+/* WEBPACK VAR INJECTION */}.call(exports, "src/router"))
 
 /***/ },
 /* 51 */
@@ -1603,8 +1603,9 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
 }), _actions);
 
 var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_TOPICS, function (state, _ref10) {
-    var hasNext = _ref10.hasNext,
-        list = _ref10.list,
+    var list = _ref10.list,
+        hasNext = _ref10.hasNext,
+        hasPrev = _ref10.hasPrev,
         page = _ref10.page,
         path = _ref10.path;
 
@@ -1614,7 +1615,7 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
         list = state.topic.list.concat(list);
     }
     state.topic = {
-        list: list, hasNext: hasNext, page: page, path: path
+        list: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
 }), (0, _defineProperty3.default)(_mutations, _mutationTypes.RECEIVE_ARTICLE, function (state, _ref11) {
     var data = _ref11.data,
@@ -4666,7 +4667,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(54)
 
 /* template */
-var __vue_template__ = __webpack_require__(129)
+var __vue_template__ = __webpack_require__(131)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4697,7 +4698,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(55)
 
 /* template */
-var __vue_template__ = __webpack_require__(126)
+var __vue_template__ = __webpack_require__(128)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4726,7 +4727,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(57)
 
 /* template */
-var __vue_template__ = __webpack_require__(127)
+var __vue_template__ = __webpack_require__(126)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4755,7 +4756,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(58)
 
 /* template */
-var __vue_template__ = __webpack_require__(131)
+var __vue_template__ = __webpack_require__(135)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4813,7 +4814,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(60)
 
 /* template */
-var __vue_template__ = __webpack_require__(125)
+var __vue_template__ = __webpack_require__(132)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4842,7 +4843,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(61)
 
 /* template */
-var __vue_template__ = __webpack_require__(130)
+var __vue_template__ = __webpack_require__(137)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4871,7 +4872,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(62)
 
 /* template */
-var __vue_template__ = __webpack_require__(128)
+var __vue_template__ = __webpack_require__(129)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4900,7 +4901,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(63)
 
 /* template */
-var __vue_template__ = __webpack_require__(135)
+var __vue_template__ = __webpack_require__(134)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4987,7 +4988,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(66)
 
 /* template */
-var __vue_template__ = __webpack_require__(134)
+var __vue_template__ = __webpack_require__(127)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5016,7 +5017,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(67)
 
 /* template */
-var __vue_template__ = __webpack_require__(132)
+var __vue_template__ = __webpack_require__(125)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5038,99 +5039,44 @@ module.exports = __vue_exports__
 /* 125 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "g-ft"
-  }, [_vm._h('span', {
-    staticClass: "copy"
-  }, [_vm._h('span', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "g-mn"
+  }, [_h('div', {
+    staticClass: "posts"
+  }, [_vm._l((_vm.topics.list), function(item) {
+    return _h('index-item', {
+      attrs: {
+        "item": item,
+        "ispc": _vm.isPC
+      }
+    })
+  })]), " ", _h('div', {
+    staticClass: "box m-page box-do"
+  }, [_h('div', {
+    staticClass: "w-icon w-icon-2"
+  }), " ", _h('div', {
+    staticClass: "w-icon w-icon-3"
+  }), " ", (_vm.topics.hasNext) ? _h('a', {
     attrs: {
-      "title": "Copyright"
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.loadMore()
+      }
     }
-  }, ["©"]), " ", _vm._h('a', {
-    attrs: {
-      "href": "/"
-    }
-  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _vm._h('span', {
-    staticClass: "beian"
-  }, [_vm._h('i'), " ", _vm._h('a', {
-    attrs: {
-      "target": "_blank",
-      "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000"
-    }
-  }, ["浙公网安备 000000000000号"])])])
-}]}
+  }, ["加载更多"]) : _h('span', ["好厉害, 竟然翻到最后一页了..."]), " "])])
+},staticRenderFns: []}
 
 /***/ },
 /* 126 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [_vm._h('div', {
-    staticClass: "box m-tit"
-  }, [_vm._h('h1', [_vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.slideToggle
-    }
-  })]), " ", _vm._h('a', {
-    staticClass: "w-icon",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.slideToggle
-    }
-  }, ["查看个人介绍"]), " ", _vm._h('a', {
-    staticClass: "github",
-    attrs: {
-      "href": "https://github.com/lincenying/mmf-blog-vue2-ssr",
-      "target": "_blank"
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "box box-do m-about"
-  }, [_vm._m(0), " ", _vm._h('p', ["姓名: 林岑影"]), " ", _vm._h('p', ["年龄: 1987.09"]), " ", _vm._m(1), " ", _vm._h('p', ["技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP"]), " ", _vm._h('a', {
-    staticClass: "w-icon",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.slideToggle
-    }
-  }, ["收起个人介绍"])])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "logo"
-  }, [_vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [_vm._h('img', {
-    attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3dy4pmj302o02odfo.jpg"
-    }
-  })])])
-},function (){var _vm=this;
-  return _vm._h('p', ["职业: 前端开发 | Github: ", _vm._h('a', {
-    attrs: {
-      "href": "https://github.com/lincenying",
-      "target": "_blank"
-    }
-  }, ["@lincenying"])])
-}]}
-
-/***/ },
-/* 127 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "arrow"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "go-top",
     attrs: {
       "href": "javascript:;"
@@ -5138,7 +5084,7 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.goTop
     }
-  }), " ", _vm._h('a', {
+  }), " ", _h('a', {
     staticClass: "go-back",
     attrs: {
       "href": "javascript:;"
@@ -5150,15 +5096,89 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
+/* 127 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "g-mn"
+  }, [(_vm.article.data) ? [_h('article-item', {
+    attrs: {
+      "article": _vm.article
+    }
+  }), " ", _h('comment')] : _vm._e()])
+},staticRenderFns: []}
+
+/***/ },
 /* 128 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [(_vm.visit) ? _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
+    staticClass: "box m-tit"
+  }, [_h('h1', [_h('a', {
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.slideToggle
+    }
+  })]), " ", _h('a', {
+    staticClass: "w-icon",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.slideToggle
+    }
+  }, ["查看个人介绍"]), " ", _h('a', {
+    staticClass: "github",
+    attrs: {
+      "href": "https://github.com/lincenying/mmf-blog-vue2-ssr",
+      "target": "_blank"
+    }
+  })]), " ", _h('div', {
+    staticClass: "box box-do m-about"
+  }, [_vm._m(0), " ", _h('p', ["姓名: 林岑影"]), " ", _h('p', ["年龄: 1987.09"]), " ", _vm._m(1), " ", _h('p', ["技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP"]), " ", _h('a', {
+    staticClass: "w-icon",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.slideToggle
+    }
+  }, ["收起个人介绍"])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "logo"
+  }, [_h('a', {
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3dy4pmj302o02odfo.jpg"
+    }
+  })])])
+},function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('p', ["职业: 前端开发 | Github: ", _h('a', {
+    attrs: {
+      "href": "https://github.com/lincenying",
+      "target": "_blank"
+    }
+  }, ["@lincenying"])])
+}]}
+
+/***/ },
+/* 129 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [(_vm.visit) ? _h('div', {
     staticClass: "box menu"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "m-sch"
-  }, [_vm._h('input', {
+  }, [_h('input', {
     staticClass: "sch",
     attrs: {
       "id": "search_content",
@@ -5172,296 +5192,158 @@ module.exports={render:function (){var _vm=this;
         _vm.search($event)
       }
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "m-nav"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "menuOpen"
-  }, [_vm._h('li', {
+  }, [_h('li', {
     staticClass: "tag-all"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/",
       "exact": ""
     }
-  }, [_vm._h('i'), "All"])]), " ", _vm._h('li', {
+  }, [_h('i'), "All"])]), " ", _h('li', {
     staticClass: "tag-life"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/1"
     }
-  }, [_vm._h('i'), "Life"])]), " ", _vm._h('li', {
+  }, [_h('i'), "Life"])]), " ", _h('li', {
     staticClass: "tag-study"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/2"
     }
-  }, [_vm._h('i'), "Study"])]), " ", _vm._h('li', {
+  }, [_h('i'), "Study"])]), " ", _h('li', {
     staticClass: "tag-other"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/3"
     }
-  }, [_vm._h('i'), "Other"])])])])]) : _vm._h('div', {
+  }, [_h('i'), "Other"])])])])]) : _h('div', {
     staticClass: "box menu"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "m-nav"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "menuOpen"
-  }, [_vm._h('li', {
+  }, [_h('li', {
     staticClass: "tag-all"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/",
       "exact": ""
     }
-  }, [_vm._h('i'), "All"])]), " ", _vm._h('li', {
+  }, [_h('i'), "All"])]), " ", _h('li', {
     staticClass: "tag-life"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/admin/list/1"
     }
-  }, [_vm._h('i'), "List"])]), " ", _vm._h('li', {
+  }, [_h('i'), "List"])]), " ", _h('li', {
     staticClass: "tag-study"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/admin/post"
     }
-  }, [_vm._h('i'), "Post"])])])])]), " "])
-},staticRenderFns: []}
-
-/***/ },
-/* 129 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "g-doc",
-    attrs: {
-      "id": "app"
-    }
-  }, [_vm._h('div', {
-    staticClass: "g-hd"
-  }, [_vm._h('About'), " ", _vm._h('Navigation', {
-    attrs: {
-      "visit": _vm.visit,
-      "search": _vm.search
-    }
-  })]), " ", _vm._h('transition', {
-    attrs: {
-      "name": "fade",
-      "mode": "out-in"
-    }
-  }, [_vm._h('router-view', {
-    key: _vm.key,
-    staticClass: "router"
-  })]), " ", _vm._h('Copyright'), " ", _vm._h('Arrow')])
+  }, [_h('i'), "Post"])])])])]), " "])
 },staticRenderFns: []}
 
 /***/ },
 /* 130 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "index m-post box article"
-  }, [_vm._h('a', {
-    staticClass: "w-icon w-icon-1",
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('form', {
     attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('a', {
-    staticClass: "w-icon2",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [" "]), " ", _vm._h('div', {
-    staticClass: "info"
-  }, [_vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.item.creat_date)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "cont cont-1"
-  }, [_vm._h('div', {
-    staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
-    attrs: {
-      "to": '/article/' + _vm.item._id
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.item.title)
-    }
-  })]), " ", (_vm.ispc) ? _vm._h('div', {
-    staticClass: "markdown-body",
-    class: !_vm.showMore ? 'showless' : '',
-    domProps: {
-      "innerHTML": _vm._s(_vm.addTarget(_vm.item.html))
-    }
-  }) : _vm._e(), " ", (_vm.ispc) ? _vm._h('div', {
-    staticClass: "more-less"
-  }, [(!_vm.showMore) ? _vm._h('a', {
-    staticClass: "more",
-    attrs: {
-      "href": "javascript:;"
+      "action": _vm.action,
+      "method": _vm.method,
+      "enctype": _vm.enctype
     },
     on: {
-      "click": function($event) {
-        _vm.open($event)
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.handleAjaxFormSubmit($event)
       }
     }
-  }, ["展开 ↓"]) : _vm._h('a', {
-    staticClass: "less",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": function($event) {
-        _vm.open($event)
-      }
-    }
-  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _vm._h('div', {
-    staticClass: "info info-1"
-  })])
+  }, [_vm._t("default")])
 },staticRenderFns: []}
 
 /***/ },
 /* 131 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [_vm._h('div', {
-    staticClass: "posts"
-  }, [_vm._h('div', {
-    staticClass: "m-post box article"
-  }, [_vm._h('a', {
-    staticClass: "w-icon w-icon-1",
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "g-doc",
     attrs: {
-      "href": "javascript:;"
+      "id": "app"
     }
-  }, [" "]), " ", _vm._h('a', {
-    staticClass: "w-icon2",
+  }, [_h('div', {
+    staticClass: "g-hd"
+  }, [_h('About'), " ", _h('Navigation', {
     attrs: {
-      "href": "javascript:;"
+      "visit": _vm.visit,
+      "search": _vm.search
     }
-  }, [" "]), " ", _vm._h('div', {
-    staticClass: "info"
-  }, [_vm._h('a', {
+  })]), " ", _h('transition', {
     attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.creat_date)
+      "name": "fade",
+      "mode": "out-in"
     }
-  }), " ", _vm._h('a', {
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _vm._h('a', {
-    staticClass: "comnum",
-    attrs: {
-      "href": "javascript:;"
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.comment_count)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "cont cont-1"
-  }, [_vm._h('div', {
-    staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
-    attrs: {
-      "to": '/article/' + _vm.article.data._id
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.title)
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "markdown-body",
-    domProps: {
-      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
-    }
-  })])]), " ", _vm._h('div', {
-    staticClass: "info info-1"
-  })])]), " ", _vm._h('div', {
-    staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
-    staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
-    staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.article.prev.prev_id) ? _vm._h('router-link', {
-    staticClass: "prev",
-    attrs: {
-      "to": '/article/' + _vm.article.prev.prev_id,
-      "id": "__prev_permalink__"
-    }
-  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _vm._h('span', {
-    staticClass: "prev"
-  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _vm._h('router-link', {
-    staticClass: "next",
-    attrs: {
-      "to": '/article/' + _vm.article.next.next_id,
-      "id": "__next_permalink__"
-    }
-  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _vm._h('span', {
-    staticClass: "next"
-  }, ["下一篇"]), " "])])
+  }, [_h('router-view', {
+    key: _vm.key,
+    staticClass: "router"
+  })]), " ", _h('Copyright'), " ", _h('Arrow')])
 },staticRenderFns: []}
 
 /***/ },
 /* 132 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "g-mn"
-  }, [_vm._h('div', {
-    staticClass: "posts"
-  }, [_vm._l((_vm.topics.list), function(item) {
-    return _vm._h('index-item', {
-      attrs: {
-        "item": item,
-        "ispc": _vm.isPC
-      }
-    })
-  })]), " ", _vm._h('div', {
-    staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
-    staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
-    staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.topics.hasNext) ? _vm._h('a', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _vm._m(0)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "g-ft"
+  }, [_h('span', {
+    staticClass: "copy"
+  }, [_h('span', {
     attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": function($event) {
-        _vm.loadMore()
-      }
+      "title": "Copyright"
     }
-  }, ["加载更多"]) : _vm._h('span', ["好厉害, 竟然翻到最后一页了..."]), " "])])
-},staticRenderFns: []}
+  }, ["©"]), " ", _h('a', {
+    attrs: {
+      "href": "/"
+    }
+  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _h('span', {
+    staticClass: "beian"
+  }, [_h('i'), " ", _h('a', {
+    attrs: {
+      "target": "_blank",
+      "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000"
+    }
+  }, ["浙公网安备 000000000000号"])])])
+}]}
 
 /***/ },
 /* 133 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "box"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "comment"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "nctitle"
-  }, ["评论"]), " ", _vm._h('div', {
+  }, ["评论"]), " ", _h('div', {
     staticClass: "bcmt"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "s-fc0 ztag ztag_tips"
-  }, ["由于该用户的权限设置，您暂时无法进行评论..."]), " ", _vm._h('div', {
+  }, ["由于该用户的权限设置，您暂时无法进行评论..."]), " ", _h('div', {
     staticClass: "bcmtadd"
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5482,7 +5364,7 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), " ", _vm._h('textarea', {
+  }), " ", _h('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5503,51 +5385,51 @@ module.exports={render:function (){var _vm=this;
         _vm.form.content = $event.target.value
       }
     }
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "bcmtbtn"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     staticClass: "ztag ztag_tips"
-  }, ["提示"]), " ", _vm._h('button', {
+  }, ["提示"]), " ", _h('button', {
     staticClass: "s-bd1 s-fc1 s-bg1 ztag",
     on: {
       "click": _vm.postComment
     }
-  }, ["发布"]), " ", _vm._h('div', {
+  }, ["发布"]), " ", _h('div', {
     staticClass: "txt s-fc0"
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "bcmtlst"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "clearfix ztag"
   }, [_vm._l((_vm.comments.list), function(item) {
-    return _vm._h('li', {
+    return _h('li', {
       staticClass: "s-bd2 s-bg2"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlsta clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstb"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       attrs: {
         "href": "javascript:;",
         "title": item.username
       }
-    }, [_vm._h('img', {
+    }, [_h('img', {
       staticClass: "itag",
       attrs: {
         "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
       }
-    })])]), " ", _vm._h('div', {
+    })])]), " ", _h('div', {
       staticClass: "bcmtlstc"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstd clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlste clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstg"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlsti"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstj"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       staticClass: "s-fc2 itag bcmtlstk",
       attrs: {
         "href": "javascript:;",
@@ -5556,9 +5438,9 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.username)
       }
-    }), " ", (item.reply_user) ? _vm._h('span', {
+    }), " ", (item.reply_user) ? _h('span', {
       staticClass: "s-fc3 itag"
-    }, ["回复了  \n                                                        ", _vm._h('a', {
+    }, ["回复了  \n                                                        ", _h('a', {
       staticClass: "s-fc2 itag",
       attrs: {
         "href": "javascript:;"
@@ -5566,16 +5448,16 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.reply_user)
       }
-    })]) : _vm._e(), " ", _vm._h('span', {
+    })]) : _vm._e(), " ", _h('span', {
       staticClass: "bcmtlstf s-fc4"
-    }, ["："]), " ", _vm._h('span', {
+    }, ["："]), " ", _h('span', {
       staticClass: "bcmtlstf s-fc4 itag",
       domProps: {
         "textContent": _vm._s(item.content)
       }
-    })])])]), " ", _vm._h('div', {
+    })])])]), " ", _h('div', {
       staticClass: "bcmtlsth"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       staticClass: "s-fc2 itag",
       staticStyle: {
         "visibility": "hidden"
@@ -5583,7 +5465,7 @@ module.exports={render:function (){var _vm=this;
       attrs: {
         "href": "javascript:;"
       }
-    }, ["删除"]), _vm._h('a', {
+    }, ["删除"]), _h('a', {
       staticClass: "s-fc2 itag",
       attrs: {
         "href": "javascript:;"
@@ -5594,11 +5476,11 @@ module.exports={render:function (){var _vm=this;
         }
       }
     }, ["回复"])])])])])])])
-  })])]), " ", _vm._m(0), " ", (_vm.comments.hasNext) ? _vm._h('div', {
+  })])]), " ", _vm._m(0), " ", (_vm.comments.hasNext) ? _h('div', {
     staticClass: "bcmtmore s-bd2"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "bcmtlsta"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "s-fc2 ztag",
     attrs: {
       "href": "javascript:;"
@@ -5609,15 +5491,15 @@ module.exports={render:function (){var _vm=this;
       }
     }
   }, ["查看更多"])])]) : _vm._e()])])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "bcmtmore s-bd2 ztag",
     staticStyle: {
       "display": "none"
     }
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "bcmtlsta"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     staticClass: "s-fc4"
   }, ["正在载入中..."])])])
 }]}
@@ -5626,37 +5508,23 @@ module.exports={render:function (){var _vm=this;
 /* 134 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [(_vm.article.data) ? [_vm._h('article-item', {
-    attrs: {
-      "article": _vm.article
-    }
-  }), " ", _vm._h('comment')] : _vm._e()])
-},staticRenderFns: []}
-
-/***/ },
-/* 135 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ajax-form', {
+  }, [_h('ajax-form', {
     attrs: {
       "id": "article-post",
       "action": _vm.api,
       "method": "post",
       "complete": _vm.onFormComplete
     }
-  }, [_vm._h('section', {
+  }, [_h('section', {
     attrs: {
       "id": "post-title"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5678,11 +5546,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.title = $event.target.value
       }
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-category"
     }
-  }, [_vm._h('select', {
+  }, [_h('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5704,39 +5572,39 @@ module.exports={render:function (){var _vm=this;
         })[0]
       }
     }
-  }, [_vm._h('option', {
+  }, [_h('option', {
     attrs: {
       "value": ""
     }
   }, ["请选择分类"]), " ", _vm._l((_vm.options), function(op) {
-    return _vm._h('option', {
+    return _h('option', {
       domProps: {
         "value": op.value,
         "textContent": _vm._s(op.name)
       }
     })
-  })])]), " ", _vm._h('section', {
+  })])]), " ", _h('section', {
     attrs: {
       "id": "post-content"
     }
-  }, [_vm._h('textarea', {
+  }, [_h('textarea', {
     staticClass: "form-control",
     attrs: {
       "id": "editor",
       "name": "content",
       "data-autosave": "editor-content"
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-submit"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     attrs: {
       "type": "hidden",
       "name": "action",
       "value": "modify"
     }
-  }), " ", _vm._h('input', {
+  }), " ", _h('input', {
     attrs: {
       "type": "hidden",
       "name": "id"
@@ -5744,7 +5612,7 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "value": _vm.form._id
     }
-  }), " ", _vm._h('button', {
+  }), " ", _h('button', {
     staticClass: "btn btn-success",
     on: {
       "click": _vm.onSubmit
@@ -5753,20 +5621,103 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
+/* 135 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
+    staticClass: "posts"
+  }, [_h('div', {
+    staticClass: "m-post box article"
+  }, [_h('a', {
+    staticClass: "w-icon w-icon-1",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _h('a', {
+    staticClass: "w-icon2",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _h('div', {
+    staticClass: "info"
+  }, [_h('a', {
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.creat_date)
+    }
+  }), " ", _h('a', {
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _h('a', {
+    staticClass: "comnum",
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.comment_count)
+    }
+  })]), " ", _h('div', {
+    staticClass: "cont cont-1"
+  }, [_h('div', {
+    staticClass: "text"
+  }, [_h('h2', [_h('router-link', {
+    attrs: {
+      "to": '/article/' + _vm.article.data._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.title)
+    }
+  })]), " ", _h('div', {
+    staticClass: "markdown-body",
+    domProps: {
+      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
+    }
+  })])]), " ", _h('div', {
+    staticClass: "info info-1"
+  })])]), " ", _h('div', {
+    staticClass: "box m-page box-do"
+  }, [_h('div', {
+    staticClass: "w-icon w-icon-2"
+  }), " ", _h('div', {
+    staticClass: "w-icon w-icon-3"
+  }), " ", (_vm.article.prev.prev_id) ? _h('router-link', {
+    staticClass: "prev",
+    attrs: {
+      "to": '/article/' + _vm.article.prev.prev_id,
+      "id": "__prev_permalink__"
+    }
+  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _h('span', {
+    staticClass: "prev"
+  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _h('router-link', {
+    staticClass: "next",
+    attrs: {
+      "to": '/article/' + _vm.article.next.next_id,
+      "id": "__next_permalink__"
+    }
+  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _h('span', {
+    staticClass: "next"
+  }, ["下一篇"]), " "])])
+},staticRenderFns: []}
+
+/***/ },
 /* 136 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "list-group"
   }, [_vm._l((_vm.topics.list), function(item) {
-    return _vm._h('li', {
+    return _h('li', {
       staticClass: "list-group-item"
-    }, [_vm._h('router-link', {
+    }, [_h('router-link', {
       attrs: {
         "to": '/article/' + item._id,
         "target": "_blank"
@@ -5774,7 +5725,7 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.title)
       }
-    }), " ", (item.is_delete == 0) ? _vm._h('a', {
+    }), " ", (item.is_delete == 0) ? _h('a', {
       staticClass: "badge badge-danger",
       attrs: {
         "href": "javascript:;"
@@ -5784,7 +5735,7 @@ module.exports={render:function (){var _vm=this;
           _vm.mdel(item._id)
         }
       }
-    }, ["删除"]) : _vm._h('a', {
+    }, ["删除"]) : _h('a', {
       staticClass: "badge badge-info",
       attrs: {
         "href": "javascript:;"
@@ -5794,25 +5745,25 @@ module.exports={render:function (){var _vm=this;
           _vm.recover(item._id)
         }
       }
-    }, ["恢复"]), " ", " ", _vm._h('router-link', {
+    }, ["恢复"]), " ", " ", _h('router-link', {
       staticClass: "badge badge-success",
       attrs: {
         "to": '/admin/edit/' + item._id + '/' + _vm.curPage
       }
     }, ["编辑"])])
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.topics.hasPrev) ? _vm._h('router-link', {
+  }), " ", (_vm.topics.hasPrev) ? _h('router-link', {
     staticClass: "prev",
     attrs: {
       "to": '/admin/list/' + _vm.prevPage,
       "id": "__prev_permalink__"
     }
-  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _vm._h('router-link', {
+  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _h('router-link', {
     staticClass: "next",
     attrs: {
       "to": '/admin/list/' + _vm.nextPage,
@@ -5825,43 +5776,93 @@ module.exports={render:function (){var _vm=this;
 /* 137 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('form', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "index m-post box article"
+  }, [_h('a', {
+    staticClass: "w-icon w-icon-1",
     attrs: {
-      "action": _vm.action,
-      "method": _vm.method,
-      "enctype": _vm.enctype
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _h('a', {
+    staticClass: "w-icon2",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [" "]), " ", _h('div', {
+    staticClass: "info"
+  }, [_h('a', {
+    attrs: {
+      "href": "javascript:;"
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.creat_date)
+    }
+  })]), " ", _h('div', {
+    staticClass: "cont cont-1"
+  }, [_h('div', {
+    staticClass: "text"
+  }, [_h('h2', [_h('router-link', {
+    attrs: {
+      "to": '/article/' + _vm.item._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.title)
+    }
+  })]), " ", (_vm.ispc) ? _h('div', {
+    staticClass: "markdown-body",
+    class: !_vm.showMore ? 'showless' : '',
+    domProps: {
+      "innerHTML": _vm._s(_vm.addTarget(_vm.item.html))
+    }
+  }) : _vm._e(), " ", (_vm.ispc) ? _h('div', {
+    staticClass: "more-less"
+  }, [(!_vm.showMore) ? _h('a', {
+    staticClass: "more",
+    attrs: {
+      "href": "javascript:;"
     },
     on: {
-      "submit": function($event) {
-        $event.preventDefault();
-        _vm.handleAjaxFormSubmit($event)
+      "click": function($event) {
+        _vm.open($event)
       }
     }
-  }, [_vm._t("default")])
+  }, ["展开 ↓"]) : _h('a', {
+    staticClass: "less",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.open($event)
+      }
+    }
+  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _h('div', {
+    staticClass: "info info-1"
+  })])
 },staticRenderFns: []}
 
 /***/ },
 /* 138 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ajax-form', {
+  }, [_h('ajax-form', {
     attrs: {
       "id": "article-post",
       "action": _vm.api,
       "method": "post",
       "complete": _vm.onFormComplete
     }
-  }, [_vm._h('section', {
+  }, [_h('section', {
     attrs: {
       "id": "post-title"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5883,11 +5884,11 @@ module.exports={render:function (){var _vm=this;
         _vm.title = $event.target.value
       }
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-category"
     }
-  }, [_vm._h('select', {
+  }, [_h('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5909,27 +5910,27 @@ module.exports={render:function (){var _vm=this;
         })[0]
       }
     }
-  }, [_vm._h('option', {
+  }, [_h('option', {
     attrs: {
       "value": ""
     }
-  }, ["请选择分类"]), " ", _vm._h('option', {
+  }, ["请选择分类"]), " ", _h('option', {
     attrs: {
       "value": "1"
     }
-  }, ["生活"]), " ", _vm._h('option', {
+  }, ["生活"]), " ", _h('option', {
     attrs: {
       "value": "2"
     }
-  }, ["工作"]), " ", _vm._h('option', {
+  }, ["工作"]), " ", _h('option', {
     attrs: {
       "value": "3"
     }
-  }, ["其他"])])]), " ", _vm._h('section', {
+  }, ["其他"])])]), " ", _h('section', {
     attrs: {
       "id": "post-content"
     }
-  }, [_vm._h('textarea', {
+  }, [_h('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5951,23 +5952,23 @@ module.exports={render:function (){var _vm=this;
         _vm.content = $event.target.value
       }
     }
-  }), " ", _vm._h('textarea', {
+  }), " ", _h('textarea', {
     staticClass: "form-control hidden",
     attrs: {
       "id": "html",
       "name": "html"
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-submit"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     attrs: {
       "type": "hidden",
       "name": "action",
       "value": "post"
     }
-  }), " ", _vm._h('button', {
+  }), " ", _h('button', {
     staticClass: "btn btn-success",
     on: {
       "click": _vm.onSubmit
