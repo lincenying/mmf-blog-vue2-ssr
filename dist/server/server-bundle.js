@@ -230,10 +230,17 @@ var ua = exports.ua = function ua() {
 
 var ssp = exports.ssp = function ssp(path) {
     if (!inBrowser) return;
-    var scrollTop = _store2.default.get(path) || 0;
-    _vue2.default.nextTick().then(function () {
-        window.scrollTo(0, scrollTop);
-    });
+    var clientHeight = document.documentElement.clientHeight,
+        scrollTop = _store2.default.get(path);
+    if (scrollTop) {
+        _vue2.default.nextTick().then(function () {
+            if (document.body.clientHeight >= scrollTop + clientHeight) {
+                window.scrollTo(0, scrollTop);
+            } else {
+                _store2.default.remove(path);
+            }
+        });
+    }
 };
 
 /***/ },
@@ -1356,7 +1363,7 @@ var router = new _vueRouter2.default({
     mode: 'history',
     base: __dirname,
     scrollBehavior: scrollBehavior,
-    routes: [{ name: 'index', path: '/:page(\\d+)?', component: _index2.default }, { name: 'category', path: '/category/:id(\\d+)/:page(\\d+)?', component: _index2.default }, { name: 'search', path: '/search/:qs/:page(\\d+)?', component: _index2.default }, { name: 'article', path: '/article/:id', component: _article2.default, meta: { scrollToTop: true } }, { name: 'list', path: '/admin/list/:page(\\d+)', component: _adminList2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'post', path: '/admin/post', component: _adminPost2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'edit', path: '/admin/edit/:id/:page', component: _adminEdit2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }]
+    routes: [{ name: 'index', path: '/', component: _index2.default }, { name: 'category', path: '/category/:id(\\d+)', component: _index2.default }, { name: 'search', path: '/search/:qs', component: _index2.default }, { name: 'article', path: '/article/:id', component: _article2.default, meta: { scrollToTop: true } }, { name: 'list', path: '/admin/list/:page(\\d+)', component: _adminList2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'post', path: '/admin/post', component: _adminPost2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }, { name: 'edit', path: '/admin/edit/:id/:page', component: _adminEdit2.default, meta: { scrollToTop: true }, beforeEnter: guardRoute }]
 });
 
 exports.default = router;
@@ -1602,8 +1609,11 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mut
         page = _ref10.page,
         path = _ref10.path;
 
-    list = [].concat(list);
-
+    if (page === 1) {
+        list = [].concat(list);
+    } else {
+        list = state.topic.list.concat(list);
+    }
     state.topic = {
         list: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
@@ -2542,30 +2552,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fetchInitialData = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(store) {
-        var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { page: 1 };
 
-        var _store$state$route, _store$state$route$pa, id, qs, page, path, base;
+        var _store$state$route, _store$state$route$pa, id, qs, path, base;
 
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, qs = _store$state$route$pa.qs, page = _store$state$route$pa.page, path = _store$state$route.path;
-
-                        config.page = page || 1;
+                        _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, qs = _store$state$route$pa.qs, path = _store$state$route.path;
                         base = (0, _extends3.default)({}, config, {
                             markdown: 1,
                             limit: 10,
                             id: id,
                             qs: qs
                         });
-                        _context.next = 5;
+                        _context.next = 4;
                         return store.dispatch('frontend/getTopics', base);
 
-                    case 5:
-                        (0, _utils.ssp)(path);
+                    case 4:
+                        if (config.page === 1) (0, _utils.ssp)(path);
 
-                    case 6:
+                    case 5:
                     case 'end':
                         return _context.stop();
                 }
@@ -2587,26 +2595,6 @@ exports.default = {
     }), {
         isPC: function isPC() {
             return (0, _utils.ua)() === "PC";
-        },
-        nextPageUrl: function nextPageUrl() {
-            var _$store$state$route$p = this.$store.state.route.params,
-                id = _$store$state$route$p.id,
-                qs = _$store$state$route$p.qs;
-
-            var nextPage = +this.topics.page + 1;
-            if (id) return '/category/' + id + '/' + nextPage;else if (qs) return '/search/' + qs + '/' + nextPage;
-            return '/' + nextPage;
-        },
-        prevPageUrl: function prevPageUrl() {
-            var _$store$state$route$p2 = this.$store.state.route.params,
-                id = _$store$state$route$p2.id,
-                qs = _$store$state$route$p2.qs;
-
-            var prevPage = +this.topics.page - 1,
-                url = void 0;
-            if (prevPage === 1) prevPage = '';else prevPage = '/' + prevPage;
-            if (id) url = '/category/' + id + prevPage;else if (qs) url = '/search/' + qs + prevPage;else url = prevPage;
-            return url === '' ? '/' : url;
         }
     }),
     methods: {
@@ -2618,7 +2606,7 @@ exports.default = {
     },
     mounted: function mounted() {
         if (this.topics.list.length <= 0 || this.$route.path !== this.topics.path) {
-            fetchInitialData(this.$store);
+            fetchInitialData(this.$store, { page: 1 });
         } else {
             (0, _utils.ssp)(this.$route.path);
             this.$store.dispatch('gProgress', 100);
@@ -2627,7 +2615,7 @@ exports.default = {
 
     watch: {
         '$route': function $route() {
-            fetchInitialData(this.$store);
+            fetchInitialData(this.$store, { page: 1 });
         }
     },
     beforeRouteLeave: function beforeRouteLeave(to, from, next) {
@@ -5051,47 +5039,44 @@ module.exports = __vue_exports__
 /* 125 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "posts"
   }, [_vm._l((_vm.topics.list), function(item) {
-    return _vm._h('index-item', {
+    return _h('index-item', {
       attrs: {
         "item": item,
         "ispc": _vm.isPC
       }
     })
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "w-icon w-icon-3"
-  }), " ", " ", (_vm.topics.hasPrev) ? _vm._h('router-link', {
-    staticClass: "prev",
+  }), " ", (_vm.topics.hasNext) ? _h('a', {
     attrs: {
-      "to": _vm.prevPageUrl,
-      "id": "__prev_permalink__"
+      "href": "javascript:;"
+    },
+    on: {
+      "click": function($event) {
+        _vm.loadMore()
+      }
     }
-  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _vm._h('router-link', {
-    staticClass: "next",
-    attrs: {
-      "to": _vm.nextPageUrl,
-      "id": "__next_permalink__"
-    }
-  }, ["下一页"]) : _vm._e()])])
+  }, ["加载更多"]) : _h('span', ["好厉害, 竟然翻到最后一页了..."]), " "])])
 },staticRenderFns: []}
 
 /***/ },
 /* 126 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "arrow"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "go-top",
     attrs: {
       "href": "javascript:;"
@@ -5099,7 +5084,7 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.goTop
     }
-  }), " ", _vm._h('a', {
+  }), " ", _h('a', {
     staticClass: "go-back",
     attrs: {
       "href": "javascript:;"
@@ -5114,31 +5099,31 @@ module.exports={render:function (){var _vm=this;
 /* 127 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [(_vm.article.data) ? [_vm._h('article-item', {
+  }, [(_vm.article.data) ? [_h('article-item', {
     attrs: {
       "article": _vm.article
     }
-  }), " ", _vm._h('comment')] : _vm._e()])
+  }), " ", _h('comment')] : _vm._e()])
 },staticRenderFns: []}
 
 /***/ },
 /* 128 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [_vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
     staticClass: "box m-tit"
-  }, [_vm._h('h1', [_vm._h('a', {
+  }, [_h('h1', [_h('a', {
     attrs: {
       "href": "javascript:;"
     },
     on: {
       "click": _vm.slideToggle
     }
-  })]), " ", _vm._h('a', {
+  })]), " ", _h('a', {
     staticClass: "w-icon",
     attrs: {
       "href": "javascript:;"
@@ -5146,15 +5131,15 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.slideToggle
     }
-  }, ["查看个人介绍"]), " ", _vm._h('a', {
+  }, ["查看个人介绍"]), " ", _h('a', {
     staticClass: "github",
     attrs: {
       "href": "https://github.com/lincenying/mmf-blog-vue2-ssr",
       "target": "_blank"
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "box box-do m-about"
-  }, [_vm._m(0), " ", _vm._h('p', ["姓名: 林岑影"]), " ", _vm._h('p', ["年龄: 1987.09"]), " ", _vm._m(1), " ", _vm._h('p', ["技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP"]), " ", _vm._h('a', {
+  }, [_vm._m(0), " ", _h('p', ["姓名: 林岑影"]), " ", _h('p', ["年龄: 1987.09"]), " ", _vm._m(1), " ", _h('p', ["技能: HTML5 + CSS3 + NodeJS + React + Vue + ES6 + Gulp + WebPack + jQuery + PHP"]), " ", _h('a', {
     staticClass: "w-icon",
     attrs: {
       "href": "javascript:;"
@@ -5163,20 +5148,20 @@ module.exports={render:function (){var _vm=this;
       "click": _vm.slideToggle
     }
   }, ["收起个人介绍"])])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "logo"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     attrs: {
       "href": "javascript:;"
     }
-  }, [_vm._h('img', {
+  }, [_h('img', {
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3dy4pmj302o02odfo.jpg"
     }
   })])])
-},function (){var _vm=this;
-  return _vm._h('p', ["职业: 前端开发 | Github: ", _vm._h('a', {
+},function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('p', ["职业: 前端开发 | Github: ", _h('a', {
     attrs: {
       "href": "https://github.com/lincenying",
       "target": "_blank"
@@ -5188,12 +5173,12 @@ module.exports={render:function (){var _vm=this;
 /* 129 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [(_vm.visit) ? _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [(_vm.visit) ? _h('div', {
     staticClass: "box menu"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "m-sch"
-  }, [_vm._h('input', {
+  }, [_h('input', {
     staticClass: "sch",
     attrs: {
       "id": "search_content",
@@ -5207,69 +5192,69 @@ module.exports={render:function (){var _vm=this;
         _vm.search($event)
       }
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "m-nav"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "menuOpen"
-  }, [_vm._h('li', {
+  }, [_h('li', {
     staticClass: "tag-all"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/",
       "exact": ""
     }
-  }, [_vm._h('i'), "All"])]), " ", _vm._h('li', {
+  }, [_h('i'), "All"])]), " ", _h('li', {
     staticClass: "tag-life"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/1"
     }
-  }, [_vm._h('i'), "Life"])]), " ", _vm._h('li', {
+  }, [_h('i'), "Life"])]), " ", _h('li', {
     staticClass: "tag-study"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/2"
     }
-  }, [_vm._h('i'), "Study"])]), " ", _vm._h('li', {
+  }, [_h('i'), "Study"])]), " ", _h('li', {
     staticClass: "tag-other"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/category/3"
     }
-  }, [_vm._h('i'), "Other"])])])])]) : _vm._h('div', {
+  }, [_h('i'), "Other"])])])])]) : _h('div', {
     staticClass: "box menu"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "m-nav"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "menuOpen"
-  }, [_vm._h('li', {
+  }, [_h('li', {
     staticClass: "tag-all"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/",
       "exact": ""
     }
-  }, [_vm._h('i'), "All"])]), " ", _vm._h('li', {
+  }, [_h('i'), "All"])]), " ", _h('li', {
     staticClass: "tag-life"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/admin/list/1"
     }
-  }, [_vm._h('i'), "List"])]), " ", _vm._h('li', {
+  }, [_h('i'), "List"])]), " ", _h('li', {
     staticClass: "tag-study"
-  }, [_vm._h('router-link', {
+  }, [_h('router-link', {
     attrs: {
       "to": "/admin/post"
     }
-  }, [_vm._h('i'), "Post"])])])])]), " "])
+  }, [_h('i'), "Post"])])])])]), " "])
 },staticRenderFns: []}
 
 /***/ },
 /* 130 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('form', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('form', {
     attrs: {
       "action": _vm.action,
       "method": _vm.method,
@@ -5288,52 +5273,52 @@ module.exports={render:function (){var _vm=this;
 /* 131 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-doc",
     attrs: {
       "id": "app"
     }
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "g-hd"
-  }, [_vm._h('About'), " ", _vm._h('Navigation', {
+  }, [_h('About'), " ", _h('Navigation', {
     attrs: {
       "visit": _vm.visit,
       "search": _vm.search
     }
-  })]), " ", _vm._h('transition', {
+  })]), " ", _h('transition', {
     attrs: {
       "name": "fade",
       "mode": "out-in"
     }
-  }, [_vm._h('router-view', {
+  }, [_h('router-view', {
     key: _vm.key,
     staticClass: "router"
-  })]), " ", _vm._h('Copyright'), " ", _vm._h('Arrow')])
+  })]), " ", _h('Copyright'), " ", _h('Arrow')])
 },staticRenderFns: []}
 
 /***/ },
 /* 132 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-ft"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     staticClass: "copy"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     attrs: {
       "title": "Copyright"
     }
-  }, ["©"]), " ", _vm._h('a', {
+  }, ["©"]), " ", _h('a', {
     attrs: {
       "href": "/"
     }
-  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _vm._h('span', {
+  }, ["M·M·F 小屋"]), " 2016.06"]), " ", _h('span', {
     staticClass: "beian"
-  }, [_vm._h('i'), " ", _vm._h('a', {
+  }, [_h('i'), " ", _h('a', {
     attrs: {
       "target": "_blank",
       "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=000000000000"
@@ -5345,20 +5330,20 @@ module.exports={render:function (){var _vm=this;
 /* 133 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "box"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "comment"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "nctitle"
-  }, ["评论"]), " ", _vm._h('div', {
+  }, ["评论"]), " ", _h('div', {
     staticClass: "bcmt"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "s-fc0 ztag ztag_tips"
-  }, ["由于该用户的权限设置，您暂时无法进行评论..."]), " ", _vm._h('div', {
+  }, ["由于该用户的权限设置，您暂时无法进行评论..."]), " ", _h('div', {
     staticClass: "bcmtadd"
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5379,7 +5364,7 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), " ", _vm._h('textarea', {
+  }), " ", _h('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5400,51 +5385,51 @@ module.exports={render:function (){var _vm=this;
         _vm.form.content = $event.target.value
       }
     }
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "bcmtbtn"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     staticClass: "ztag ztag_tips"
-  }, ["提示"]), " ", _vm._h('button', {
+  }, ["提示"]), " ", _h('button', {
     staticClass: "s-bd1 s-fc1 s-bg1 ztag",
     on: {
       "click": _vm.postComment
     }
-  }, ["发布"]), " ", _vm._h('div', {
+  }, ["发布"]), " ", _h('div', {
     staticClass: "txt s-fc0"
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "bcmtlst"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "clearfix ztag"
   }, [_vm._l((_vm.comments.list), function(item) {
-    return _vm._h('li', {
+    return _h('li', {
       staticClass: "s-bd2 s-bg2"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlsta clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstb"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       attrs: {
         "href": "javascript:;",
         "title": item.username
       }
-    }, [_vm._h('img', {
+    }, [_h('img', {
       staticClass: "itag",
       attrs: {
         "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
       }
-    })])]), " ", _vm._h('div', {
+    })])]), " ", _h('div', {
       staticClass: "bcmtlstc"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstd clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlste clearfix"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstg"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlsti"
-    }, [_vm._h('div', {
+    }, [_h('div', {
       staticClass: "bcmtlstj"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       staticClass: "s-fc2 itag bcmtlstk",
       attrs: {
         "href": "javascript:;",
@@ -5453,9 +5438,9 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.username)
       }
-    }), " ", (item.reply_user) ? _vm._h('span', {
+    }), " ", (item.reply_user) ? _h('span', {
       staticClass: "s-fc3 itag"
-    }, ["回复了  \n                                                        ", _vm._h('a', {
+    }, ["回复了  \n                                                        ", _h('a', {
       staticClass: "s-fc2 itag",
       attrs: {
         "href": "javascript:;"
@@ -5463,16 +5448,16 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.reply_user)
       }
-    })]) : _vm._e(), " ", _vm._h('span', {
+    })]) : _vm._e(), " ", _h('span', {
       staticClass: "bcmtlstf s-fc4"
-    }, ["："]), " ", _vm._h('span', {
+    }, ["："]), " ", _h('span', {
       staticClass: "bcmtlstf s-fc4 itag",
       domProps: {
         "textContent": _vm._s(item.content)
       }
-    })])])]), " ", _vm._h('div', {
+    })])])]), " ", _h('div', {
       staticClass: "bcmtlsth"
-    }, [_vm._h('a', {
+    }, [_h('a', {
       staticClass: "s-fc2 itag",
       staticStyle: {
         "visibility": "hidden"
@@ -5480,7 +5465,7 @@ module.exports={render:function (){var _vm=this;
       attrs: {
         "href": "javascript:;"
       }
-    }, ["删除"]), _vm._h('a', {
+    }, ["删除"]), _h('a', {
       staticClass: "s-fc2 itag",
       attrs: {
         "href": "javascript:;"
@@ -5491,11 +5476,11 @@ module.exports={render:function (){var _vm=this;
         }
       }
     }, ["回复"])])])])])])])
-  })])]), " ", _vm._m(0), " ", (_vm.comments.hasNext) ? _vm._h('div', {
+  })])]), " ", _vm._m(0), " ", (_vm.comments.hasNext) ? _h('div', {
     staticClass: "bcmtmore s-bd2"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "bcmtlsta"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "s-fc2 ztag",
     attrs: {
       "href": "javascript:;"
@@ -5506,15 +5491,15 @@ module.exports={render:function (){var _vm=this;
       }
     }
   }, ["查看更多"])])]) : _vm._e()])])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "bcmtmore s-bd2 ztag",
     staticStyle: {
       "display": "none"
     }
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "bcmtlsta"
-  }, [_vm._h('span', {
+  }, [_h('span', {
     staticClass: "s-fc4"
   }, ["正在载入中..."])])])
 }]}
@@ -5523,23 +5508,23 @@ module.exports={render:function (){var _vm=this;
 /* 134 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ajax-form', {
+  }, [_h('ajax-form', {
     attrs: {
       "id": "article-post",
       "action": _vm.api,
       "method": "post",
       "complete": _vm.onFormComplete
     }
-  }, [_vm._h('section', {
+  }, [_h('section', {
     attrs: {
       "id": "post-title"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5561,11 +5546,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.title = $event.target.value
       }
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-category"
     }
-  }, [_vm._h('select', {
+  }, [_h('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5587,39 +5572,39 @@ module.exports={render:function (){var _vm=this;
         })[0]
       }
     }
-  }, [_vm._h('option', {
+  }, [_h('option', {
     attrs: {
       "value": ""
     }
   }, ["请选择分类"]), " ", _vm._l((_vm.options), function(op) {
-    return _vm._h('option', {
+    return _h('option', {
       domProps: {
         "value": op.value,
         "textContent": _vm._s(op.name)
       }
     })
-  })])]), " ", _vm._h('section', {
+  })])]), " ", _h('section', {
     attrs: {
       "id": "post-content"
     }
-  }, [_vm._h('textarea', {
+  }, [_h('textarea', {
     staticClass: "form-control",
     attrs: {
       "id": "editor",
       "name": "content",
       "data-autosave": "editor-content"
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-submit"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     attrs: {
       "type": "hidden",
       "name": "action",
       "value": "modify"
     }
-  }), " ", _vm._h('input', {
+  }), " ", _h('input', {
     attrs: {
       "type": "hidden",
       "name": "id"
@@ -5627,7 +5612,7 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "value": _vm.form._id
     }
-  }), " ", _vm._h('button', {
+  }), " ", _h('button', {
     staticClass: "btn btn-success",
     on: {
       "click": _vm.onSubmit
@@ -5639,35 +5624,35 @@ module.exports={render:function (){var _vm=this;
 /* 135 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', [_vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
     staticClass: "posts"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "m-post box article"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "w-icon w-icon-1",
     attrs: {
       "href": "javascript:;"
     }
-  }, [" "]), " ", _vm._h('a', {
+  }, [" "]), " ", _h('a', {
     staticClass: "w-icon2",
     attrs: {
       "href": "javascript:;"
     }
-  }, [" "]), " ", _vm._h('div', {
+  }, [" "]), " ", _h('div', {
     staticClass: "info"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     attrs: {
       "href": "javascript:;"
     },
     domProps: {
       "textContent": _vm._s(_vm.article.data.creat_date)
     }
-  }), " ", _vm._h('a', {
+  }), " ", _h('a', {
     attrs: {
       "href": "javascript:;"
     }
-  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _vm._h('a', {
+  }, ["浏览: " + _vm._s(_vm.article.data.visit)]), " ", _h('a', {
     staticClass: "comnum",
     attrs: {
       "href": "javascript:;"
@@ -5675,45 +5660,45 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "textContent": _vm._s(_vm.article.data.comment_count)
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "cont cont-1"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
+  }, [_h('h2', [_h('router-link', {
     attrs: {
       "to": '/article/' + _vm.article.data._id
     },
     domProps: {
       "textContent": _vm._s(_vm.article.data.title)
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "markdown-body",
     domProps: {
       "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
     }
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "info info-1"
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.article.prev.prev_id) ? _vm._h('router-link', {
+  }), " ", (_vm.article.prev.prev_id) ? _h('router-link', {
     staticClass: "prev",
     attrs: {
       "to": '/article/' + _vm.article.prev.prev_id,
       "id": "__prev_permalink__"
     }
-  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _vm._h('span', {
+  }, ["上一篇 > " + _vm._s(_vm.article.prev.prev_title)]) : _h('span', {
     staticClass: "prev"
-  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _vm._h('router-link', {
+  }, ["上一篇"]), " ", " ", (_vm.article.next.next_id) ? _h('router-link', {
     staticClass: "next",
     attrs: {
       "to": '/article/' + _vm.article.next.next_id,
       "id": "__next_permalink__"
     }
-  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _vm._h('span', {
+  }, [_vm._s(_vm.article.next.next_title) + " < 下一篇"]) : _h('span', {
     staticClass: "next"
   }, ["下一篇"]), " "])])
 },staticRenderFns: []}
@@ -5722,17 +5707,17 @@ module.exports={render:function (){var _vm=this;
 /* 136 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ul', {
+  }, [_h('ul', {
     staticClass: "list-group"
   }, [_vm._l((_vm.topics.list), function(item) {
-    return _vm._h('li', {
+    return _h('li', {
       staticClass: "list-group-item"
-    }, [_vm._h('router-link', {
+    }, [_h('router-link', {
       attrs: {
         "to": '/article/' + item._id,
         "target": "_blank"
@@ -5740,7 +5725,7 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "textContent": _vm._s(item.title)
       }
-    }), " ", (item.is_delete == 0) ? _vm._h('a', {
+    }), " ", (item.is_delete == 0) ? _h('a', {
       staticClass: "badge badge-danger",
       attrs: {
         "href": "javascript:;"
@@ -5750,7 +5735,7 @@ module.exports={render:function (){var _vm=this;
           _vm.mdel(item._id)
         }
       }
-    }, ["删除"]) : _vm._h('a', {
+    }, ["删除"]) : _h('a', {
       staticClass: "badge badge-info",
       attrs: {
         "href": "javascript:;"
@@ -5760,25 +5745,25 @@ module.exports={render:function (){var _vm=this;
           _vm.recover(item._id)
         }
       }
-    }, ["恢复"]), " ", " ", _vm._h('router-link', {
+    }, ["恢复"]), " ", " ", _h('router-link', {
       staticClass: "badge badge-success",
       attrs: {
         "to": '/admin/edit/' + item._id + '/' + _vm.curPage
       }
     }, ["编辑"])])
-  })])]), " ", _vm._h('div', {
+  })])]), " ", _h('div', {
     staticClass: "box m-page box-do"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "w-icon w-icon-2"
-  }), " ", _vm._h('div', {
+  }), " ", _h('div', {
     staticClass: "w-icon w-icon-3"
-  }), " ", (_vm.topics.hasPrev) ? _vm._h('router-link', {
+  }), " ", (_vm.topics.hasPrev) ? _h('router-link', {
     staticClass: "prev",
     attrs: {
       "to": '/admin/list/' + _vm.prevPage,
       "id": "__prev_permalink__"
     }
-  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _vm._h('router-link', {
+  }, ["上一页"]) : _vm._e(), " ", (_vm.topics.hasNext) ? _h('router-link', {
     staticClass: "next",
     attrs: {
       "to": '/admin/list/' + _vm.nextPage,
@@ -5791,48 +5776,48 @@ module.exports={render:function (){var _vm=this;
 /* 137 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "index m-post box article"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     staticClass: "w-icon w-icon-1",
     attrs: {
       "href": "javascript:;"
     }
-  }, [" "]), " ", _vm._h('a', {
+  }, [" "]), " ", _h('a', {
     staticClass: "w-icon2",
     attrs: {
       "href": "javascript:;"
     }
-  }, [" "]), " ", _vm._h('div', {
+  }, [" "]), " ", _h('div', {
     staticClass: "info"
-  }, [_vm._h('a', {
+  }, [_h('a', {
     attrs: {
       "href": "javascript:;"
     },
     domProps: {
       "textContent": _vm._s(_vm.item.creat_date)
     }
-  })]), " ", _vm._h('div', {
+  })]), " ", _h('div', {
     staticClass: "cont cont-1"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "text"
-  }, [_vm._h('h2', [_vm._h('router-link', {
+  }, [_h('h2', [_h('router-link', {
     attrs: {
       "to": '/article/' + _vm.item._id
     },
     domProps: {
       "textContent": _vm._s(_vm.item.title)
     }
-  })]), " ", (_vm.ispc) ? _vm._h('div', {
+  })]), " ", (_vm.ispc) ? _h('div', {
     staticClass: "markdown-body",
     class: !_vm.showMore ? 'showless' : '',
     domProps: {
       "innerHTML": _vm._s(_vm.addTarget(_vm.item.html))
     }
-  }) : _vm._e(), " ", (_vm.ispc) ? _vm._h('div', {
+  }) : _vm._e(), " ", (_vm.ispc) ? _h('div', {
     staticClass: "more-less"
-  }, [(!_vm.showMore) ? _vm._h('a', {
+  }, [(!_vm.showMore) ? _h('a', {
     staticClass: "more",
     attrs: {
       "href": "javascript:;"
@@ -5842,7 +5827,7 @@ module.exports={render:function (){var _vm=this;
         _vm.open($event)
       }
     }
-  }, ["展开 ↓"]) : _vm._h('a', {
+  }, ["展开 ↓"]) : _h('a', {
     staticClass: "less",
     attrs: {
       "href": "javascript:;"
@@ -5852,7 +5837,7 @@ module.exports={render:function (){var _vm=this;
         _vm.open($event)
       }
     }
-  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _vm._h('div', {
+  }, ["收起 ↑"]), " "]) : _vm._e()])]), " ", _h('div', {
     staticClass: "info info-1"
   })])
 },staticRenderFns: []}
@@ -5861,23 +5846,23 @@ module.exports={render:function (){var _vm=this;
 /* 138 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
     staticClass: "g-mn"
-  }, [_vm._h('div', {
+  }, [_h('div', {
     staticClass: "box"
-  }, [_vm._h('ajax-form', {
+  }, [_h('ajax-form', {
     attrs: {
       "id": "article-post",
       "action": _vm.api,
       "method": "post",
       "complete": _vm.onFormComplete
     }
-  }, [_vm._h('section', {
+  }, [_h('section', {
     attrs: {
       "id": "post-title"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5899,11 +5884,11 @@ module.exports={render:function (){var _vm=this;
         _vm.title = $event.target.value
       }
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-category"
     }
-  }, [_vm._h('select', {
+  }, [_h('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5925,27 +5910,27 @@ module.exports={render:function (){var _vm=this;
         })[0]
       }
     }
-  }, [_vm._h('option', {
+  }, [_h('option', {
     attrs: {
       "value": ""
     }
-  }, ["请选择分类"]), " ", _vm._h('option', {
+  }, ["请选择分类"]), " ", _h('option', {
     attrs: {
       "value": "1"
     }
-  }, ["生活"]), " ", _vm._h('option', {
+  }, ["生活"]), " ", _h('option', {
     attrs: {
       "value": "2"
     }
-  }, ["工作"]), " ", _vm._h('option', {
+  }, ["工作"]), " ", _h('option', {
     attrs: {
       "value": "3"
     }
-  }, ["其他"])])]), " ", _vm._h('section', {
+  }, ["其他"])])]), " ", _h('section', {
     attrs: {
       "id": "post-content"
     }
-  }, [_vm._h('textarea', {
+  }, [_h('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -5967,23 +5952,23 @@ module.exports={render:function (){var _vm=this;
         _vm.content = $event.target.value
       }
     }
-  }), " ", _vm._h('textarea', {
+  }), " ", _h('textarea', {
     staticClass: "form-control hidden",
     attrs: {
       "id": "html",
       "name": "html"
     }
-  })]), " ", _vm._h('section', {
+  })]), " ", _h('section', {
     attrs: {
       "id": "post-submit"
     }
-  }, [_vm._h('input', {
+  }, [_h('input', {
     attrs: {
       "type": "hidden",
       "name": "action",
       "value": "post"
     }
-  }), " ", _vm._h('button', {
+  }), " ", _h('button', {
     staticClass: "btn btn-success",
     on: {
       "click": _vm.onSubmit

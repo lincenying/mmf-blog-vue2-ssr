@@ -83,7 +83,7 @@ app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
 app.use('/api', routes)
 
-app.get(['/:page(\\d+)?', '/category/:id/:page(\\d+)?', '/search/:qs/:page(\\d+)?', '/article/:id', '/admin/list/:page', '/admin/post', '/admin/edit/:id/:page'], (req, res) => {
+app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page', '/admin/post', '/admin/edit/:id/:page'], (req, res) => {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
