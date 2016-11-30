@@ -29,7 +29,7 @@ const fetchInitialData = async (store, config = {}) => {
         qs
     }
     await store.dispatch('frontend/getTopics', base)
-    if (config.page === 1) ssp(path)
+    ssp(path)
 }
 export default {
     prefetch: fetchInitialData,
