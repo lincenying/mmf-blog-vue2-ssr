@@ -50,3 +50,8 @@ http://localhost:8080
 
 登录
 http://localhost:8080/login
+
+添加管理员
+http://localhost:8080/api/admin
+
+管理员添加成功后, 会自动生成 admin.lock 文件锁定, 如果需要继续添加, 请把该文件删除

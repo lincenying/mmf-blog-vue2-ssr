@@ -1,30 +1,46 @@
+var fs = require('fs')
 var mongoose = require('../mongoose')
 var User = mongoose.model('User')
 var md5 = require('md5')
 
+function fsExistsSync(path) {
+    try {
+        fs.accessSync(path, fs.F_OK)
+    } catch(e) {
+        return false
+    }
+    return true
+}
+
 exports.insertUser = (req, res, next) => {
     var password = req.body.password,
         username = req.body.username
-    if (!username || !password) {
-        res.render('admin.html', { message: '请输入用户密码' })
+
+    if (fsExistsSync('./admin.lock')) {
+        res.render('admin.html', {message: '请先把 admin.lock 删除'})
     } else {
-        User.findOneAsync({
-            username
-        })
-        .then(result => {
-            if (result) {
-                return '该用户已经存在'
-            }
-            return User.createAsync({
-                username,
-                password: md5(password),
-                leval: 9
-            }).then(() => {
-                return '添加用户成功: '+username+', 密码: '+password
+        if (!username || !password) {
+            res.render('admin.html', { message: '请输入用户密码' })
+        } else {
+            User.findOneAsync({
+                username
             })
-        }).then(message => {
-            res.render('admin.html', { message })
-        }).catch(err => next(err))
+            .then(result => {
+                if (result) {
+                    return '该用户已经存在'
+                }
+                return User.createAsync({
+                    username,
+                    password: md5(password),
+                    leval: 9
+                }).then(() => {
+                    fs.writeFileSync('./admin.lock', '')
+                    return '添加用户成功: '+username+', 密码: '+password
+                })
+            }).then(message => {
+                res.render('admin.html', { message })
+            }).catch(err => next(err))
+        }
     }
 }
 
