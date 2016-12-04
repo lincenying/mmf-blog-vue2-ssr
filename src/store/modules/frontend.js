@@ -25,46 +25,43 @@ const state = {
 }
 
 const actions = {
-    ['frontend/getTopics']({commit, rootState: {route: { path }}}, config) {
-        return api.get('frontend/topics', config).then(({ data }) => {
+    async ['frontend/getTopics']({commit, rootState: {route: { path }}}, config) {
+        const { data: { data, code} } = await api.get('frontend/topics', config)
+        if (data && code === 200) {
             commit(RECEIVE_TOPICS, {
                 ...config,
-                ...data.data,
-                path
-            })
-        })
-    },
-    ['frontend/getArticle']({ commit, rootState: {route: { path, params: { id }}} }) {
-        return api.get('frontend/article', {
-            markdown: 1,
-            id
-        }).then(({data}) => {
-            commit(RECEIVE_ARTICLE, {
                 ...data,
                 path
             })
-        })
+        }
     },
-    ['frontend/getComment']({ commit, rootState: {route: { path, params: { id }}} }, { page, limit }) {
-        return api.get('frontend/comment/list', {
-            page,
-            id,
-            limit
-        }).then(({ data }) => {
+    async ['frontend/getArticle']({ commit, rootState: {route: { path, params: { id }}} }) {
+        const { data: { data, prev, next, code} } = await api.get('frontend/article', { markdown: 1, id })
+        if (data && code === 200) {
+            commit(RECEIVE_ARTICLE, {
+                data,
+                prev,
+                next,
+                path
+            })
+        }
+    },
+    async ['frontend/getComment']({ commit, rootState: {route: { path, params: { id }}} }, { page, limit }) {
+        const { data: { data, code} } = await api.get('frontend/comment/list', { page, id, limit })
+        if (data && code === 200) {
             commit(RECEIVE_COMMENT, {
-                ...data.data,
+                ...data,
                 page,
                 path
             })
-        })
+        }
     },
-    ['frontend/postComment']({ commit, rootState: {route: { path, params: { id }}} }, config) {
-        return api.post('frontend/comment/post', config).then(({data}) => {
-            if (data.code === 200) {
-                commit(POST_COMMENT, data.data)
-                return data
-            }
-        })
+    async ['frontend/postComment']({ commit, rootState: {route: { path, params: { id }}} }, config) {
+        const { data: { data, code} } = await api.post('frontend/comment/post', config)
+        if (data && code === 200) {
+            commit(POST_COMMENT, data)
+            return data
+        }
     }
 }
 

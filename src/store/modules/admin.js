@@ -18,29 +18,33 @@ const state = {
 }
 
 const actions = {
-    ['admin/getTopics'] ({commit, rootState: {route: { path, params: { page } }}}, config) {
+    async ['admin/getTopics'] ({commit, rootState: {route: { path, params: { page } }}}, config) {
         config.page = page
-        return api.get('admin/topics', config).then(({ data }) => {
+        const { data: { data, code} } = await api.get('admin/topics', config)
+        if (data && code === 200) {
             commit(RECEIVE_ADMIN_TOPICS, {
-                ...data.data,
+                ...data,
                 path
             })
-        })
+        }
     },
-    ['admin/getArticle'] ({ rootState: {route: { params: { id }}} }) {
-        return api.get('admin/article', {
-            id
-        })
+    async ['admin/getArticle'] ({ rootState: {route: { params: { id }}} }) {
+        const { data: { data, code} } = await api.get('admin/article', { id })
+        if (data && code === 200) {
+            return data
+        }
     },
-    ['admin/deleteArticle'] ({commit}, config) {
-        api.get('admin/article/delete', config).then(() => {
+    async ['admin/deleteArticle'] ({commit}, config) {
+        const { data: { code} } = await api.get('admin/article/delete', config)
+        if (code === 200) {
             commit(DELETE_ARTICLE, config.id)
-        })
+        }
     },
-    ['admin/recoverArticle'] ({commit}, config) {
-        api.get('admin/article/recover', config).then(() => {
+    async ['admin/recoverArticle'] ({commit}, config) {
+        const { data: { code} } = await api.get('admin/article/recover', config)
+        if (code === 200) {
             commit(RECOVER_ARTICLE, config.id)
-        })
+        }
     }
 }
 

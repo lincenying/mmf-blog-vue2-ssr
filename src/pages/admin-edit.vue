@@ -85,9 +85,9 @@ export default {
         }
     },
     mounted() {
-        this.$store.dispatch('admin/getArticle').then(({ data }) => {
+        this.$store.dispatch('admin/getArticle').then(data => {
             this.form = {
-                ...data.data
+                ...data
             }
             editormd("post-content", {
                 width: "100%",

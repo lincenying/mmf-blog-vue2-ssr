@@ -47,7 +47,7 @@ export default {
             method: 'post',
             url: config.api + url,
             data: qs.stringify(data),
-            timeout: 3000,
+            timeout: 5000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -59,7 +59,7 @@ export default {
             method: 'get',
             url: config.api + url,
             params,
-            timeout: 3000,
+            timeout: 5000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
