@@ -1,46 +1,31 @@
 <template>
-    <div>
-        <div v-if="visit" class="box menu">
-            <div class="m-sch">
-                <input @keyup.enter="search($event)" id="search_content" class="sch" type="text" name="q" placeholder="记得按回车哦" />
+    <nav class="global-nav">
+        <div class="wrap clearfix">
+            <div class="left-part"><router-link to="/" exact class="logo-link"><i class="icon icon-nav-logo"></i><span class="hidden">M.M.F 小屋</span></router-link>
+                <div class="main-nav">
+                    <router-link to="/" class="nav-link current"><i class="icon icon-nav-home"></i><span class="text">首页</span></router-link>
+                    <router-link to="/hot" class="nav-link"><i class="icon icon-nav-explore"></i><span class="text">热门</span></router-link>
+                    <router-link to="/about" class="nav-link"><i class="icon icon-nav-features"></i><span class="text">关于</span></router-link>
+                </div>
             </div>
-            <div class="m-nav">
-                <ul class="menuOpen">
-                    <li class="tag-all">
-                        <router-link to="/" exact><i></i>All</router-link>
-                    </li>
-                    <li class="tag-life">
-                        <router-link to="/category/1"><i></i>Life</router-link>
-                    </li>
-                    <li class="tag-study">
-                        <router-link to="/category/2"><i></i>Study</router-link>
-                    </li>
-                    <li class="tag-other">
-                        <router-link to="/category/3"><i></i>Other</router-link>
-                    </li>
-                </ul>
+            <div class="right-part">
+                <span class="nav-search"><i class="icon icon-search-white"></i><input @keyup.enter="search($event)" placeholder="记得按回车哦" class="nav-search-input"></span>
+                <span class="nav-me"><a class="nav-me-link"><img src="/static/images/avatar.png" class="nav-avatar-img"></a></span>
             </div>
         </div>
-        <div v-else class="box menu">
-            <div class="m-nav">
-                <ul class="menuOpen">
-                    <li class="tag-all">
-                        <router-link to="/" exact><i></i>All</router-link>
-                    </li>
-                    <li class="tag-life">
-                        <router-link to="/admin/list/1"><i></i>List</router-link>
-                    </li>
-                    <li class="tag-study">
-                        <router-link to="/admin/post"><i></i>Post</router-link>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    </nav>
 </template>
 
 <script lang="babel">
 export default {
-    props: ['visit', 'search']
+    methods: {
+        search(e) {
+            var qs = e.target.value
+            if (qs === "") {
+                return false
+            }
+            this.$router.replace('/search/' + qs)
+        }
+    }
 }
 </script>

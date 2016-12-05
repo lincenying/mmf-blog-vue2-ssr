@@ -1,55 +1,114 @@
 <template>
-    <div class="box">
-        <div class="comment">
-            <div class="nctitle">评论</div>
-            <div class="bcmt">
-                <div class="s-fc0 ztag ztag_tips">由于该用户的权限设置，您暂时无法进行评论...</div>
-                <div class="bcmtadd">
-                    <input v-model="form.username" type="text" class="form-control" placeholder="请输入昵称">
-                    <textarea id="content" v-model="form.content" class="form-control" placeholder="请输入评论内容"></textarea>
-                    <div class="bcmtbtn">
-                        <span class="ztag ztag_tips">提示</span>
-                        <button @click="postComment" class="s-bd1 s-fc1 s-bg1 ztag">发布</button>
-                        <div class="txt s-fc0"></div>
+    <div class="card">
+        <div class="comments" data-comment-type="Answer" data-comment-id="37833">
+            <div class="comment-post-wrap"> <img src="http://i1.zdimg.com//assets/icons/avatar-big-placeholder.jpg@1e_50w_50h_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                <div class="comment-post-input-wrap base-textarea-wrap">
+                    <textarea class="textarea-input base-input" cols="30" rows="4"></textarea>
+                </div>
+                <div class="comment-post-actions clearfix">
+                    <a href="javascript:;" class="btn btn-blue">发表评论</a>
+                </div>
+            </div>
+            <div class="comment-items-wrap" data-comment="CommentList">
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
                     </div>
                 </div>
-                <div class="bcmtlst">
-                    <ul class="clearfix ztag">
-                        <li v-for="item in comments.list" class="s-bd2 s-bg2">
-                            <div class="bcmtlsta clearfix">
-                                <div class="bcmtlstb">
-                                    <a href="javascript:;" :title="item.username"><img class="itag" src="http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"></a>
-                                </div>
-                                <div class="bcmtlstc">
-                                    <div class="bcmtlstd clearfix">
-                                        <div class="bcmtlste clearfix">
-                                            <div class="bcmtlstg">
-                                                <div class="bcmtlsti">
-                                                    <div class="bcmtlstj">
-                                                        <a class="s-fc2 itag bcmtlstk" href="javascript:;" :title="item.username" v-text="item.username"></a>
-                                                        <span v-if="item.reply_user" class="s-fc3 itag">回复了&nbsp;&nbsp;
-                                                            <a href="javascript:;" class="s-fc2 itag" v-text="item.reply_user"></a>
-                                                        </span>
-                                                        <span class="bcmtlstf s-fc4">：</span>
-                                                        <span class="bcmtlstf s-fc4 itag" v-text="item.content"></span></div>
-                                                </div>
-                                            </div>
-                                            <div class="bcmtlsth">
-                                                <a class="s-fc2 itag" href="javascript:;" style="visibility: hidden;">删除</a><a @click="reply(item)" class="s-fc2 itag" href="javascript:;">回复</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="bcmtmore s-bd2 ztag" style="display: none;">
-                    <div class="bcmtlsta"><span class="s-fc4">正在载入中...</span></div>
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
+                    </div>
                 </div>
-                <div v-if="comments.hasNext" class="bcmtmore s-bd2">
-                    <div class="bcmtlsta"><a @click="loadcomment()" href="javascript:;" class="s-fc2 ztag">查看更多</a></div>
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
+                    </div>
                 </div>
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-item">
+                    <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author-avatar-link">
+                        <img src="http://i1.zdimg.com/avatar/f7/575f7516c8f35.jpg@1e_50w_1c_0i_0o_100Q_1x.jpg" alt="" class="avatar-img">
+                    </a>
+                    <div class="comment-content-wrap">
+                        <span class="comment-author-wrap">
+                            <a data-hover="user" href="http://www.naitang.com/people/zhangyajing85" class="comment-author">张雅静</a>
+                        </span>
+                        <div class="comment-content">那个趣味眼线！！！第三张图还挺可爱的！</div>
+                        <div class="comment-footer">
+                            <span class="comment-likes-count hidden"><b data-agreeid="242785">0</b> 赞</span>
+                            <span class="comment-time">1 周前</span>
+                            <a href="javascript:;" class="comment-action-item comment-reply">回复</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-wrap">
+                <a href="javascript:;" class="comments-load-more">加载更多</a>
             </div>
         </div>
     </div>

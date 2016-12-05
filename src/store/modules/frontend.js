@@ -4,7 +4,7 @@ import {
 } from '../mutation-types'
 
 const state = {
-    topic: {
+    topics: {
         list: [],
         hasNext: 0,
         page: 1,
@@ -70,9 +70,9 @@ const mutations = {
         if (page === 1) {
             list = [].concat(list)
         } else {
-            list = state.topic.list.concat(list)
+            list = state.topics.list.concat(list)
         }
-        state.topic = {
+        state.topics = {
             list, hasNext, hasPrev, page, path
         }
     },
@@ -98,7 +98,7 @@ const mutations = {
 
 const getters = {
     ['frontend/getTopics'](state) {
-        return state.topic
+        return state.topics
     },
     ['frontend/getArticle'](state) {
         return state.article

@@ -101,7 +101,7 @@ exports.insert = (req, res, next) => {
         username = req.body.username
 
     if (fsExistsSync('./admin.lock')) {
-        res.render('admin.html', {message: '请先把 admin.lock 删除'})
+        res.render('add-admin.html', {message: '请先把 admin.lock 删除'})
     } else {
         if (!username || !password || !email) {
             res.render('admin.html', { message: '请将表单填写完整' })
@@ -125,7 +125,7 @@ exports.insert = (req, res, next) => {
                     return '添加用户成功: '+username+', 密码: '+password
                 })
             }).then(message => {
-                res.render('admin.html', { message })
+                res.render('add-admin.html', { message })
             }).catch(err => next(err))
         }
     }

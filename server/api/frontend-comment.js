@@ -75,36 +75,43 @@ exports.getList = (req, res) => {
     var id = req.query.id,
         limit = req.query.limit,
         page = req.query.page
-    page = parseInt(page, 10)
-    limit = parseInt(limit, 10)
-    if (!page) page = 1
-    if (!limit) limit = 10
-    var data = {
-            is_delete: 0,
-            article_id: id
-        },
-        skip = (page - 1) * limit
-    Promise.all([
-        Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(),
-        Comment.countAsync(data)
-    ]).then(result => {
-        var total = result[1]
-        var totalPage = Math.ceil(total / limit)
-        var json = {
-            code: 200,
-            data: {
-                list: result[0],
-                total,
-                hasNext: totalPage > page ? 1 : 0
-            }
-        }
-        res.json(json)
-    }).catch(err => {
+    if (!id) {
         res.json({
             code: -200,
-            message: err.toString()
+            message: '参数错误'
         })
-    })
+    } else {
+        page = parseInt(page, 10)
+        limit = parseInt(limit, 10)
+        if (!page) page = 1
+        if (!limit) limit = 10
+        var data = {
+                is_delete: 0,
+                article_id: id
+            },
+            skip = (page - 1) * limit
+        Promise.all([
+            Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(),
+            Comment.countAsync(data)
+        ]).then(result => {
+            var total = result[1]
+            var totalPage = Math.ceil(total / limit)
+            var json = {
+                code: 200,
+                data: {
+                    list: result[0],
+                    total,
+                    hasNext: totalPage > page ? 1 : 0
+                }
+            }
+            res.json(json)
+        }).catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString()
+            })
+        })
+    }
 }
 
 /**

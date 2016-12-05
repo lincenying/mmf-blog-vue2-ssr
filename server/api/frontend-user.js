@@ -138,7 +138,7 @@ exports.modify = (req, res) => {
 exports.account = (req, res) => {
     var _id = req.body.id,
         email = req.body.email,
-        user_id = req.cookie.user_id,
+        user_id = req.cookies.user_id,
         username = req.body.username
     if (user_id === _id) {
         User.updateAsync({ _id }, { '$set': { email, username } }).then(() => {
@@ -169,9 +169,9 @@ exports.account = (req, res) => {
  */
 exports.password = (req, res) => {
     var _id = req.body.id,
-        old_password = req.cookie.old_password,
+        old_password = req.body.old_password,
         password = req.body.password,
-        user_id = req.cookie.user_id
+        user_id = req.cookies.user_id
     if (user_id === _id) {
         User.findOneAsync({
             _id,

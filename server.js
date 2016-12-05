@@ -13,9 +13,12 @@ const bodyParser = require('body-parser')
 const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
 
-require('./server/models/user')
+require('./server/models/admin')
 require('./server/models/article')
+require('./server/models/category')
 require('./server/models/comment')
+require('./server/models/like')
+require('./server/models/user')
 
 const routes = require('./server/routes/index')
 
@@ -123,8 +126,8 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/admin/list/:page
     })
 })
 
-app.get('/login', (req, res) => {
-    res.render('login.html', { title: '登录' })
+app.get('/admin', (req, res) => {
+    res.render('admin.html', { title: '登录' })
 })
 
 app.get('*', (req, res) => {

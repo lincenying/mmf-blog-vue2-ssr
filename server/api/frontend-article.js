@@ -54,20 +54,21 @@ exports.getList = (req, res) => {
             data = result[0],
             total = result[1],
             totalPage = Math.ceil(total / limit),
-            user_id = req.cookie.user_id
+            user_id = req.cookies.user_id
 
         data.forEach(item => {
             arr.push(Like.findOneAsync({ article_id: item._id, user_id }))
         })
         Promise.all(arr).then(collection => {
-            data.map((item, index) => {
-                item.likeStatus = !!collection[index]
+            data = data.map((item, index) => {
+                item._doc.like_status = !!collection[index]
                 return item
             })
+            console.log(data)
             var json = {
                 code: 200,
                 data: {
-                    list: result[0],
+                    list: data,
                     total,
                     hasNext: totalPage > page ? 1 : 0,
                     hasPrev: page > 1
@@ -98,7 +99,7 @@ exports.getList = (req, res) => {
 
 exports.getItem = (req, res) => {
     var _id = req.query.id,
-        user_id = req.cookie.user_id
+        user_id = req.cookies.user_id
     // var markdown = req.query.markdown
     if (!_id) {
         res.json({

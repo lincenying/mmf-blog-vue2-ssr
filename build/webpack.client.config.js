@@ -31,7 +31,10 @@ var config = merge(baseConfig, {
             from: 'static/editor.md/**/*',
             to: path.join(__dirname, '../dist')
         }, {
-            from: 'src/template/admin.html',
+            from: 'static/images/**/*',
+            to: path.join(__dirname, '../dist')
+        }, {
+            from: 'src/template/add-admin.html',
             to: path.join(__dirname, '../dist')
         }]),
         new webpack.ProvidePlugin({
@@ -90,10 +93,10 @@ if (process.env.NODE_ENV === 'production') {
             }),
             new HtmlWebpackPlugin({
                 chunks: [
-                    'manifest', 'vendor', 'login',
+                    'manifest', 'vendor', 'admin',
                 ],
-                filename: 'login.html',
-                template: 'src/template/login.html',
+                filename: 'admin.html',
+                template: 'src/template/admin.html',
                 inject: true,
             })
         ]
@@ -120,10 +123,10 @@ if (process.env.NODE_ENV === 'production') {
             }),
             new HtmlWebpackPlugin({
                 chunks: [
-                    'vendor', 'login',
+                    'vendor', 'admin',
                 ],
-                filename: 'login.html',
-                template: 'src/template/login.html',
+                filename: 'admin.html',
+                template: 'src/template/admin.html',
                 inject: true,
             })
         ]

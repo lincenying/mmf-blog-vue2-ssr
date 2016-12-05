@@ -1,50 +1,33 @@
 <template>
 <div id="app" class="g-doc">
-    <div class="g-hd">
-        <About></About>
-        <Navigation :visit="visit" :search="search"></Navigation>
-    </div>
+    <Navigation></Navigation>
     <transition name="fade" mode="out-in">
         <router-view :key="key" class="router"></router-view>
     </transition>
-    <Copyright></Copyright>
-    <Arrow></Arrow>
+    <sign-up></sign-up>
+    <sign-in></sign-in>
 </div>
 </template>
 <script lang="babel">
 import { mapGetters } from 'vuex'
 import NProgress from 'nprogress'
-import About from './components/about.vue'
 import Navigation from './components/navigation.vue'
-import Copyright from './components/copyright.vue'
-import Arrow from './components/arrow.vue'
+import signUp from './components/signup.vue'
+import signIn from './components/signin.vue'
 
 export default {
     computed: {
         ...mapGetters({
             global: 'getGlobal'
         }),
-        visit() {
-            return !['list', 'post', 'edit'].includes(this.$route.name)
-        },
         key() {
             return this.$route.path.replace(/\//g, '_')
         }
     },
     components: {
-        About,
         Navigation,
-        Copyright,
-        Arrow
-    },
-    methods: {
-        search(e) {
-            var qs = e.target.value
-            if (qs === "") {
-                return false
-            }
-            this.$router.replace('/search/' + qs)
-        }
+        signUp,
+        signIn
     },
     watch: {
         'global.progress'(val) {
