@@ -39,7 +39,7 @@ const router = new VueRouter({
     base: __dirname,
     scrollBehavior,
     routes: [
-        { name:'index', path: '/', component: index },
+        { name:'login', path: '/backend', component: index },
         { name:'category', path: '/category/:id(\\d+)', component: index },
         { name:'search', path: '/search/:qs', component: index },
         { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },

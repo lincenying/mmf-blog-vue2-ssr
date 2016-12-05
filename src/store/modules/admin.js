@@ -8,7 +8,7 @@ import {
 } from '../mutation-types'
 
 const state = {
-    topic: {
+    topics: {
         list: [],
         path: '',
         hasNext: 0,
@@ -50,7 +50,7 @@ const actions = {
 
 const mutations = {
     [RECEIVE_ADMIN_TOPICS](state, {list, path, hasNext, hasPrev}) {
-        state.topic = {
+        state.topics = {
             list,  path, hasNext, hasPrev
         }
     },
@@ -58,7 +58,7 @@ const mutations = {
         state.article = data
     },
     [UPDATE_ADMIN_ARTICLE](state, data) {
-        const obj = state.topic.list.find(ii => ii._id === data._id)
+        const obj = state.topics.list.find(ii => ii._id === data._id)
         for (const jj in obj) {
             if (obj.hasOwnProperty(jj) && data[jj]) {
                 obj[jj] = data[jj]
@@ -66,21 +66,24 @@ const mutations = {
         }
     },
     [DELETE_ARTICLE](state, id) {
-        const obj = state.topic.list.find(ii => ii._id === id)
+        const obj = state.topics.list.find(ii => ii._id === id)
         obj.is_delete = 1
     },
     [RECOVER_ARTICLE](state, id) {
-        const obj = state.topic.list.find(ii => ii._id === id)
+        const obj = state.topics.list.find(ii => ii._id === id)
         obj.is_delete = 0
     }
 }
 
 const getters = {
     ['admin/getTopics'] (state) {
-        return state.topic
+        return state.topics
     },
     ['admin/getArticle'] (state) {
         return state.article
+    },
+    ['admin/getCategory'] (state) {
+        return state.category
     }
 }
 

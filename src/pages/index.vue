@@ -16,9 +16,9 @@
 import ls from 'store2'
 import { mapGetters } from 'vuex'
 import topicsItem from '../components/topics-item.vue'
-import category from '../components/category.vue'
-import trending from '../components/trending.vue'
-import { ua, ssp } from '../utils'
+import category from '../components/aside-category.vue'
+import trending from '../components/aside-trending.vue'
+import { ssp } from '../utils'
 const fetchInitialData = async (store, config = { page: 1}) => {
     const {params: {id, qs}, path} = store.state.route
     const base = {
@@ -40,10 +40,7 @@ export default {
     computed: {
         ...mapGetters({
             topics: 'frontend/getTopics'
-        }),
-        isPC() {
-            return ua() === "PC"
-        }
+        })
     },
     methods: {
         loadMore(page = this.topics.page + 1) {

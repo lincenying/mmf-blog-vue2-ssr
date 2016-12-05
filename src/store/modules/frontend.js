@@ -21,7 +21,8 @@ const state = {
         hasNext: 0,
         page: 1,
         path: ''
-    }
+    },
+    category: []
 }
 
 const actions = {
