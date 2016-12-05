@@ -2,7 +2,7 @@ var mongoose = require('../mongoose')
 var Schema = mongoose.Schema
 var Promise = require('bluebird')
 
-var UserSchema = new Schema({
+var AdminSchema = new Schema({
     username: String,
     email: String,
     password: String,
@@ -11,8 +11,8 @@ var UserSchema = new Schema({
     timestamp: Number
 })
 
-var User = mongoose.model('User', UserSchema)
-Promise.promisifyAll(User)
-Promise.promisifyAll(User.prototype)
+var Admin = mongoose.model('Admin', AdminSchema)
+Promise.promisifyAll(Admin)
+Promise.promisifyAll(Admin.prototype)
 
-module.exports = User
+module.exports = Admin

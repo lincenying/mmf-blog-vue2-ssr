@@ -1,7 +1,9 @@
+var moment = require('moment')
+
 var mongoose = require('../mongoose')
 var Comment = mongoose.model('Comment')
 var Article = mongoose.model('Article')
-var moment = require('moment')
+
 /**
  * 发布评论
  * @method
@@ -9,7 +11,7 @@ var moment = require('moment')
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.postComment = (req, res) => {
+exports.insert = (req, res) => {
     var content = req.body.content,
         creat_date = moment().format('YYYY-MM-DD HH:MM:SS'),
         id = req.body.id,
@@ -69,7 +71,7 @@ exports.postComment = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.getComment = (req, res) => {
+exports.getList = (req, res) => {
     var id = req.query.id,
         limit = req.query.limit,
         page = req.query.page
@@ -97,6 +99,54 @@ exports.getComment = (req, res) => {
             }
         }
         res.json(json)
+    }).catch(err => {
+        res.json({
+            code: -200,
+            message: err.toString()
+        })
+    })
+}
+
+/**
+ * 评论删除
+ * @method deleteAdmin
+ * @param  {[type]}    req [description]
+ * @param  {[type]}    res [description]
+ * @return {[type]}        [description]
+ */
+exports.deletes = (req, res) => {
+    var id = req.query.id
+    Comment.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
+        return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': -1 } }).then(() => {
+            res.json({
+                code: 200,
+                message: '更新成功'
+            })
+        })
+    }).catch(err => {
+        res.json({
+            code: -200,
+            message: err.toString()
+        })
+    })
+}
+
+/**
+ * 评论恢复
+ * @method deleteAdmin
+ * @param  {[type]}    req [description]
+ * @param  {[type]}    res [description]
+ * @return {[type]}        [description]
+ */
+exports.recover = (req, res) => {
+    var id = req.query.id
+    Comment.updateAsync({ _id: id }, { is_delete: 0 }).then(() => {
+        return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': 1 } }).then(() => {
+            res.json({
+                code: 200,
+                message: '更新成功'
+            })
+        })
     }).catch(err => {
         res.json({
             code: -200,
