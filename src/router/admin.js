@@ -1,15 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import ls from 'store2'
 import cookies from 'js-cookie'
 
 import inBrowser from '../utils'
 
-import index from '../pages/index.vue'
-import article from '../pages/article.vue'
-import adminPost from '../pages/admin-post.vue'
-import adminEdit from '../pages/admin-edit.vue'
-import adminList from '../pages/admin-list.vue'
+import login from '../pages/backend-login.vue'
+import articleList from '../pages/backend-article-list.vue'
+import articleInsert from '../pages/backend-article-insert.vue'
+import articleModify from '../pages/backend-article-modify.vue'
+
+import categoryList from '../pages/backend-category-list.vue'
+import categoryInsert from '../pages/backend-category-insert.vue'
+import categoryModify from '../pages/backend-category-modify.vue'
+
+import adminList from '../pages/backend-admin-list.vue'
+import adminModify from '../pages/backend-admin-modify.vue'
+
+import userList from '../pages/backend-user-list.vue'
+import userModify from '../pages/backend-user-modify.vue'
 
 Vue.use(VueRouter)
 
@@ -26,7 +34,7 @@ const scrollBehavior = to => {
 }
 
 const guardRoute = (to, from, next) => {
-    var token = ls.get('token') && cookies.get('user') || !inBrowser
+    var token = cookies.get('_user') || !inBrowser
     if (!token) {
         next('/')
     } else {
@@ -39,13 +47,22 @@ const router = new VueRouter({
     base: __dirname,
     scrollBehavior,
     routes: [
-        { name:'login', path: '/backend', component: index },
-        { name:'category', path: '/category/:id(\\d+)', component: index },
-        { name:'search', path: '/search/:qs', component: index },
-        { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },
-        { name:'list', path: '/admin/list/:page(\\d+)', component: adminList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
-        { name:'post', path: '/admin/post', component: adminPost, meta: { scrollToTop: true }, beforeEnter: guardRoute },
-        { name:'edit', path: '/admin/edit/:id/:page', component: adminEdit, meta: { scrollToTop: true }, beforeEnter: guardRoute }
+        { name:'login', path: '/backend', component: login },
+
+        { name:'admin_list', path: '/backend/admin/list', component: adminList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'admin_modify', path: '/backend/admin/modify/:id', component: adminModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+
+        { name:'article_list', path: '/backend/article/list', component: articleList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'article_insert', path: '/backend/article/insert', component: articleInsert, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'article_modify', path: '/backend/article/modify/:id', component: articleModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+
+        { name:'category_list', path: '/backend/category/list', component: categoryList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'category_insert', path: '/backend/category/insert', component: categoryInsert, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'category_modify', path: '/backend/category/modify/:id', component: categoryModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+
+        { name:'user_list', path: '/backend/user/list', component: userList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'user_modify', path: '/backend/user/modify/:id', component: userModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+
     ]
 })
 

@@ -64,9 +64,9 @@ exports.login = (req, res) => {
             var id = result._id
             var remember_me = req.body.remember_me ? 2592000000 : 86400000
             var token = md5(id + md5Pre + username)
-            res.cookie('_user', token, { maxAge: remember_me })
-            res.cookie('_userid', id, { maxAge: remember_me })
-            res.cookie('_username', username, { maxAge: remember_me })
+            res.cookie('b_user', token, { maxAge: remember_me })
+            res.cookie('b_userid', id, { maxAge: remember_me })
+            res.cookie('b_username', username, { maxAge: remember_me })
             json = {
                 code: 200,
                 message: '登录成功',
@@ -101,10 +101,10 @@ exports.insert = (req, res, next) => {
         username = req.body.username
 
     if (fsExistsSync('./admin.lock')) {
-        res.render('add-admin.html', {message: '请先把 admin.lock 删除'})
+        res.render('admin-add.html', {message: '请先把 admin.lock 删除'})
     } else {
         if (!username || !password || !email) {
-            res.render('admin.html', { message: '请将表单填写完整' })
+            res.render('admin-add.html', { message: '请将表单填写完整' })
         } else {
             Admin.findOneAsync({
                 username
@@ -125,7 +125,7 @@ exports.insert = (req, res, next) => {
                     return '添加用户成功: '+username+', 密码: '+password
                 })
             }).then(message => {
-                res.render('add-admin.html', { message })
+                res.render('admin-add.html', { message })
             }).catch(err => next(err))
         }
     }

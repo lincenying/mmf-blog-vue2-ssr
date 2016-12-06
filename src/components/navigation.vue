@@ -1,10 +1,19 @@
 <template>
     <nav class="global-nav">
-        <div class="wrap clearfix">
+        <div v-if="backend" class="wrap clearfix">
+            <div class="left-part"><a href="/" exact class="logo-link"><i class="icon icon-nav-logo"></i><span class="hidden">M.M.F 小屋</span></a>
+                <div class="main-nav">
+                    <a href="/" class="nav-link"><i class="icon icon-nav-home"></i><span class="text">首页</span></a>
+                    <a href="/trending" class="nav-link"><i class="icon icon-nav-explore"></i><span class="text">热门</span></a>
+                    <a href="/about" class="nav-link"><i class="icon icon-nav-features"></i><span class="text">关于</span></a>
+                </div>
+            </div>
+        </div>
+        <div v-else class="wrap clearfix">
             <div class="left-part"><router-link to="/" exact class="logo-link"><i class="icon icon-nav-logo"></i><span class="hidden">M.M.F 小屋</span></router-link>
                 <div class="main-nav">
                     <router-link to="/" class="nav-link current"><i class="icon icon-nav-home"></i><span class="text">首页</span></router-link>
-                    <router-link to="/hot" class="nav-link"><i class="icon icon-nav-explore"></i><span class="text">热门</span></router-link>
+                    <router-link to="/trending" class="nav-link"><i class="icon icon-nav-explore"></i><span class="text">热门</span></router-link>
                     <router-link to="/about" class="nav-link"><i class="icon icon-nav-features"></i><span class="text">关于</span></router-link>
                 </div>
             </div>
@@ -18,6 +27,7 @@
 
 <script lang="babel">
 export default {
+    props: ['backend'],
     methods: {
         search(e) {
             var qs = e.target.value

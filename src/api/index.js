@@ -33,7 +33,10 @@ function checkStatus(response) {
 
 function checkCode(res) {
     if (inBrowser && res.data.code === -500) {
-        window.location.href = '/login'
+        window.location.href = '/backend'
+        return
+    } else if (inBrowser && res.data.code === -400) {
+        window.location.href = '/'
         return
     } else if (res.data.code !== 200) {
         store.dispatch('showMsg', res.data.message)

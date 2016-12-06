@@ -15,10 +15,10 @@ var backendArticle = require('../api/backend-article'),
 
 // 添加管理员
 router.get('/backend', (req, res) => {
-    res.render('admin.html', { title: '添加管理员', message: '' })
+    res.render('admin-add.html', { title: '添加管理员', message: '' })
 })
 router.post('/backend', (req, res) => {
-    backendUser.insertUser(req, res)
+    backendUser.insert(req, res)
 })
 
 // API
@@ -50,11 +50,11 @@ router.post('/backend/article/modify', isAdmin, multipartMiddleware, (req, res) 
 })
 // ------- 分类 -------
 // 管理时, 获取分类列表
-router.get('/backend/category/list', isAdmin, (req, res) => {
+router.get('/backend/category/list', (req, res) => {
     backendCategory.getList(req, res)
 })
 // 管理时, 获取单个分类
-router.get('/backend/category/item', isAdmin, (req, res) => {
+router.get('/backend/category/item', (req, res) => {
     backendCategory.getItem(req, res)
 })
 // 管理时, 添加分类
@@ -137,6 +137,10 @@ router.get('/frontend/topics', (req, res) => {
 // 前台浏览时, 获取单篇文章
 router.get('/frontend/article', (req, res) => {
     frontendArticle.getItem(req, res)
+})
+// 前台浏览时, 热门文章
+router.get('/frontend/trending', (req, res) => {
+    frontendArticle.getTrending(req, res)
 })
 // ------ 评论 ------
 // 发布评论

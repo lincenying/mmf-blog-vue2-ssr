@@ -64,7 +64,6 @@ exports.getList = (req, res) => {
                 item._doc.like_status = !!collection[index]
                 return item
             })
-            console.log(data)
             var json = {
                 code: 200,
                 data: {
@@ -132,6 +131,25 @@ exports.getItem = (req, res) => {
             data: value[0],
             prev,
             next
+        }
+        res.json(json)
+    }).catch(err => {
+        res.json({
+            code: -200,
+            message: err.toString()
+        })
+    })
+}
+
+exports.getTrending = (req, res) => {
+    var limit = 5
+    var data = { is_delete: 0 }
+    Article.find(data).sort('-visit').limit(limit).exec().then(result => {
+        var json = {
+            code: 200,
+            data: {
+                list: result
+            }
         }
         res.json(json)
     }).catch(err => {

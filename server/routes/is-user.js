@@ -1,5 +1,5 @@
 var md5 = require('md5')
-var md5Pre = require('../config')
+var md5Pre = require('../config').md5Pre
 
 module.exports = (req, res, next) => {
     var user = req.cookies.user,
@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
         res.clearCookie('userid')
         res.clearCookie('username')
         res.json({
-            code: -500,
+            code: -400,
             message: '请先登录'
         })
     } else {

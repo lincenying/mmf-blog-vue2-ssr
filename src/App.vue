@@ -1,11 +1,11 @@
 <template>
 <div id="app" class="g-doc">
-    <Navigation></Navigation>
+    <Navigation :backend="backend"></Navigation>
     <transition name="fade" mode="out-in">
         <router-view :key="key" class="router"></router-view>
     </transition>
-    <sign-up></sign-up>
-    <sign-in></sign-in>
+    <sign-up v-if="!backend"></sign-up>
+    <sign-in v-if="!backend"></sign-in>
 </div>
 </template>
 <script lang="babel">
@@ -22,6 +22,9 @@ export default {
         }),
         key() {
             return this.$route.path.replace(/\//g, '_')
+        },
+        backend() {
+            return this.$route.path.indexOf('backend')
         }
     },
     components: {

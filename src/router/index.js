@@ -4,10 +4,10 @@ import cookies from 'js-cookie'
 
 import inBrowser from '../utils'
 
-import index from '../pages/index.vue'
-import article from '../pages/article.vue'
-import account from '../pages/user-account.vue'
-import password from '../pages/user-password.vue'
+import index from '../pages/frontend-index.vue'
+import article from '../pages/frontend-article.vue'
+import account from '../pages/frontend-user-account.vue'
+import password from '../pages/frontend-user-password.vue'
 
 Vue.use(VueRouter)
 
