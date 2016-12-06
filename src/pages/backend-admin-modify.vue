@@ -1,30 +1,23 @@
 <template>
-    <div class="main wrap clearfix">
-        <div class="main-left">
-            <div class="home-feeds cards-wrap">
-                <div class="settings-main card">
-                    <div class="settings-main-content">
-                        <a-input title="昵称">
-                            <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username">
-                            <span class="input-info error">请输入昵称</span>
-                        </a-input>
-                        <a-input title="邮箱">
-                            <input type="text" v-model="form.email" placeholder="邮箱" class="base-input" name="email">
-                            <span class="input-info error">请输入邮箱</span>
-                        </a-input>
-                        <a-input title="密码">
-                            <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password">
-                            <span class="input-info error">请输入密码</span>
-                        </a-input>
-                    </div>
-                    <div class="settings-footer clearfix">
-                        <router-link to="/backend/admin/list" class="btn btn-blue">返回</router-link>
-                        <a @click="modify" href="javascript:;" class="btn btn-yellow">编辑管理员</a>
-                    </div>
-                </div>
-            </div>
+    <div class="settings-main card">
+        <div class="settings-main-content">
+            <a-input title="昵称">
+                <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username">
+                <span class="input-info error">请输入昵称</span>
+            </a-input>
+            <a-input title="邮箱">
+                <input type="text" v-model="form.email" placeholder="邮箱" class="base-input" name="email">
+                <span class="input-info error">请输入邮箱</span>
+            </a-input>
+            <a-input title="密码">
+                <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password">
+                <span class="input-info error">请输入密码</span>
+            </a-input>
         </div>
-        <backend-menu></backend-menu>
+        <div class="settings-footer clearfix">
+            <router-link to="/backend/admin/list" class="btn btn-blue">返回</router-link>
+            <a @click="modify" href="javascript:;" class="btn btn-yellow">编辑管理员</a>
+        </div>
     </div>
 </template>
 

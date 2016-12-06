@@ -1,22 +1,49 @@
 <template>
-    <div class="main wrap clearfix">
-
+    <div class="settings-main card">
+        <div class="settings-main-content">
+            <div class="list-section list-header">
+                <div class="list-username">用户名</div>
+                <div class="list-email">邮箱</div>
+                <div class="list-date">时间</div>
+                <div class="list-action">操作</div>
+            </div>
+            <div v-for="item in user.data" class="list-section">
+                <div class="list-username">{{ item.username }}</div>
+                <div class="list-email">{{ item.email }}</div>
+                <div class="list-date">{{ item.creat_date }}</div>
+                <div class="list-action">
+                    <router-link :to="'/backend/user/modify/' + item._id" class="badge badge-success">编辑</router-link>
+                    <a href="javascript:;">删除</a>
+                </div>
+            </div>
+        </div>
+        <div v-if="user.hasNext" class="settings-footer clearfix">
+            <a @click="loadMore()" class="admin-load-more" href="javascript:;">加载更多</a>
+        </div>
     </div>
 </template>
 
 <script lang="babel">
-import aInput from '../components/_input.vue'
+import { mapGetters } from 'vuex'
+const fetchInitialData = async (store, config = { page: 1}) => {
+    await store.dispatch('backend/getUserList', config)
+}
 export default {
-    data() {
-        return {
-            form: {
-                username: '',
-                password: ''
-            }
+    name: 'backend-user-list',
+    computed: {
+        ...mapGetters({
+            user: 'backend/getUserList'
+        })
+    },
+    methods: {
+        loadMore(page = this.user.page + 1) {
+            fetchInitialData(this.$store, {page})
         }
     },
-    components: {
-        aInput
-    }
+    mounted() {
+        if (this.user.data.length <= 0) {
+            fetchInitialData(this.$store)
+        }
+    },
 }
 </script>

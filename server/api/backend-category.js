@@ -20,7 +20,7 @@ exports.getList = (req, res) => {
         var json = {
             code: 200,
             data: {
-                list: result[0]
+                list: result
             }
         }
         res.json(json)
@@ -52,11 +52,11 @@ exports.insert = (req, res) => {
             creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
             is_delete: 0,
             timestamp: moment().format('X')
-        }).then(() => {
+        }).then(result => {
             res.json({
                 code: 200,
                 message: '添加成功',
-                data: 'success'
+                data: result._id
             })
         })
     }

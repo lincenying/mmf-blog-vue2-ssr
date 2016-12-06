@@ -22,7 +22,6 @@ const state = {
         page: 1,
         path: ''
     },
-    category: [],
     trending: []
 }
 
@@ -65,12 +64,6 @@ const actions = {
             return data
         }
     },
-    async ['frontend/getCategoryList']({ commit }) {
-        const { data: { data, code} } = await api.get('backend/category/list')
-        if (data && code === 200) {
-            commit('frontend/receiveCategoryList', data)
-        }
-    },
     async ['frontend/getTrending']({ commit }) {
         const { data: { data, code} } = await api.get('frontend/trending')
         if (data && code === 200) {
@@ -107,9 +100,6 @@ const mutations = {
     },
     [POST_COMMENT](state, data) {
         state.comment.list = [data].concat(state.comment.list)
-    },
-    ['frontend/receiveCategoryList'](state, data) {
-        state.category = data
     },
     ['frontend/receiveTrending'](state, data) {
         state.trending = data
