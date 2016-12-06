@@ -7,6 +7,7 @@ const serverConfig = require('./webpack.server.config')
 module.exports = function setupDevServer(app, opts) {
     // modify client config to work with hot middleware
     clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
+    clientConfig.entry.admin = ['webpack-hot-middleware/client', clientConfig.entry.admin]
     clientConfig.output.filename = '[name].js'
     clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin(), new webpack.NoErrorsPlugin())
 
@@ -26,6 +27,11 @@ module.exports = function setupDevServer(app, opts) {
         if (fs.existsSync(filePath)) {
             const index = fs.readFileSync(filePath, 'utf-8')
             opts.indexUpdated(index)
+        }
+        const adminPath = path.join(clientConfig.output.path, 'admin.html')
+        if (fs.existsSync(adminPath)) {
+            const admin = fs.readFileSync(adminPath, 'utf-8')
+            opts.adminUpdated(admin)
         }
     })
 

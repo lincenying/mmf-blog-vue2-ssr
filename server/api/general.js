@@ -80,7 +80,8 @@ exports.deletes = (req, res, mongoDB) => {
     mongoDB.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
         res.json({
             code: 200,
-            message: '更新成功'
+            message: '更新成功',
+            data: 'success'
         })
     }).catch(err => {
         res.json({
@@ -103,7 +104,8 @@ exports.modify = (res, mongoDB, id, data) => {
     mongoDB.updateAsync({ _id: id }, { '$set': data }).then(() => {
         res.json({
             code: 200,
-            message: '更新成功'
+            message: '更新成功',
+            data: 'success'
         })
     }).catch(err => {
         res.json({
@@ -126,7 +128,8 @@ exports.recover = (req, res, mongoDB) => {
     mongoDB.updateAsync({ _id: id }, { is_delete: 0 }).then(() => {
         res.json({
             code: 200,
-            message: '更新成功'
+            message: '更新成功',
+            data: 'success'
         })
     }).catch(err => {
         res.json({

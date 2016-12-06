@@ -38,13 +38,13 @@ export default {
     },
     methods: {
         async login() {
-            if (!this.form.username || !this.form.username) {
+            if (!this.form.username || !this.form.password) {
                 this.$store.dispatch('showMsg', '请输入用户名和密码!')
                 return
             }
             const { data: { data, code} } = await api.post('backend/admin/login', this.form)
             if (data && code === 200) {
-                console.log(data)
+                this.$router.replace('/backend/article/list')
             }
         }
     }

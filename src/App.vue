@@ -24,7 +24,7 @@ export default {
             return this.$route.path.replace(/\//g, '_')
         },
         backend() {
-            return this.$route.path.indexOf('backend')
+            return this.$route.path.indexOf('backend') >= 0
         }
     },
     components: {

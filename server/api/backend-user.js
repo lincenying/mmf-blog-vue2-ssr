@@ -143,7 +143,7 @@ exports.modify = (req, res) => {
         email = req.body.email,
         password = req.body.password,
         username = req.body.username
-
+    password = md5(md5Pre + password)
     modify(res, Admin, _id, {
         email, password, username
     })

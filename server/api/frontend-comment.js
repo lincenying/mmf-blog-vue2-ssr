@@ -127,7 +127,8 @@ exports.deletes = (req, res) => {
         return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': -1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         })
     }).catch(err => {
@@ -151,7 +152,8 @@ exports.recover = (req, res) => {
         return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': 1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         })
     }).catch(err => {

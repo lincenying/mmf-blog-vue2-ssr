@@ -55,7 +55,8 @@ exports.insert = (req, res) => {
         }).then(() => {
             res.json({
                 code: 200,
-                message: '添加成功'
+                message: '添加成功',
+                data: 'success'
             })
         })
     }

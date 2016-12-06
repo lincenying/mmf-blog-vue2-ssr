@@ -11,8 +11,8 @@ var config = merge(baseConfig, {
 })
 
 if (process.env.NODE_ENV === 'production') {
-    config = merge(config, devConfig)
-} else {
     config = merge(config, prodConfig)
+} else {
+    config = merge(config, devConfig)
 }
 module.exports = config

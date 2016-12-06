@@ -90,22 +90,37 @@ exports.insert = (req, res, next) => {
     } else {
         User.findOneAsync({ username }).then(result => {
             if (result) {
-                return '该用户已经存在'
+                res.json({
+                    code: -200,
+                    message: '该用户名已经存在!'
+                })
+            } else {
+                return User.createAsync({
+                    username,
+                    password: md5(md5Pre + password),
+                    email,
+                    creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+                    is_delete: 0,
+                    timestamp: moment().format('X')
+                }).then(() => {
+                    res.json({
+                        code: 200,
+                        message: '注册成功!',
+                        data: 'success'
+                    })
+                }).catch(err => {
+                    res.json({
+                        code: -200,
+                        message: err.toString()
+                    })
+                })
             }
-            return User.createAsync({
-                username,
-                password: md5(md5Pre + password),
-                email,
-                creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
-                is_delete: 0,
-                timestamp: moment().format('X')
-            }).then(() => {
-                fs.writeFileSync('./admin.lock', '')
-                return '添加用户成功: '+username+', 密码: '+password
+        }).catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString()
             })
-        }).then(message => {
-            res.render('admin.html', { message })
-        }).catch(err => next(err))
+        })
     }
 }
 
@@ -144,7 +159,8 @@ exports.account = (req, res) => {
         User.updateAsync({ _id }, { '$set': { email, username } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         }).catch(err => {
             res.json({
@@ -182,7 +198,8 @@ exports.password = (req, res) => {
                 User.updateAsync({ _id }, { '$set': { password: md5(md5Pre + password) } }).then(() => {
                     res.json({
                         code: 200,
-                        message: '更新成功'
+                        message: '更新成功',
+                        data: 'success'
                     })
                 }).catch(err => {
                     res.json({

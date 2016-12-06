@@ -10,7 +10,7 @@
                             <div class="list-date">时间</div>
                             <div class="list-action">操作</div>
                         </div>
-                        <div v-for="item in list" class="list-section">
+                        <div v-for="item in admin.data" class="list-section">
                             <div class="list-username">{{ item.username }}</div>
                             <div class="list-email">{{ item.email }}</div>
                             <div class="list-date">{{ item.creat_date }}</div>
@@ -20,8 +20,8 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="hasNext" class="settings-footer clearfix">
-                        <a class="admin-load-more" href="javascript:;">加载更多</a>
+                    <div v-if="admin.hasNext" class="settings-footer clearfix">
+                        <a @click="loadMore()" class="admin-load-more" href="javascript:;">加载更多</a>
                     </div>
                 </div>
             </div>
@@ -31,37 +31,30 @@
 </template>
 
 <script lang="babel">
-import api from '~api'
+import { mapGetters } from 'vuex'
 import backendMenu from '~components/backend-menu.vue'
+const fetchInitialData = async (store, config = { page: 1}) => {
+    await store.dispatch('backend/getAdminList', config)
+}
 export default {
     name: 'backend-admin-list',
-    data() {
-        return {
-            page: 1,
-            limit: 10,
-            hasNext: false,
-            list: []
-        }
-    },
     components: {
         backendMenu
     },
+    computed: {
+        ...mapGetters({
+            admin: 'backend/getAdminList'
+        })
+    },
     methods: {
-        async loadMore(page = 1) {
-            const { data: { data, code }} = await api.get('backend/admin/list', { page })
-            if (code === 200) {
-                this.page = page + 1
-                this.hasNext = data.hasNext
-                if (page === 1) {
-                    this.list = data.list
-                } else {
-                    this.list = this.list.concat(data.list)
-                }
-            }
+        loadMore(page = this.admin.page + 1) {
+            fetchInitialData(this.$store, {page})
         }
     },
     mounted() {
-        this.loadMore()
+        if (this.admin.data.length <= 0) {
+            fetchInitialData(this.$store)
+        }
     },
 }
 </script>

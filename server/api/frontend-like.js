@@ -16,7 +16,8 @@ exports.like = (req, res) => {
         return Article.updateAsync({ _id: article_id }, { '$inc': { 'like': 1 } }).then(() => {
             return res.json({
                 code: 200,
-                message: '操作成功'
+                message: '操作成功',
+                data: 'success'
             })
         })
     }).catch(err => {
@@ -34,7 +35,8 @@ exports.unlike = (req, res) => {
         return Article.updateAsync({ _id: article_id }, { '$inc': { 'like': -1 } }).then(() => {
             return res.json({
                 code: 200,
-                message: '操作成功'
+                message: '操作成功',
+                data: 'success'
             })
         })
     }).catch(err => {

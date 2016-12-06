@@ -69,7 +69,8 @@ exports.insert = (req, res) => {
             return res.json({
                 code: 200,
                 user_id: result._id,
-                message: '发布成功'
+                message: '发布成功',
+                data: 'success'
             })
         })
     }).catch(err => {
@@ -93,7 +94,8 @@ exports.deletes = (req, res) => {
         return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': -1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         })
     }).catch(err => {
@@ -117,7 +119,8 @@ exports.recover = (req, res) => {
         return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': 1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         })
     }).catch(err => {
@@ -151,13 +154,15 @@ exports.modify = (req, res) => {
             ]).then(() => {
                 res.json({
                     code: 200,
-                    message: '更新成功'
+                    message: '更新成功',
+                    data: 'success'
                 })
             })
         } else {
             res.json({
                 code: 200,
-                message: '更新成功'
+                message: '更新成功',
+                data: 'success'
             })
         }
     }).catch(err => {
