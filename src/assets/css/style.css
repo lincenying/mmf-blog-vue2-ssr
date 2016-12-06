@@ -2018,3 +2018,13 @@ a:hover .icon-arrow-right {
         background-image: url(../images/@2x/articles.png);
     }
 }
+/* fix */
+.editormd {
+    z-index: 2;
+}
+.editormd, .editormd .CodeMirror {
+    border-radius: 5px;
+}
+.editormd.editormd-fullscreen, .editormd.editormd-fullscreen .CodeMirror {
+    border-radius: 0;
+}

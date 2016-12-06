@@ -77,9 +77,6 @@ module.exports = {
             from: 'favicon.ico',
             to: path.join(__dirname, '../dist')
         }, {
-            from: 'static/editor.md/**/*',
-            to: path.join(__dirname, '../dist')
-        }, {
             from: 'static/images/**/*',
             to: path.join(__dirname, '../dist')
         }, {
