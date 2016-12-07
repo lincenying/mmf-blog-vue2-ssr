@@ -43,6 +43,11 @@ const actions = {
 
 const mutations = {
     ['backend/receiveArticleList'](state, {list, path, hasNext, hasPrev, page}) {
+        if (page === 1) {
+            list = [].concat(list)
+        } else {
+            list = state.lists.data.concat(list)
+        }
         state.lists = {
             data: list,  path, hasNext, hasPrev, page
         }

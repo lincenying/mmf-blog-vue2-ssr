@@ -16,6 +16,7 @@ axios.interceptors.response.use(response => {
     return response
 }, error => {
     store.dispatch('gProgress', 100)
+    store.dispatch('showMsg', error.toString())
     return Promise.reject(error)
 })
 
@@ -50,7 +51,7 @@ export default {
             method: 'post',
             url: config.api + url,
             data: qs.stringify(data),
-            timeout: 5000,
+            timeout: 10000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -62,7 +63,7 @@ export default {
             method: 'get',
             url: config.api + url,
             params,
-            timeout: 5000,
+            timeout: 10000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
