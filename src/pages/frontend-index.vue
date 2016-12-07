@@ -65,12 +65,13 @@ export default {
     metaInfo () {
         var title = 'M.M.F 小屋'
         const {params: {id, key, by}} = this.$store.state.route
+        console.log(id, key, by)
         if (id && this.topics.data.length > 0) {
-            title = this.topics.data[0].category_name + ' - ' + title
+            title = this.topics.data[0].category_name + ' ' + title
         } else if (key) {
-            title = '搜索: ' + key + ' - ' + title
+            title = '搜索: ' + key + ' ' + title
         } else if (by) {
-            title = '热门 - ' + title
+            title = '热门 ' + title
         }
         return {
             title,

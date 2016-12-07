@@ -3386,7 +3386,7 @@ exports.default = {
     },
     metaInfo: function metaInfo() {
         return {
-            title: '关于 - M.M.F 小屋',
+            title: '关于 M.M.F 小屋',
             meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         };
     }
@@ -3493,8 +3493,8 @@ exports.default = {
     },
     metaInfo: function metaInfo() {
         return {
-            title: this.article.data.title + ' - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' - M.M.F 小屋' }]
+            title: this.article.data.title + ' M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' M.M.F 小屋' }]
         };
     }
 };
@@ -3618,12 +3618,13 @@ exports.default = {
             key = _$store$state$route$p.key,
             by = _$store$state$route$p.by;
 
+        console.log(id, key, by);
         if (id && this.topics.data.length > 0) {
-            title = this.topics.data[0].category_name + ' - ' + title;
+            title = this.topics.data[0].category_name + ' ' + title;
         } else if (key) {
-            title = '搜索: ' + key + ' - ' + title;
+            title = '搜索: ' + key + ' ' + title;
         } else if (by) {
-            title = '热门 - ' + title;
+            title = '热门 ' + title;
         }
         return {
             title: title,
@@ -3718,7 +3719,7 @@ exports.default = {
     },
     metaInfo: function metaInfo() {
         return {
-            title: '帐号 - M.M.F 小屋',
+            title: '帐号 M.M.F 小屋',
             meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         };
     }
@@ -3834,7 +3835,7 @@ exports.default = {
     },
     metaInfo: function metaInfo() {
         return {
-            title: '密码 - M.M.F 小屋',
+            title: '密码 M.M.F 小屋',
             meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         };
     }
