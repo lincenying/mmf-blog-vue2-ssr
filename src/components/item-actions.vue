@@ -8,12 +8,19 @@
     </div>
 </template>
 <script lang="babel">
+import cookies from 'js-cookie'
 import api from '~api'
 export default {
     name: 'item-actions',
     props: ['item'],
     methods: {
         async like() {
+            const username = cookies.get('user')
+            if (!username) {
+                this.$store.dispatch('showMsg', '请先登录!')
+                this.$store.commit('global/showLoginModal', true)
+                return
+            }
             const { data: {code, message} } = await api.get('frontend/like', { id: this.item._id })
             if (code === 200) {
                 this.$store.dispatch('showMsg', {
@@ -25,6 +32,12 @@ export default {
             }
         },
         async unlike() {
+            const username = cookies.get('user')
+            if (!username) {
+                this.$store.dispatch('showMsg', '请先登录!')
+                this.$store.commit('global/showLoginModal', true)
+                return
+            }
             const { data: {code, message} } = await api.get('frontend/unlike', { id: this.item._id })
             if (code === 200) {
                 this.$store.dispatch('showMsg', {
