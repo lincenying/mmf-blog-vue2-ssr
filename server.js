@@ -106,8 +106,8 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
     const renderStream = renderer.renderToStream(context)
     renderStream.once('data', () => {
         const { title, meta } = context.meta.inject()
-        indexHTML.head = indexHTML.head.replace('<!-- title -->', title.text())
-        indexHTML.head = indexHTML.head.replace('<!-- Description -->', meta.text())
+        indexHTML.head = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+        indexHTML.head = indexHTML.head.replace(/<meta.*?name="description".*?\/>/g, meta.text())
         res.write(indexHTML.head)
     })
     renderStream.on('data', chunk => {

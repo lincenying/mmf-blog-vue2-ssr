@@ -66,7 +66,7 @@ export default {
     },
     metaInfo () {
         return {
-            title: this.article.data.title + ' M.M.F 小屋',
+            title: this.article.data.title + ' - M.M.F 小屋',
             meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' M.M.F 小屋' }]
         }
     }
