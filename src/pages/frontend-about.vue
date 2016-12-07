@@ -47,17 +47,17 @@
             </div>
         </div>
         <div class="main-right">
-            <category></category>
+            <trending></trending>
         </div>
     </div>
 </template>
 <script lang="babel">
-import category from '../components/aside-category.vue'
+import trending from '../components/aside-trending.vue'
 
 export default {
     name: 'frontend-index',
     components: {
-        category
+        trending
     },
     mounted() {
         this.$store.dispatch('gProgress', 100)
