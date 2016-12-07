@@ -33,7 +33,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            topics: 'frontend/getArticleList'
+            topics: 'frontend/getArticleList',
+            category: 'backend/getCategoryList'
         })
     },
     methods: {
@@ -60,6 +61,21 @@ export default {
         if (scrollTop) ls.set(path, scrollTop)
         else ls.remove(path)
         next()
+    },
+    metaInfo () {
+        var title = 'M.M.F 小屋'
+        const {params: {id, key, by}} = this.$store.state.route
+        if (id && this.topics.data.length > 0) {
+            title = this.topics.data[0].category_name + ' - ' + title
+        } else if (key) {
+            title = '搜索: ' + key + ' - ' + title
+        } else if (by) {
+            title = '热门 - ' + title
+        }
+        return {
+            title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
+        }
     }
 }
 </script>

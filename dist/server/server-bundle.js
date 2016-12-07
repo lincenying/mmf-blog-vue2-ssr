@@ -62,7 +62,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 159);
+/******/ 	return __webpack_require__(__webpack_require__.s = 160);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -690,10 +690,10 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(66)
+__vue_exports__ = __webpack_require__(67)
 
 /* template */
-var __vue_template__ = __webpack_require__(150)
+var __vue_template__ = __webpack_require__(148)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1296,10 +1296,10 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(67)
+__vue_exports__ = __webpack_require__(66)
 
 /* template */
-var __vue_template__ = __webpack_require__(148)
+var __vue_template__ = __webpack_require__(150)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1388,7 +1388,7 @@ var _router = __webpack_require__(55);
 
 var _router2 = _interopRequireDefault(_router);
 
-var _vuexRouterSync = __webpack_require__(158);
+var _vuexRouterSync = __webpack_require__(159);
 
 var _filters = __webpack_require__(54);
 
@@ -1474,9 +1474,13 @@ var _vue = __webpack_require__(22);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(157);
+var _vueRouter = __webpack_require__(158);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
+
+var _vueMeta = __webpack_require__(157);
+
+var _vueMeta2 = _interopRequireDefault(_vueMeta);
 
 var _jsCookie = __webpack_require__(21);
 
@@ -1509,6 +1513,7 @@ var _frontendUserPassword2 = _interopRequireDefault(_frontendUserPassword);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueRouter2.default);
+_vue2.default.use(_vueMeta2.default);
 
 var scrollBehavior = function scrollBehavior(to) {
     var position = {};
@@ -3365,19 +3370,25 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _asideCategory = __webpack_require__(33);
+var _asideTrending = __webpack_require__(33);
 
-var _asideCategory2 = _interopRequireDefault(_asideCategory);
+var _asideTrending2 = _interopRequireDefault(_asideTrending);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     name: 'frontend-index',
     components: {
-        category: _asideCategory2.default
+        trending: _asideTrending2.default
     },
     mounted: function mounted() {
         this.$store.dispatch('gProgress', 100);
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '关于 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -3410,11 +3421,11 @@ var _itemActions = __webpack_require__(50);
 
 var _itemActions2 = _interopRequireDefault(_itemActions);
 
-var _asideCategory = __webpack_require__(33);
+var _asideCategory = __webpack_require__(49);
 
 var _asideCategory2 = _interopRequireDefault(_asideCategory);
 
-var _asideTrending = __webpack_require__(49);
+var _asideTrending = __webpack_require__(33);
 
 var _asideTrending2 = _interopRequireDefault(_asideTrending);
 
@@ -3479,6 +3490,12 @@ exports.default = {
         '$route': function $route() {
             fetchInitialData(this.$store);
         }
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: this.article.data.title + ' - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' - M.M.F 小屋' }]
+        };
     }
 };
 
@@ -3515,11 +3532,11 @@ var _topicsItem = __webpack_require__(132);
 
 var _topicsItem2 = _interopRequireDefault(_topicsItem);
 
-var _asideCategory = __webpack_require__(33);
+var _asideCategory = __webpack_require__(49);
 
 var _asideCategory2 = _interopRequireDefault(_asideCategory);
 
-var _asideTrending = __webpack_require__(49);
+var _asideTrending = __webpack_require__(33);
 
 var _asideTrending2 = _interopRequireDefault(_asideTrending);
 
@@ -3564,7 +3581,8 @@ exports.default = {
         topicsItem: _topicsItem2.default, category: _asideCategory2.default, trending: _asideTrending2.default
     },
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        topics: 'frontend/getArticleList'
+        topics: 'frontend/getArticleList',
+        category: 'backend/getCategoryList'
     })),
     methods: {
         loadMore: function loadMore() {
@@ -3592,6 +3610,25 @@ exports.default = {
         var path = this.$route.path;
         if (scrollTop) _store2.default.set(path, scrollTop);else _store2.default.remove(path);
         next();
+    },
+    metaInfo: function metaInfo() {
+        var title = 'M.M.F 小屋';
+        var _$store$state$route$p = this.$store.state.route.params,
+            id = _$store$state$route$p.id,
+            key = _$store$state$route$p.key,
+            by = _$store$state$route$p.by;
+
+        if (id && this.topics.data.length > 0) {
+            title = this.topics.data[0].category_name + ' - ' + title;
+        } else if (key) {
+            title = '搜索: ' + key + ' - ' + title;
+        } else if (by) {
+            title = '热门 - ' + title;
+        }
+        return {
+            title: title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
+        };
     }
 };
 
@@ -3678,6 +3715,12 @@ exports.default = {
     },
     mounted: function mounted() {
         this.getUser();
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '帐号 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -3788,6 +3831,12 @@ exports.default = {
     },
     mounted: function mounted() {
         this.$store.dispatch('gProgress', 100);
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '密码 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -7042,7 +7091,7 @@ module.exports={render:function (){var _vm=this;
     staticClass: "main wrap clearfix"
   }, [_vm._m(0), " ", _vm._h('div', {
     staticClass: "main-right"
-  }, [_vm._h('category')])])
+  }, [_vm._h('trending')])])
 },staticRenderFns: [function (){var _vm=this;
   return _vm._h('div', {
     staticClass: "main-left"
@@ -7302,16 +7351,22 @@ module.exports = require("toastr");
 /* 157 */
 /***/ function(module, exports) {
 
-module.exports = require("vue-router");
+module.exports = require("vue-meta");
 
 /***/ },
 /* 158 */
 /***/ function(module, exports) {
 
-module.exports = require("vuex-router-sync");
+module.exports = require("vue-router");
 
 /***/ },
 /* 159 */
+/***/ function(module, exports) {
+
+module.exports = require("vuex-router-sync");
+
+/***/ },
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7330,9 +7385,11 @@ var _app = __webpack_require__(52);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var isDev = "production" !== 'production';
+var meta = _app.app.$meta();
 
 exports.default = function (context) {
     _app.router.push(context.url);
+    context.meta = meta;
 
     var ss = isDev && Date.now();
     return _promise2.default.all(_app.router.getMatchedComponents().map(function (component) {

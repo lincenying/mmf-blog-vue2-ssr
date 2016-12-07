@@ -53,6 +53,12 @@ export default {
     },
     mounted() {
         this.getUser()
+    },
+    metaInfo () {
+        return {
+            title: '帐号 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        }
     }
 }
 </script>

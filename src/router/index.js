@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Meta from 'vue-meta'
 import cookies from 'js-cookie'
 
 import inBrowser from '../utils'
@@ -11,6 +12,7 @@ import account from '../pages/frontend-user-account.vue'
 import password from '../pages/frontend-user-password.vue'
 
 Vue.use(VueRouter)
+Vue.use(Meta)
 
 const scrollBehavior = to => {
     const position = {}

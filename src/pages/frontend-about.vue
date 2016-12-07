@@ -61,6 +61,12 @@ export default {
     },
     mounted() {
         this.$store.dispatch('gProgress', 100)
+    },
+    metaInfo () {
+        return {
+            title: '关于 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        }
     }
 }
 </script>

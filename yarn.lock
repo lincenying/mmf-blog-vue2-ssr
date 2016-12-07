@@ -1530,6 +1530,10 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "http://registry.npm.taobao.org/deep-is/download/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
+deepmerge@^1.2.0:
+  version "1.3.1"
+  resolved "http://registry.npm.taobao.org/deepmerge/download/deepmerge-1.3.1.tgz#682ba92402574115b865edce525665814296a39b"
+
 defined@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/defined/download/defined-1.0.0.tgz#c98d9bcef75674188e110969151199e39b1fa693"
@@ -4825,6 +4829,14 @@ vue-loader@^10.0.2:
     vue-hot-reload-api "^2.0.1"
     vue-style-loader "^1.0.0"
     vue-template-es2015-compiler "^1.2.2"
+
+vue-meta:
+  version "0.5.3"
+  resolved "http://registry.npm.taobao.org/vue-meta/download/vue-meta-0.5.3.tgz#373e970c3615a5625f79c219a4ff5c2529df56f5"
+  dependencies:
+    deepmerge "^1.2.0"
+    lodash.isplainobject "^4.0.6"
+    object-assign "^4.1.0"
 
 vue-router@^2.1.0:
   version "2.1.1"

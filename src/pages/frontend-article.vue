@@ -63,6 +63,12 @@ export default {
         '$route'() {
             fetchInitialData(this.$store)
         }
+    },
+    metaInfo () {
+        return {
+            title: this.article.data.title + ' - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' - M.M.F 小屋' }]
+        }
     }
 }
 </script>
