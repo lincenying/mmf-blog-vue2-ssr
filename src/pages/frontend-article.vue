@@ -9,7 +9,7 @@
             </div>
             <div class="card card-answer">
                 <div class="answer-content">
-                    <div class="article-content markdown-body" v-html="article.data.html"></div>
+                    <div class="article-content markdown-body" v-html="addTarget(article.data.html)"></div>
                 </div>
                 <actions :item="article.data"></actions>
             </div>
@@ -45,6 +45,12 @@ export default {
         comment,
         category,
         trending
+    },
+    methods: {
+        addTarget(content) {
+            if (!content) return ''
+            return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=')
+        }
     },
     mounted() {
         if (this.$route.path !== this.article.path) {

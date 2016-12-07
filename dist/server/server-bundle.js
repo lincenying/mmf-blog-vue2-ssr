@@ -3461,6 +3461,12 @@ exports.default = {
         category: _asideCategory2.default,
         trending: _asideTrending2.default
     },
+    methods: {
+        addTarget: function addTarget(content) {
+            if (!content) return '';
+            return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=');
+        }
+    },
     mounted: function mounted() {
         if (this.$route.path !== this.article.path) {
             fetchInitialData(this.$store);
@@ -6986,7 +6992,7 @@ module.exports={render:function (){var _vm=this;
   }, [_vm._h('div', {
     staticClass: "article-content markdown-body",
     domProps: {
-      "innerHTML": _vm._s(_vm.article.data.html)
+      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
     }
   })]), " ", _vm._h('actions', {
     attrs: {
