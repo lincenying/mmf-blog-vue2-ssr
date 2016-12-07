@@ -61,6 +61,14 @@ const mutations = {
             obj.username = payload.username
             obj.email = payload.email
         }
+    },
+    ['backend/deleteAdmin'](state, id) {
+        const obj = state.lists.data.find(ii => ii._id === id)
+        if (obj) obj.is_delete = 1
+    },
+    ['backend/recoverAdmin'](state, id) {
+        const obj = state.lists.data.find(ii => ii._id === id)
+        if (obj) obj.is_delete = 0
     }
 }
 

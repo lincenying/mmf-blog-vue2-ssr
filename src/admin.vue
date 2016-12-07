@@ -22,7 +22,7 @@ import backendMenu from './components/backend-menu.vue'
 export default {
     computed: {
         ...mapGetters({
-            global: 'getGlobal'
+            global: 'global/getGlobal'
         }),
         key() {
             return this.$route.path.replace(/\//g, '_')

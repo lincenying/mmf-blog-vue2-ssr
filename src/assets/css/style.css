@@ -646,6 +646,8 @@ a {
     color: #3e4545;
     line-height: 25px;
     display: block;
+    max-height: 125px;
+    overflow: hidden;
 }
 
 .feed .feed-article-content:hover .feed-view-more-text {
@@ -1630,7 +1632,7 @@ a:hover .icon-arrow-right {
 }
 
 .list-section .list-date {
-    width: 140px;
+    width: 100px;
 }
 
 .list-section .list-action {
@@ -1642,7 +1644,7 @@ a:hover .icon-arrow-right {
 }
 
 .list-section .list-email {
-    width: 270px;
+    width: 310px;
 }
 
 .modal-wrap {

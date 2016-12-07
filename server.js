@@ -95,7 +95,7 @@ app.use('/static', serve('./dist/static'))
 app.use('/api', routes)
 
 // 前台路由, ssr 渲染
-app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending', '/user/account', '/user/password'], (req, res) => {
+app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'], (req, res) => {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }

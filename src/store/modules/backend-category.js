@@ -35,7 +35,7 @@ const mutations = {
             ...state.item,
             ...payload
         }
-        const obj = state.lists.find(ii => ii._id === payload._id)
+        const obj = state.lists.find(ii => ii._id === payload.id)
         if (obj) {
             obj.cate_name = payload.cate_name
             obj.cate_order = payload.cate_order

@@ -16,26 +16,26 @@ exports.insert = (req, res) => {
         creat_date = moment().format('YYYY-MM-DD HH:MM:SS'),
         id = req.body.id,
         timestamp = moment().format('X'),
-        username = req.body.username || '匿名'
+        userid = req.cookies.userid,
+        username = req.cookies.username
     if (!content) {
         res.json({
             code: -200,
             message: '请输入评论内容'
         })
+        return
     }
     var data = {
         article_id: id,
+        userid,
         username,
         email: '',
         content,
-        reply_id: 0,
-        reply_user: '',
         creat_date,
         is_delete: 0,
         timestamp
     }
-    Comment.createAsync(data)
-    .then(result => {
+    Comment.createAsync(data) .then(result => {
         return Article.updateAsync({
             _id: id
         }, {
@@ -45,14 +45,7 @@ exports.insert = (req, res) => {
         }).then(() => {
             res.json({
                 code: 200,
-                data: {
-                    _id: result._id,
-                    article_id: id,
-                    username,
-                    content,
-                    creat_date,
-                    is_delete: 0
-                },
+                data: result,
                 message: '发布成功'
             })
         })
@@ -72,7 +65,8 @@ exports.insert = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    var id = req.query.id,
+    var all = req.query.all,
+        id = req.query.id,
         limit = req.query.limit,
         page = req.query.page
     if (!id) {
@@ -86,10 +80,12 @@ exports.getList = (req, res) => {
         if (!page) page = 1
         if (!limit) limit = 10
         var data = {
-                is_delete: 0,
                 article_id: id
             },
             skip = (page - 1) * limit
+        if (!all) {
+            data.is_delete = 0
+        }
         Promise.all([
             Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(),
             Comment.countAsync(data)
@@ -127,7 +123,7 @@ exports.deletes = (req, res) => {
         return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': -1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功',
+                message: '删除成功',
                 data: 'success'
             })
         })
@@ -152,7 +148,7 @@ exports.recover = (req, res) => {
         return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': 1 } }).then(() => {
             res.json({
                 code: 200,
-                message: '更新成功',
+                message: '恢复成功',
                 data: 'success'
             })
         })

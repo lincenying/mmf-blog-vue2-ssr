@@ -1,11 +1,11 @@
 var md5 = require('md5')
-var fs = require('fs')
 var moment = require('moment')
 
 var mongoose = require('../mongoose')
 var User = mongoose.model('User')
 
 var md5Pre = require('../config').md5Pre
+var strlen = require('../utils').strlen
 const general = require('./general')
 
 const list = general.list
@@ -80,13 +80,26 @@ exports.login = (req, res) => {
  * @param  {Function}  next [description]
  * @return {json}         [description]
  */
-exports.insert = (req, res, next) => {
+exports.insert = (req, res) => {
     var email = req.body.email,
         password = req.body.password,
         username = req.body.username
 
     if (!username || !password || !email) {
-        res.render('admin.html', { message: '请将表单填写完整' })
+        res.json({
+            code: -200,
+            message: '请将表单填写完整'
+        })
+    } else if (strlen(username) < 4) {
+        res.json({
+            code: -200,
+            message: '用户长度至少 2 个中文或 4 个英文'
+        })
+    } else if (strlen(password) < 8) {
+        res.json({
+            code: -200,
+            message: '密码长度至少 8 位'
+        })
     } else {
         User.findOneAsync({ username }).then(result => {
             if (result) {
@@ -122,6 +135,32 @@ exports.insert = (req, res, next) => {
             })
         })
     }
+}
+
+exports.getItem = (req, res) => {
+    var json, userid = req.cookies.userid
+    User.findOneAsync({
+        _id: userid,
+        is_delete: 0
+    }).then(result => {
+        if (result) {
+            json = {
+                code: 200,
+                data: result
+            }
+        } else {
+            json = {
+                code: -200,
+                message: '请先登录, 或者数据错误'
+            }
+        }
+        res.json(json)
+    }).catch(err => {
+        res.json({
+            code: -200,
+            message: err.toString()
+        })
+    })
 }
 
 /**

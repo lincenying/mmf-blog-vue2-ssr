@@ -9,7 +9,7 @@
             </div>
             <div class="card card-answer">
                 <div class="answer-content">
-                    <div class="article-content" v-html="article.data.html"></div>
+                    <div class="article-content markdown-body" v-html="article.data.html"></div>
                 </div>
                 <actions :item="article.data"></actions>
             </div>
@@ -27,17 +27,17 @@ import { mapGetters } from 'vuex'
 import actions from '../components/item-actions.vue'
 import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
-import comment from '../components/comment.vue'
+import comment from '../components/frontend-comment.vue'
 const fetchInitialData = async store => {
-    await store.dispatch(`frontend/getArticle`)
-    await store.dispatch(`frontend/getComment`, { page: 1, limit: 5})
+    await store.dispatch(`frontend/getArticleItem`)
+    await store.dispatch(`global/getCommentList`, { page: 1, limit: 5})
 }
 export default {
-    name: 'article',
+    name: 'frontend-article',
     prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
-            article: 'frontend/getArticle'
+            article: 'frontend/getArticleItem'
         })
     },
     components: {

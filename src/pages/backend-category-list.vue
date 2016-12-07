@@ -11,7 +11,6 @@
                 <div class="list-time">{{ item.cate_order }}</div>
                 <div class="list-action">
                     <router-link :to="'/backend/category/modify/' + item._id" class="badge badge-success">编辑</router-link>
-                    <a href="javascript:;">删除</a>
                 </div>
             </div>
         </div>

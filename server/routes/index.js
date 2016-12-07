@@ -121,7 +121,7 @@ router.get('/backend/user/recover', isAdmin, (req, res) => {
 })
 // ------ 评论 ------
 // 删除评论
-router.get('/frontend/comment/deletes', isAdmin, (req, res) => {
+router.get('/frontend/comment/delete', isAdmin, (req, res) => {
     frontendComment.deletes(req, res)
 })
 // 恢复评论
@@ -131,11 +131,11 @@ router.get('/frontend/comment/recover', isAdmin, (req, res) => {
 // ================= 前台 =================
 // ------ 文章 ------
 // 前台浏览时, 获取文章列表
-router.get('/frontend/topics', (req, res) => {
+router.get('/frontend/article/list', (req, res) => {
     frontendArticle.getList(req, res)
 })
 // 前台浏览时, 获取单篇文章
-router.get('/frontend/article', (req, res) => {
+router.get('/frontend/article/item', (req, res) => {
     frontendArticle.getItem(req, res)
 })
 // 前台浏览时, 热门文章
@@ -152,9 +152,17 @@ router.get('/frontend/comment/list', (req, res) => {
     frontendComment.getList(req, res)
 })
 // ------ 用户 ------
+// 前台注册
+router.post('/frontend/user/insert', multipartMiddleware, (req, res) => {
+    frontendUser.insert(req, res)
+})
 // 前台登录
 router.post('/frontend/user/login', multipartMiddleware, (req, res) => {
     frontendUser.login(req, res)
+})
+// 前台账号读取
+router.get('/frontend/user/account', isUser, (req, res) => {
+    frontendUser.getItem(req, res)
 })
 // 前台账号修改
 router.post('/frontend/user/account', isUser, multipartMiddleware, (req, res) => {
@@ -166,11 +174,11 @@ router.post('/frontend/user/password', isUser, multipartMiddleware, (req, res) =
 })
 // ------ 喜欢 ------
 // 喜欢
-router.post('/frontend/like', isUser, multipartMiddleware, (req, res) => {
+router.get('/frontend/like', isUser, (req, res) => {
     frontendLike.like(req, res)
 })
 // 取消喜欢
-router.post('/frontend/unlike', isUser, multipartMiddleware, (req, res) => {
+router.get('/frontend/unlike', isUser, (req, res) => {
     frontendLike.unlike(req, res)
 })
 

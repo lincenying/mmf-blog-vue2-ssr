@@ -13,9 +13,9 @@
                             <span class="input-info error">请输入邮箱</span>
                         </a-input>
                     </div>
-                    <div class="settings-footer clearfix">
+                    <!-- <div class="settings-footer clearfix">
                         <a href="javascript:;" class="btn btn-blue">保存设置</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -26,6 +26,7 @@
 </template>
 
 <script lang="babel">
+import api from '~api'
 import account from '../components/aside-account.vue'
 import aInput from '../components/_input.vue'
 export default {
@@ -40,6 +41,18 @@ export default {
     components: {
         account,
         aInput
+    },
+    methods: {
+        async getUser() {
+            const { data: { code, data} } = await api.get('frontend/user/account')
+            if (code === 200) {
+                this.form.username = data.username
+                this.form.email = data.email
+            }
+        }
+    },
+    mounted() {
+        this.getUser()
     }
 }
 </script>

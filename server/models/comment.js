@@ -4,11 +4,10 @@ var Promise = require('bluebird')
 
 var CommentSchema = new Schema({
     article_id: String,
+    userid: String,
     username: String,
     email: String,
     content: String,
-    reply_id: String,
-    reply_user: String,
     creat_date: String,
     is_delete: Number,
     timestamp: Number

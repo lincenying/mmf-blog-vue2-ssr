@@ -19,11 +19,11 @@ var Like = mongoose.model('Like')
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    var id = req.query.id,
+    var by = req.query.by,
+        id = req.query.id,
+        key = req.query.key,
         limit = req.query.limit,
-        //markdown = req.query.markdown,
-        page = req.query.page,
-        qs = req.query.qs
+        page = req.query.page
     page = parseInt(page, 10)
     limit = parseInt(limit, 10)
     if (!page) page = 1
@@ -35,21 +35,19 @@ exports.getList = (req, res) => {
     if (id) {
         data.category = id
     }
-    if (qs) {
-        var reg = new RegExp(qs, 'i')
+    if (key) {
+        var reg = new RegExp(key, 'i')
         data.title = {$regex : reg}
+    }
+    var sort = '-_id'
+    if (by) {
+        sort = '-' + by
     }
 
     Promise.all([
-        Article.find(data).sort('-_id').skip(skip).limit(limit).exec(),
+        Article.find(data).sort(sort).skip(skip).limit(limit).exec(),
         Article.countAsync(data)
     ]).then(result => {
-        // if (markdown) {
-        //     result[0].map(data => {
-        //         data.content = marked(data.content)
-        //         return data
-        //     })
-        // }
         var arr = [],
             data = result[0],
             total = result[1],
@@ -99,7 +97,6 @@ exports.getList = (req, res) => {
 exports.getItem = (req, res) => {
     var _id = req.query.id,
         user_id = req.cookies.user_id
-    // var markdown = req.query.markdown
     if (!_id) {
         res.json({
             code: -200,
@@ -108,29 +105,13 @@ exports.getItem = (req, res) => {
     }
     Promise.all([
         Article.findOneAsync({ _id, is_delete: 0 }),
-        Article.findOne({ is_delete: 0 }).where('_id').gt(_id).sort('_id').exec(),
-        Article.findOne({ is_delete: 0 }).where('_id').lt(_id).sort('-_id').exec(),
         Like.findOneAsync({ article_id: _id, user_id }),
         Article.updateAsync({ _id }, { '$inc':{ 'visit': 1 } })
     ]).then(value => {
-        var next = {
-            next_id: value[1] ? value[1]._id : '',
-            next_title: value[1] ? value[1].title : ''
-        }
-
-        var prev = {
-            prev_id: value[2] ? value[2]._id : '',
-            prev_title: value[2] ? value[2].title : ''
-        }
-        // if (markdown) {
-        //     value[0].content = marked(value[0].content)
-        // }
-        value[0].likeStatus = !! value[3]
+        value[0]._doc.like_status = !! value[1]
         var json = {
             code: 200,
-            data: value[0],
-            prev,
-            next
+            data: value[0]
         }
         res.json(json)
     }).catch(err => {

@@ -60,7 +60,7 @@ export default {
         }
     },
     mounted() {
-        if (!this.item._id) {
+        if (!this.item._id || this.item.path !== this.$route.path) {
             fetchInitialData(this.$store)
         } else {
             this.form.cate_name = this.item.cate_name

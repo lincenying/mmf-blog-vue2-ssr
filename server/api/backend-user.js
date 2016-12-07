@@ -121,7 +121,7 @@ exports.insert = (req, res, next) => {
                     is_delete: 0,
                     timestamp: moment().format('X')
                 }).then(() => {
-                    fs.writeFileSync('./admin.lock', '')
+                    fs.writeFileSync('./admin.lock', username)
                     return '添加用户成功: '+username+', 密码: '+password
                 })
             }).then(message => {

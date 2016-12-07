@@ -15,7 +15,7 @@
                         </a-input>
                     </div>
                     <div class="settings-footer clearfix">
-                        <a href="javascript:;" class="btn btn-blue">保存设置</a>
+                        <a @click="modify" href="javascript:;" class="btn btn-yellow">保存设置</a>
                     </div>
                 </div>
             </div>
@@ -27,8 +27,9 @@
 </template>
 
 <script lang="babel">
-import account from '../components/aside-account.vue'
-import aInput from '../components/_input.vue'
+import api from '~api'
+import account from '~components/aside-account.vue'
+import aInput from '~components/_input.vue'
 export default {
     data() {
         return {
@@ -42,6 +43,30 @@ export default {
     components: {
         aInput,
         account
+    },
+    methods: {
+        async modify() {
+            if (!this.form.password || !this.form.old_password || !this.form.re_password) {
+                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                return
+            } else if (this.form.password !== this.form.re_password) {
+                this.$store.dispatch('showMsg', '两次密码输入不一致!')
+                return
+            }
+            const { data: { code, data} } = await api.post('frontend/user/password', this.form)
+            if (code === 200) {
+                this.$store.dispatch('showMsg', {
+                    type: 'success',
+                    content: data
+                })
+                this.form.old_password = ''
+                this.form.password = ''
+                this.form.re_password = ''
+            }
+        }
+    },
+    mounted() {
+        this.$store.dispatch('gProgress', 100)
     }
 }
 </script>

@@ -8,6 +8,7 @@ import login from '../pages/backend-login.vue'
 import articleList from '../pages/backend-article-list.vue'
 import articleInsert from '../pages/backend-article-insert.vue'
 import articleModify from '../pages/backend-article-modify.vue'
+import articleComment from '../pages/backend-article-comment.vue'
 
 import categoryList from '../pages/backend-category-list.vue'
 import categoryInsert from '../pages/backend-category-insert.vue'
@@ -55,6 +56,7 @@ const router = new VueRouter({
         { name:'article_list', path: '/backend/article/list', component: articleList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
         { name:'article_insert', path: '/backend/article/insert', component: articleInsert, meta: { scrollToTop: true }, beforeEnter: guardRoute },
         { name:'article_modify', path: '/backend/article/modify/:id', component: articleModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+        { name:'article_comment', path: '/backend/article/comment/:id', component: articleComment, meta: { scrollToTop: true }, beforeEnter: guardRoute },
 
         { name:'category_list', path: '/backend/category/list', component: categoryList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
         { name:'category_insert', path: '/backend/category/insert', component: categoryInsert, meta: { scrollToTop: true }, beforeEnter: guardRoute },

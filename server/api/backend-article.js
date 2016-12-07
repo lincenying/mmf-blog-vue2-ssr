@@ -7,14 +7,14 @@ const general = require('./general')
 const list = general.list
 const item = general.item
 
-// var marked = require('marked')
-// var hljs = require('highlight.js')
-// marked.setOptions({
-//     highlight(code) {
-//         return hljs.highlightAuto(code).value
-//     },
-//     breaks: true
-// })
+var marked = require('marked')
+var hljs = require('highlight.js')
+marked.setOptions({
+    highlight(code) {
+        return hljs.highlightAuto(code).value
+    },
+    breaks: true
+})
 
 /**
  * 管理时, 获取文章列表
@@ -46,11 +46,13 @@ exports.getItem = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.insert = (req, res) => {
-    var category = req.body.category,
-        category_name = req.body.category_name,
+    var categorys = req.body.category,
         content = req.body.content,
-        html = req.body['post-content-html-code'],
+        html = marked(content),
         title = req.body.title
+    var arr_category = categorys.split("|")
+    var category = arr_category[0]
+    var category_name = arr_category[1]
     var data = {
         title,
         category,
@@ -68,9 +70,8 @@ exports.insert = (req, res) => {
         return Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }).then(() => {
             return res.json({
                 code: 200,
-                user_id: result._id,
                 message: '发布成功',
-                data: 'success'
+                data: result
             })
         })
     }).catch(err => {
@@ -143,7 +144,7 @@ exports.modify = (req, res) => {
         category_name = req.body.category_name,
         category_old = req.body.category_old,
         content = req.body.content,
-        html = req.body['post-content-html-code'],
+        html = marked(content),
         id = req.body.id,
         title = req.body.title
     Article.updateAsync({ _id: id }, { '$set': { category, category_name, content, html, title } }).then(() => {

@@ -2,7 +2,7 @@
     <div class="main wrap clearfix">
         <div class="main-left">
             <div class="home-feeds cards-wrap">
-                <topics-item v-for="item in topics.list" :item="item"></topics-item>
+                <topics-item v-for="item in topics.data" :item="item"></topics-item>
                 <div class="load-more-wrap"><a v-if="topics.hasNext" @click="loadMore()" href="javascript:;" class="load-more">更多<i class="icon icon-circle-loading"></i></a></div>
             </div>
         </div>
@@ -20,20 +20,20 @@ import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
 import { ssp } from '../utils'
 const fetchInitialData = async (store, config = { page: 1}) => {
-    const {params: {id, qs}, path} = store.state.route
-    const base = { ...config, markdown: 1, limit: 10, id, qs }
-    await store.dispatch('frontend/getTopics', base)
+    const {params: {id, key, by}, path} = store.state.route
+    const base = { ...config, limit: 10, id, key, by }
+    await store.dispatch('frontend/getArticleList', base)
     if (config.page === 1) ssp(path)
 }
 export default {
-    name: 'index',
+    name: 'frontend-index',
     prefetch: fetchInitialData,
     components: {
         topicsItem, category, trending
     },
     computed: {
         ...mapGetters({
-            topics: 'frontend/getTopics'
+            topics: 'frontend/getArticleList'
         })
     },
     methods: {
@@ -42,7 +42,7 @@ export default {
         }
     },
     mounted() {
-        if (this.topics.list.length <= 0 || this.$route.path !== this.topics.path) {
+        if (this.topics.data.length <= 0 || this.$route.path !== this.topics.path) {
             fetchInitialData(this.$store, {page: 1})
         } else {
             ssp(this.$route.path)

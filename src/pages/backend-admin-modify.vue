@@ -67,7 +67,7 @@ export default {
         }
     },
     mounted() {
-        if (!this.item.path) {
+        if (this.item.path !== this.$route.path) {
             fetchInitialData(this.$store)
         } else {
             this.form.username = this.item.data.username

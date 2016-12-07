@@ -6,7 +6,7 @@ var ArticleSchema = new Schema({
     title: String,
     content: String,
     html: String,
-    category: Number,
+    category: String,
     category_name: String,
     visit: Number,
     like: Number,

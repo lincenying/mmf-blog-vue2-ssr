@@ -9,8 +9,7 @@
                 <i class="icon icon-arrow-down"></i>
                 <select v-model="form.category" class="select-item" name="category">
                     <option value="">请选择分类</option>
-                    <option value="0086">中国 +86 </option>
-                    <option value="001">美国 +1 </option>
+                    <option v-for="item in category" :value="item._id + '|' + item.cate_name">{{ item.cate_name }}</option>
                 </select>
                 <span class="input-info error">请输入分类</span>
             </a-input>
@@ -21,15 +20,21 @@
             </div>
         </div>
         <div class="settings-footer clearfix">
-            <router-link to="/backend/user/list" class="btn btn-blue">返回</router-link>
-            <a href="javascript:;" class="btn btn-yellow">编辑管理员</a>
+            <a @click="insert" href="javascript:;" class="btn btn-yellow">添加文章</a>
         </div>
     </div>
 </template>
 
 <script lang="babel">
+/* global postEditor */
+import api from '~api'
+import { mapGetters } from 'vuex'
 import aInput from '../components/_input.vue'
+const fetchInitialData = async (store, config = { limit: 99}) => {
+    await store.dispatch('backend/getCategoryList', config)
+}
 export default {
+    name: 'backend-article-insert',
     data() {
         return {
             form: {
@@ -42,7 +47,34 @@ export default {
     components: {
         aInput
     },
+    computed: {
+        ...mapGetters({
+            category: 'backend/getCategoryList'
+        })
+    },
+    methods: {
+        async insert() {
+            const content = postEditor.getMarkdown()
+            if (!this.form.title || !this.form.category || !content) {
+                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                return
+            }
+            this.form.content = content
+            const { data: { message, code, data} } = await api.post('backend/article/insert', this.form)
+            if (code === 200) {
+                this.$store.dispatch('showMsg', {
+                    type: 'success',
+                    content: message
+                })
+                this.$store.commit('backend/insertArticleItem', data)
+                this.$router.push('/backend/article/list')
+            }
+        }
+    },
     mounted() {
+        if (this.category.length <= 0) {
+            fetchInitialData(this.$store)
+        }
         // eslint-disable-next-line
         window.postEditor = editormd("post-content", {
             width: "100%",
@@ -54,15 +86,12 @@ export default {
                 return [
                     "bold", "italic", "quote", "|",
                     "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "code-block", "table", "|",
-                    "watch", "preview", "fullscreen", "|",
-                    "help"
+                    "link", "reference-link", "image", "code", "table", "|",
+                    "watch", "preview", "fullscreen"
                 ]
             },
             watch : false,
-            saveHTMLToTextarea : true,
-            imageUpload : true,
-            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"]
+            saveHTMLToTextarea : true
         })
     }
 }

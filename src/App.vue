@@ -4,8 +4,8 @@
     <transition name="fade" mode="out-in">
         <router-view :key="key" class="router"></router-view>
     </transition>
-    <sign-up v-if="!backend"></sign-up>
-    <sign-in v-if="!backend"></sign-in>
+    <sign-up v-if="!backend" :show="global.showRegisterModal"></sign-up>
+    <sign-in v-if="!backend" :show="global.showLoginModal"></sign-in>
 </div>
 </template>
 <script lang="babel">
@@ -18,7 +18,7 @@ import signIn from './components/signin.vue'
 export default {
     computed: {
         ...mapGetters({
-            global: 'getGlobal'
+            global: 'global/getGlobal'
         }),
         key() {
             return this.$route.path.replace(/\//g, '_')

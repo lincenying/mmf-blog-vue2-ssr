@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="comment-items-wrap">
-                <div v-for="item in comments.list" class="comment-item">
+                <div v-for="item in comments.data" class="comment-item">
                     <a href="javascript:;" class="comment-author-avatar-link">
                         <img src="http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg" alt="" class="avatar-img">
                     </a>
@@ -35,46 +35,46 @@
 
 <script lang="babel">
 import cookies from 'js-cookie'
+import api from '~api'
 import { mapGetters } from 'vuex'
 export default {
     computed: {
         ...mapGetters({
-            comments: 'frontend/getComment'
+            comments: 'global/getCommentList'
         })
     },
     data () {
         return {
             form: {
+                id: this.$route.params.id,
                 content: ''
             }
         }
     },
     methods: {
         loadcomment() {
-            this.$store.dispatch(`frontend/getComment`, {
+            this.$store.dispatch(`global/getCommentList`, {
                 page: this.comments.page + 1,
                 limit: 10
             })
         },
-        postComment() {
+        async postComment() {
             const username = cookies.get('user')
             if (!username) {
                 this.$store.dispatch('showMsg', '请先登录!')
+                this.$store.commit('global/showLoginModal', true)
             } else if (this.form.content === '') {
                 this.$store.dispatch('showMsg', '请输入评论内容!')
             } else {
-                this.$store.dispatch('frontend/postComment', {
-                    id: this.$route.params.id,
-                    content: this.form.content
-                }).then(({code}) => {
-                    if (code === 200) {
-                        this.form.content = ''
-                        this.$store.dispatch('showMsg', {
-                            content: '评论发布成功!',
-                            type: 'success'
-                        })
-                    }
-                })
+                const { data: { code, data }} = await api.post('frontend/comment/insert', this.form)
+                if (code === 200) {
+                    this.form.content = ''
+                    this.$store.dispatch('showMsg', {
+                        content: '评论发布成功!',
+                        type: 'success'
+                    })
+                    this.$store.commit('global/insertCommentItem', data)
+                }
             }
         },
         reply(item) {
