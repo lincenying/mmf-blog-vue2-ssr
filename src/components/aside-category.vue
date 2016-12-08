@@ -9,22 +9,11 @@
     </div>
 </template>
 <script lang="babel">
-import { mapGetters } from 'vuex'
-const fetchInitialData = store => {
-    store.dispatch('backend/getCategoryList')
-}
 export default {
     name: 'aside-category',
-    prefetch: fetchInitialData,
-    computed: {
-        ...mapGetters({
-            category: 'backend/getCategoryList'
-        })
-    },
-    mounted() {
-        if (this.category.length <= 0) {
-            fetchInitialData(this.$store)
-        }
+    props: ['category'],
+    serverCacheKey: () => {
+        return `aside::category`
     }
 }
 </script>

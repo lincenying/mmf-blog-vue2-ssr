@@ -47,20 +47,35 @@
             </div>
         </div>
         <div class="main-right">
-            <trending></trending>
+            <trending :trending="trending"></trending>
         </div>
     </div>
 </template>
 <script lang="babel">
+import { mapGetters } from 'vuex'
 import trending from '../components/aside-trending.vue'
+
+const fetchInitialData = async store => {
+    await store.dispatch('frontend/getTrending')
+}
 
 export default {
     name: 'frontend-index',
+    prefetch: fetchInitialData,
     components: {
         trending
     },
+    computed: {
+        ...mapGetters({
+            trending: 'frontend/getTrending'
+        })
+    },
     mounted() {
-        this.$store.dispatch('gProgress', 100)
+        if (this.trending.length <= 0) {
+            fetchInitialData(this.$store)
+        } else {
+            this.$store.dispatch('gProgress', 100)
+        }
     },
     metaInfo () {
         return {

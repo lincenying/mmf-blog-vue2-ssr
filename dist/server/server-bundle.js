@@ -121,35 +121,6 @@ module.exports = __webpack_require__(125);
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
-
-exports.__esModule = true;
-
-var _assign = __webpack_require__(79);
-
-var _assign2 = _interopRequireDefault(_assign);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = _assign2.default || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -248,6 +219,35 @@ exports.default = {
 };
 
 /***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+exports.__esModule = true;
+
+var _assign = __webpack_require__(79);
+
+var _assign2 = _interopRequireDefault(_assign);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _assign2.default || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+/***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -311,12 +311,6 @@ exports.default = function (obj, key, value) {
 
 /***/ },
 /* 8 */
-/***/ function(module, exports) {
-
-module.exports = require("vuex");
-
-/***/ },
-/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(20);
@@ -326,7 +320,7 @@ module.exports = function(it){
 };
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 // Thank's IE8 for his funny defineProperty
@@ -335,17 +329,23 @@ module.exports = !__webpack_require__(18)(function(){
 });
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 var dP         = __webpack_require__(15)
   , createDesc = __webpack_require__(41);
-module.exports = __webpack_require__(10) ? function(object, key, value){
+module.exports = __webpack_require__(9) ? function(object, key, value){
   return dP.f(object, key, createDesc(1, value));
 } : function(object, key, value){
   object[key] = value;
   return object;
 };
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+module.exports = require("vuex");
 
 /***/ },
 /* 12 */
@@ -417,7 +417,7 @@ var strlen = exports.strlen = function strlen(str) {
 var global    = __webpack_require__(5)
   , core      = __webpack_require__(6)
   , ctx       = __webpack_require__(17)
-  , hide      = __webpack_require__(11)
+  , hide      = __webpack_require__(10)
   , PROTOTYPE = 'prototype';
 
 var $export = function(type, name, source){
@@ -486,12 +486,12 @@ module.exports = {};
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-var anObject       = __webpack_require__(9)
+var anObject       = __webpack_require__(8)
   , IE8_DOM_DEFINE = __webpack_require__(90)
   , toPrimitive    = __webpack_require__(112)
   , dP             = Object.defineProperty;
 
-exports.f = __webpack_require__(10) ? Object.defineProperty : function defineProperty(O, P, Attributes){
+exports.f = __webpack_require__(9) ? Object.defineProperty : function defineProperty(O, P, Attributes){
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -726,7 +726,7 @@ var _vue = __webpack_require__(22);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vuex = __webpack_require__(8);
+var _vuex = __webpack_require__(11);
 
 var _vuex2 = _interopRequireDefault(_vuex);
 
@@ -836,7 +836,7 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 var LIBRARY        = __webpack_require__(40)
   , $export        = __webpack_require__(13)
   , redefine       = __webpack_require__(107)
-  , hide           = __webpack_require__(11)
+  , hide           = __webpack_require__(10)
   , has            = __webpack_require__(19)
   , Iterators      = __webpack_require__(14)
   , $iterCreate    = __webpack_require__(94)
@@ -1364,7 +1364,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.store = exports.router = exports.app = undefined;
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -1567,7 +1567,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -1577,7 +1577,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _actions, _mutations, _getters;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -1742,7 +1742,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -1752,7 +1752,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _actions, _mutations, _getters;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -1963,7 +1963,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -1981,7 +1981,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _actions, _mutations, _getters;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -2106,7 +2106,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2116,7 +2116,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _actions, _mutations, _getters;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -2281,7 +2281,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2291,7 +2291,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _actions, _mutations, _getters;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -2475,7 +2475,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2485,7 +2485,7 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _mutations;
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -2663,11 +2663,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _vuex = __webpack_require__(8);
+var _vuex = __webpack_require__(11);
 
 var _nprogress = __webpack_require__(155);
 
@@ -2737,16 +2737,21 @@ exports.default = {
 /***/ function(module, exports) {
 
 "use strict";
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = {};
+exports.default = {
+    name: 'aside-account',
+    serverCacheKey: function serverCacheKey() {
+        return 'aside::account';
+    }
+};
 
 /***/ },
 /* 66 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 "use strict";
 'use strict';
@@ -2754,34 +2759,17 @@ exports.default = {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _extends2 = __webpack_require__(2);
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _vuex = __webpack_require__(8);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var fetchInitialData = function fetchInitialData(store) {
-    store.dispatch('backend/getCategoryList');
-};
 exports.default = {
     name: 'aside-category',
-    prefetch: fetchInitialData,
-    computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        category: 'backend/getCategoryList'
-    })),
-    mounted: function mounted() {
-        if (this.category.length <= 0) {
-            fetchInitialData(this.$store);
-        }
+    props: ['category'],
+    serverCacheKey: function serverCacheKey() {
+        return 'aside::category';
     }
 };
 
 /***/ },
 /* 67 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 "use strict";
 'use strict';
@@ -2789,28 +2777,11 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _extends2 = __webpack_require__(2);
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _vuex = __webpack_require__(8);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var fetchInitialData = function fetchInitialData(store) {
-    store.dispatch('frontend/getTrending');
-};
 exports.default = {
     name: 'aside-trending',
-    prefetch: fetchInitialData,
-    computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        trending: 'frontend/getTrending'
-    })),
-    mounted: function mounted() {
-        if (this.trending.length <= 0) {
-            fetchInitialData(this.$store);
-        }
+    props: ['trending'],
+    serverCacheKey: function serverCacheKey() {
+        return 'aside::trending';
     }
 };
 
@@ -2833,7 +2804,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2841,11 +2812,11 @@ var _jsCookie = __webpack_require__(21);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
-var _vuex = __webpack_require__(8);
+var _vuex = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2958,7 +2929,7 @@ var _jsCookie = __webpack_require__(21);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -3125,7 +3096,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -3216,7 +3187,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -3349,7 +3320,7 @@ exports.default = {
         actions: _itemActions2.default
     },
     methods: {
-        addTarget: function addTarget(content) {
+        cutStr: function cutStr(content) {
             if (!content) return '';
             return content.substring(0, 500) + '...';
         }
@@ -3370,19 +3341,63 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends2 = __webpack_require__(3);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _regenerator = __webpack_require__(1);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(0);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _vuex = __webpack_require__(11);
+
 var _asideTrending = __webpack_require__(33);
 
 var _asideTrending2 = _interopRequireDefault(_asideTrending);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var fetchInitialData = function () {
+    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(store) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        _context.next = 2;
+                        return store.dispatch('frontend/getTrending');
+
+                    case 2:
+                    case 'end':
+                        return _context.stop();
+                }
+            }
+        }, _callee, undefined);
+    }));
+
+    return function fetchInitialData(_x) {
+        return _ref.apply(this, arguments);
+    };
+}();
+
 exports.default = {
     name: 'frontend-index',
+    prefetch: fetchInitialData,
     components: {
         trending: _asideTrending2.default
     },
+    computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
+        trending: 'frontend/getTrending'
+    })),
     mounted: function mounted() {
-        this.$store.dispatch('gProgress', 100);
+        if (this.trending.length <= 0) {
+            fetchInitialData(this.$store);
+        } else {
+            this.$store.dispatch('gProgress', 100);
+        }
     },
     metaInfo: function metaInfo() {
         return {
@@ -3403,7 +3418,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -3415,7 +3430,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _vuex = __webpack_require__(8);
+var _vuex = __webpack_require__(11);
 
 var _itemActions = __webpack_require__(50);
 
@@ -3441,14 +3456,13 @@ var fetchInitialData = function () {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        _context.next = 2;
+                        store.dispatch('backend/getCategoryList');
+                        store.dispatch('frontend/getTrending');
+                        store.dispatch('global/getCommentList', { page: 1, limit: 5 });
+                        _context.next = 5;
                         return store.dispatch('frontend/getArticleItem');
 
-                    case 2:
-                        _context.next = 4;
-                        return store.dispatch('global/getCommentList', { page: 1, limit: 5 });
-
-                    case 4:
+                    case 5:
                     case 'end':
                         return _context.stop();
                 }
@@ -3464,7 +3478,10 @@ exports.default = {
     name: 'frontend-article',
     prefetch: fetchInitialData,
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        article: 'frontend/getArticleItem'
+        article: 'frontend/getArticleItem',
+        comments: 'global/getCommentList',
+        category: 'backend/getCategoryList',
+        trending: 'frontend/getTrending'
     })),
     components: {
         actions: _itemActions2.default,
@@ -3514,7 +3531,7 @@ var _regenerator = __webpack_require__(1);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(2);
+var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -3526,7 +3543,7 @@ var _store = __webpack_require__(51);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _vuex = __webpack_require__(8);
+var _vuex = __webpack_require__(11);
 
 var _topicsItem = __webpack_require__(132);
 
@@ -3556,13 +3573,16 @@ var fetchInitialData = function () {
                     case 0:
                         _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, key = _store$state$route$pa.key, by = _store$state$route$pa.by, path = _store$state$route.path;
                         base = (0, _extends3.default)({}, config, { limit: 10, id: id, key: key, by: by });
-                        _context.next = 4;
+
+                        store.dispatch('backend/getCategoryList');
+                        store.dispatch('frontend/getTrending');
+                        _context.next = 6;
                         return store.dispatch('frontend/getArticleList', base);
 
-                    case 4:
+                    case 6:
                         if (config.page === 1) (0, _utils.ssp)(path);
 
-                    case 5:
+                    case 7:
                     case 'end':
                         return _context.stop();
                 }
@@ -3582,7 +3602,8 @@ exports.default = {
     },
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
         topics: 'frontend/getArticleList',
-        category: 'backend/getCategoryList'
+        category: 'backend/getCategoryList',
+        trending: 'frontend/getTrending'
     })),
     methods: {
         loadMore: function loadMore() {
@@ -3618,8 +3639,13 @@ exports.default = {
             key = _$store$state$route$p.key,
             by = _$store$state$route$p.by;
 
-        if (id && this.topics.data.length > 0) {
-            title = this.topics.data[0].category_name + ' - ' + title;
+        if (id) {
+            var obj = this.category.find(function (item) {
+                return item._id === id;
+            });
+            if (obj) {
+                title = obj.cate_name + ' - ' + title;
+            }
         } else if (key) {
             title = '搜索: ' + key + ' - ' + title;
         } else if (by) {
@@ -3651,7 +3677,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -3743,7 +3769,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _api = __webpack_require__(3);
+var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -3941,7 +3967,7 @@ module.exports = function(IS_INCLUDES){
 var ctx         = __webpack_require__(17)
   , call        = __webpack_require__(93)
   , isArrayIter = __webpack_require__(92)
-  , anObject    = __webpack_require__(9)
+  , anObject    = __webpack_require__(8)
   , toLength    = __webpack_require__(44)
   , getIterFn   = __webpack_require__(113)
   , BREAK       = {}
@@ -3968,7 +3994,7 @@ exports.RETURN = RETURN;
 /* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(10) && !__webpack_require__(18)(function(){
+module.exports = !__webpack_require__(9) && !__webpack_require__(18)(function(){
   return Object.defineProperty(__webpack_require__(26)('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
@@ -4011,7 +4037,7 @@ module.exports = function(it){
 /***/ function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
-var anObject = __webpack_require__(9);
+var anObject = __webpack_require__(8);
 module.exports = function(iterator, fn, value, entries){
   try {
     return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -4035,7 +4061,7 @@ var create         = __webpack_require__(99)
   , IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(11)(IteratorPrototype, __webpack_require__(4)('iterator'), function(){ return this; });
+__webpack_require__(10)(IteratorPrototype, __webpack_require__(4)('iterator'), function(){ return this; });
 
 module.exports = function(Constructor, NAME, next){
   Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
@@ -4193,7 +4219,7 @@ module.exports = !$assign || __webpack_require__(18)(function(){
 /***/ function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject    = __webpack_require__(9)
+var anObject    = __webpack_require__(8)
   , dPs         = __webpack_require__(100)
   , enumBugKeys = __webpack_require__(36)
   , IE_PROTO    = __webpack_require__(29)('IE_PROTO')
@@ -4240,10 +4266,10 @@ module.exports = Object.create || function create(O, Properties){
 /***/ function(module, exports, __webpack_require__) {
 
 var dP       = __webpack_require__(15)
-  , anObject = __webpack_require__(9)
+  , anObject = __webpack_require__(8)
   , getKeys  = __webpack_require__(27);
 
-module.exports = __webpack_require__(10) ? Object.defineProperties : function defineProperties(O, Properties){
+module.exports = __webpack_require__(9) ? Object.defineProperties : function defineProperties(O, Properties){
   anObject(O);
   var keys   = getKeys(Properties)
     , length = keys.length
@@ -4324,7 +4350,7 @@ module.exports = function(KEY, exec){
 /* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
-var hide = __webpack_require__(11);
+var hide = __webpack_require__(10);
 module.exports = function(target, src, safe){
   for(var key in src){
     if(safe && target[key])target[key] = src[key];
@@ -4336,7 +4362,7 @@ module.exports = function(target, src, safe){
 /* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(10);
 
 /***/ },
 /* 108 */
@@ -4347,7 +4373,7 @@ module.exports = __webpack_require__(11);
 var global      = __webpack_require__(5)
   , core        = __webpack_require__(6)
   , dP          = __webpack_require__(15)
-  , DESCRIPTORS = __webpack_require__(10)
+  , DESCRIPTORS = __webpack_require__(9)
   , SPECIES     = __webpack_require__(4)('species');
 
 module.exports = function(KEY){
@@ -4363,7 +4389,7 @@ module.exports = function(KEY){
 /***/ function(module, exports, __webpack_require__) {
 
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject  = __webpack_require__(9)
+var anObject  = __webpack_require__(8)
   , aFunction = __webpack_require__(24)
   , SPECIES   = __webpack_require__(4)('species');
 module.exports = function(O, D){
@@ -4490,7 +4516,7 @@ $export($export.S + $export.F, 'Object', {assign: __webpack_require__(98)});
 
 var $export = __webpack_require__(13);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(10), 'Object', {defineProperty: __webpack_require__(15).f});
+$export($export.S + $export.F * !__webpack_require__(9), 'Object', {defineProperty: __webpack_require__(15).f});
 
 /***/ },
 /* 117 */
@@ -4846,7 +4872,7 @@ __webpack_require__(39)(String, 'String', function(iterated){
 
 __webpack_require__(114);
 var global        = __webpack_require__(5)
-  , hide          = __webpack_require__(11)
+  , hide          = __webpack_require__(10)
   , Iterators     = __webpack_require__(14)
   , TO_STRING_TAG = __webpack_require__(4)('toStringTag');
 
@@ -6242,7 +6268,11 @@ module.exports={render:function (){var _vm=this;
     staticClass: "main wrap clearfix"
   }, [_vm._m(0), " ", _vm._h('div', {
     staticClass: "main-right"
-  }, [_vm._h('trending')])])
+  }, [_vm._h('trending', {
+    attrs: {
+      "trending": _vm.trending
+    }
+  })])])
 },staticRenderFns: [function (){var _vm=this;
   return _vm._h('div', {
     staticClass: "main-left"
@@ -6332,7 +6362,7 @@ module.exports={render:function (){var _vm=this;
   }, [_vm._h('div', {
     staticClass: "feed-article-content markdown-body",
     domProps: {
-      "textContent": _vm._s(_vm.addTarget(_vm.item.content))
+      "textContent": _vm._s(_vm.cutStr(_vm.item.content))
     }
   })])]), " ", _vm._h('actions', {
     attrs: {
@@ -6523,7 +6553,15 @@ module.exports={render:function (){var _vm=this;
     staticClass: "icon icon-circle-loading"
   })]) : _vm._e()])])]), " ", _vm._h('div', {
     staticClass: "main-right"
-  }, [_vm._h('category'), " ", _vm._h('trending')])])
+  }, [_vm._h('category', {
+    attrs: {
+      "category": _vm.category
+    }
+  }), " ", _vm._h('trending', {
+    attrs: {
+      "trending": _vm.trending
+    }
+  })])])
 },staticRenderFns: []}
 
 /***/ },
@@ -6969,9 +7007,21 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "item": _vm.article.data
     }
-  })]), " ", _vm._h('comment')]), " ", _vm._h('div', {
+  })]), " ", _vm._h('comment', {
+    attrs: {
+      "comments": _vm.comments
+    }
+  })]), " ", _vm._h('div', {
     staticClass: "main-right"
-  }, [_vm._h('category'), " ", _vm._h('trending')])])
+  }, [_vm._h('category', {
+    attrs: {
+      "category": _vm.category
+    }
+  }), " ", _vm._h('trending', {
+    attrs: {
+      "trending": _vm.trending
+    }
+  })])])
 },staticRenderFns: []}
 
 /***/ },

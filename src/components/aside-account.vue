@@ -7,6 +7,9 @@
 
 <script lang="babel">
 export default {
-
+    name: 'aside-account',
+    serverCacheKey: () => {
+        return `aside::account`
+    }
 }
 </script>

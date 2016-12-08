@@ -14,22 +14,11 @@
     </div>
 </template>
 <script lang="babel">
-import { mapGetters } from 'vuex'
-const fetchInitialData = store => {
-    store.dispatch('frontend/getTrending')
-}
 export default {
     name: 'aside-trending',
-    prefetch: fetchInitialData,
-    computed: {
-        ...mapGetters({
-            trending: 'frontend/getTrending'
-        })
-    },
-    mounted() {
-        if (this.trending.length <= 0) {
-            fetchInitialData(this.$store)
-        }
+    props: ['trending'],
+    serverCacheKey: () => {
+        return `aside::trending`
     }
 }
 </script>

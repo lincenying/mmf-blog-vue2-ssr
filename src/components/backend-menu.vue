@@ -15,6 +15,9 @@
 
 <script lang="babel">
 export default {
-
+    name: 'backend-menu',
+    serverCacheKey: () => {
+        return `backend::menu`
+    }
 }
 </script>

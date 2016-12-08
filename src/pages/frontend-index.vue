@@ -7,8 +7,8 @@
             </div>
         </div>
         <div class="main-right">
-            <category></category>
-            <trending></trending>
+            <category :category="category"></category>
+            <trending :trending="trending"></trending>
         </div>
     </div>
 </template>
@@ -22,6 +22,8 @@ import { ssp } from '../utils'
 const fetchInitialData = async (store, config = { page: 1}) => {
     const {params: {id, key, by}, path} = store.state.route
     const base = { ...config, limit: 10, id, key, by }
+    store.dispatch('backend/getCategoryList')
+    store.dispatch('frontend/getTrending')
     await store.dispatch('frontend/getArticleList', base)
     if (config.page === 1) ssp(path)
 }
@@ -34,7 +36,8 @@ export default {
     computed: {
         ...mapGetters({
             topics: 'frontend/getArticleList',
-            category: 'backend/getCategoryList'
+            category: 'backend/getCategoryList',
+            trending: 'frontend/getTrending'
         })
     },
     methods: {
@@ -65,8 +68,11 @@ export default {
     metaInfo () {
         var title = 'M.M.F 小屋'
         const {params: {id, key, by}} = this.$store.state.route
-        if (id && this.topics.data.length > 0) {
-            title = this.topics.data[0].category_name + ' - ' + title
+        if (id) {
+            const obj = this.category.find(item => item._id === id)
+            if (obj) {
+                title = obj.cate_name + ' - ' + title
+            }
         } else if (key) {
             title = '搜索: ' + key + ' - ' + title
         } else if (by) {

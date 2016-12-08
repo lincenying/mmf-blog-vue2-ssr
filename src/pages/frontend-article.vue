@@ -13,11 +13,11 @@
                 </div>
                 <actions :item="article.data"></actions>
             </div>
-            <comment></comment>
+            <comment :comments="comments"></comment>
         </div>
         <div class="main-right">
-            <category></category>
-            <trending></trending>
+            <category :category="category"></category>
+            <trending :trending="trending"></trending>
         </div>
     </div>
 </template>
@@ -29,15 +29,20 @@ import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
 import comment from '../components/frontend-comment.vue'
 const fetchInitialData = async store => {
+    store.dispatch('backend/getCategoryList')
+    store.dispatch('frontend/getTrending')
+    store.dispatch(`global/getCommentList`, { page: 1, limit: 5})
     await store.dispatch(`frontend/getArticleItem`)
-    await store.dispatch(`global/getCommentList`, { page: 1, limit: 5})
 }
 export default {
     name: 'frontend-article',
     prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
-            article: 'frontend/getArticleItem'
+            article: 'frontend/getArticleItem',
+            comments: 'global/getCommentList',
+            category: 'backend/getCategoryList',
+            trending: 'frontend/getTrending'
         })
     },
     components: {
