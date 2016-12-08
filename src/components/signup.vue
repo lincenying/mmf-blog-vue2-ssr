@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         close() {
-            this.$store.commit('global/showLoginModal', false)
+            this.$store.commit('global/showRegisterModal', false)
         },
         login() {
             this.$store.commit('global/showLoginModal', true)
