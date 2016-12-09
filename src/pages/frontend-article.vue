@@ -17,7 +17,7 @@
         </div>
         <div v-else class="main-left">
             <div class="card card-answer">
-                <div class="answer-content">请勿修改文章 ID, 或者该文章已经被删除</div>
+                <div class="answer-content">该文章不存在, 或者该文章已经被删除</div>
             </div>
         </div>
         <div class="main-right">
@@ -75,9 +75,10 @@ export default {
         }
     },
     metaInfo () {
+        const title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
         return {
-            title: this.article.data.title + ' - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' M.M.F 小屋' }]
+            title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
         }
     }
 }

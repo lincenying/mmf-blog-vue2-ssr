@@ -53,31 +53,40 @@ exports.getList = (req, res) => {
             total = result[1],
             totalPage = Math.ceil(total / limit),
             user_id = req.cookies.user_id
-
-        data.forEach(item => {
-            arr.push(Like.findOneAsync({ article_id: item._id, user_id }))
-        })
-        Promise.all(arr).then(collection => {
-            data = data.map((item, index) => {
-                item._doc.like_status = !!collection[index]
+        var json = {
+            code: 200,
+            data: {
+                list: data,
+                total,
+                hasNext: totalPage > page ? 1 : 0,
+                hasPrev: page > 1
+            }
+        }
+        if (user_id) {
+            data.forEach(item => {
+                arr.push(Like.findOneAsync({ article_id: item._id, user_id }))
+            })
+            Promise.all(arr).then(collection => {
+                data = data.map((item, index) => {
+                    item._doc.like_status = !!collection[index]
+                    return item
+                })
+                json.data.list = data
+                res.json(json)
+            }).catch(err => {
+                res.json({
+                    code: -200,
+                    message: err.toString()
+                })
+            })
+        } else {
+            data = data.map(item => {
+                item._doc.like_status = false
                 return item
             })
-            var json = {
-                code: 200,
-                data: {
-                    list: data,
-                    total,
-                    hasNext: totalPage > page ? 1 : 0,
-                    hasPrev: page > 1
-                }
-            }
+            json.data.list = data
             res.json(json)
-        }).catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
-        })
+        }
     }).catch(err => {
         res.json({
             code: -200,
@@ -115,7 +124,8 @@ exports.getItem = (req, res) => {
                 message: '没有找到该文章'
             }
         } else {
-            value[0]._doc.like_status = !! value[1]
+            if (user_id) value[0]._doc.like_status = !! value[1]
+            else value[0]._doc.like_status = false
             json = {
                 code: 200,
                 data: value[0]

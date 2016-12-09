@@ -3501,9 +3501,10 @@ exports.default = {
         }
     },
     metaInfo: function metaInfo() {
+        var title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋';
         return {
-            title: this.article.data.title + ' - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' M.M.F 小屋' }]
+            title: title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
         };
     }
 };
@@ -7009,7 +7010,7 @@ module.exports={render:function (){var _vm=this;
     staticClass: "card card-answer"
   }, [_vm._h('div', {
     staticClass: "answer-content"
-  }, ["请勿修改文章 ID, 或者该文章已经被删除"])])]), " ", " ", _vm._h('div', {
+  }, ["该文章不存在, 或者该文章已经被删除"])])]), " ", " ", _vm._h('div', {
     staticClass: "main-right"
   }, [_vm._h('category', {
     attrs: {
