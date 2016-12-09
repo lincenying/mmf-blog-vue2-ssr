@@ -3026,6 +3026,13 @@ exports.default = {
                     }
                 }, _callee2, _this2);
             }))();
+        },
+        share: function share() {
+            var top = window.screen.height / 2 - 250;
+            var left = window.screen.width / 2 - 300;
+            var title = this.item.title + ' - M.M.F 小屋';
+            var url = 'http://www.mmxiaowu.com/article/' + this.item._id;
+            window.open("http://service.weibo.com/share/share.php?title=" + encodeURIComponent(title.replace(/&nbsp;/g, " ").replace(/<br \/>/g, " ")) + "&url=" + encodeURIComponent(url), "分享至新浪微博", "height=500, width=600, top=" + top + ", left=" + left + ", toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
     }
 };
@@ -6608,19 +6615,20 @@ module.exports={render:function (){var _vm=this;
     staticClass: "icon icon-action-fav-active"
   }), _vm._h('span', {
     staticClass: "text"
-  }, [_vm._s(_vm.item.visit) + " 浏览"])]), " ", _vm._m(0)])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('a', {
+  }, [_vm._s(_vm.item.visit) + " 浏览"])]), " ", _vm._h('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.share
     }
   }, [_vm._h('i', {
     staticClass: "icon icon-action-share"
   }), _vm._h('span', {
     staticClass: "text"
-  }, ["分享"])])
-}]}
+  }, ["分享"])])])
+},staticRenderFns: []}
 
 /***/ },
 /* 144 */
