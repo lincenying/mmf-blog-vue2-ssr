@@ -108,10 +108,18 @@ exports.getItem = (req, res) => {
         Like.findOneAsync({ article_id: _id, user_id }),
         Article.updateAsync({ _id }, { '$inc':{ 'visit': 1 } })
     ]).then(value => {
-        value[0]._doc.like_status = !! value[1]
-        var json = {
-            code: 200,
-            data: value[0]
+        var json
+        if (!value[0]) {
+            json = {
+                code: -200,
+                data: '没有找到该文章'
+            }
+        } else {
+            value[0]._doc.like_status = !! value[1]
+            json = {
+                code: 200,
+                data: value[0]
+            }
         }
         res.json(json)
     }).catch(err => {
