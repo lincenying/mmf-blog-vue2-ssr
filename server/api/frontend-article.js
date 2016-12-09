@@ -112,7 +112,7 @@ exports.getItem = (req, res) => {
         if (!value[0]) {
             json = {
                 code: -200,
-                data: '没有找到该文章'
+                message: '没有找到该文章'
             }
         } else {
             value[0]._doc.like_status = !! value[1]

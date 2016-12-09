@@ -36,13 +36,8 @@
 <script lang="babel">
 import cookies from 'js-cookie'
 import api from '~api'
-import { mapGetters } from 'vuex'
 export default {
-    computed: {
-        ...mapGetters({
-            comments: 'global/getCommentList'
-        })
-    },
+    props: ['comments'],
     data () {
         return {
             form: {

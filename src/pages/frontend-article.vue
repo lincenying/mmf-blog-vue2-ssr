@@ -1,6 +1,6 @@
 <template>
     <div class="main wrap clearfix">
-        <div class="main-left">
+        <div v-if="article.data._id" class="main-left">
             <div class="card card-question-head">
                 <div class="question-content">
                     <router-link :to="'/category/' + article.data.category" v-text="article.data.category_name" class="topic-link-item"></router-link>
@@ -14,6 +14,11 @@
                 <actions :item="article.data"></actions>
             </div>
             <comment :comments="comments"></comment>
+        </div>
+        <div v-else class="main-left">
+            <div class="card card-answer">
+                <div class="answer-content">请勿修改文章 ID, 或者该文章已经被删除</div>
+            </div>
         </div>
         <div class="main-right">
             <category :category="category"></category>
