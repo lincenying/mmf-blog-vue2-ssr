@@ -143,7 +143,7 @@ var _store = __webpack_require__(34);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(11);
 
 var _apiConfig = __webpack_require__(53);
 
@@ -332,7 +332,7 @@ module.exports = !__webpack_require__(18)(function(){
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-var dP         = __webpack_require__(15)
+var dP         = __webpack_require__(14)
   , createDesc = __webpack_require__(41);
 module.exports = __webpack_require__(9) ? function(object, key, value){
   return dP.f(object, key, createDesc(1, value));
@@ -343,12 +343,6 @@ module.exports = __webpack_require__(9) ? function(object, key, value){
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
-
-module.exports = require("vuex");
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -411,7 +405,7 @@ var strlen = exports.strlen = function strlen(str) {
 };
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 var global    = __webpack_require__(5)
@@ -477,13 +471,13 @@ $export.R = 128; // real proto method for `library`
 module.exports = $export;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 module.exports = {};
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 var anObject       = __webpack_require__(8)
@@ -502,6 +496,12 @@ exports.f = __webpack_require__(9) ? Object.defineProperty : function defineProp
   if('value' in Attributes)O[P] = Attributes.value;
   return O;
 };
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+module.exports = require("vuex");
 
 /***/ },
 /* 16 */
@@ -632,7 +632,7 @@ module.exports = Object.keys || function keys(O){
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(15).f
+var def = __webpack_require__(14).f
   , has = __webpack_require__(19)
   , TAG = __webpack_require__(4)('toStringTag');
 
@@ -726,7 +726,7 @@ var _vue = __webpack_require__(22);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(15);
 
 var _vuex2 = _interopRequireDefault(_vuex);
 
@@ -834,11 +834,11 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 "use strict";
 'use strict';
 var LIBRARY        = __webpack_require__(40)
-  , $export        = __webpack_require__(13)
+  , $export        = __webpack_require__(12)
   , redefine       = __webpack_require__(107)
   , hide           = __webpack_require__(10)
   , has            = __webpack_require__(19)
-  , Iterators      = __webpack_require__(14)
+  , Iterators      = __webpack_require__(13)
   , $iterCreate    = __webpack_require__(94)
   , setToStringTag = __webpack_require__(28)
   , getPrototypeOf = __webpack_require__(102)
@@ -1487,7 +1487,7 @@ var _jsCookie = __webpack_require__(21);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(11);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -2600,7 +2600,7 @@ var _toastr = __webpack_require__(156);
 
 var _toastr2 = _interopRequireDefault(_toastr);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2668,7 +2668,7 @@ var _extends2 = __webpack_require__(3);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(15);
 
 var _nprogress = __webpack_require__(155);
 
@@ -2805,10 +2805,6 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _extends2 = __webpack_require__(3);
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _jsCookie = __webpack_require__(21);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
@@ -2817,14 +2813,10 @@ var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
-var _vuex = __webpack_require__(11);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        comments: 'global/getCommentList'
-    })),
+    props: ['comments'],
     data: function data() {
         return {
             form: {
@@ -3035,6 +3027,13 @@ exports.default = {
                     }
                 }, _callee2, _this2);
             }))();
+        },
+        share: function share() {
+            var top = window.screen.height / 2 - 250;
+            var left = window.screen.width / 2 - 300;
+            var title = this.item.title + ' - M.M.F 小屋';
+            var url = 'http://www.mmxiaowu.com/article/' + this.item._id;
+            window.open("http://service.weibo.com/share/share.php?title=" + encodeURIComponent(title.replace(/&nbsp;/g, " ").replace(/<br \/>/g, " ")) + "&url=" + encodeURIComponent(url), "分享至新浪微博", "height=500, width=600, top=" + top + ", left=" + left + ", toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
     }
 };
@@ -3192,7 +3191,7 @@ var _api = __webpack_require__(2);
 
 var _api2 = _interopRequireDefault(_api);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3354,7 +3353,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(15);
 
 var _asideTrending = __webpack_require__(33);
 
@@ -3431,7 +3430,7 @@ var _asyncToGenerator2 = __webpack_require__(0);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(15);
 
 var _itemActions = __webpack_require__(50);
 
@@ -3510,9 +3509,10 @@ exports.default = {
         }
     },
     metaInfo: function metaInfo() {
+        var title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋';
         return {
-            title: this.article.data.title + ' - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: this.article.data.title + ' M.M.F 小屋' }]
+            title: title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
         };
     }
 };
@@ -3544,7 +3544,7 @@ var _store = __webpack_require__(51);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(15);
 
 var _topicsItem = __webpack_require__(132);
 
@@ -3558,7 +3558,7 @@ var _asideTrending = __webpack_require__(33);
 
 var _asideTrending2 = _interopRequireDefault(_asideTrending);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4025,7 +4025,7 @@ module.exports = function(fn, args, that){
 /***/ function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators  = __webpack_require__(14)
+var Iterators  = __webpack_require__(13)
   , ITERATOR   = __webpack_require__(4)('iterator')
   , ArrayProto = Array.prototype;
 
@@ -4266,7 +4266,7 @@ module.exports = Object.create || function create(O, Properties){
 /* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-var dP       = __webpack_require__(15)
+var dP       = __webpack_require__(14)
   , anObject = __webpack_require__(8)
   , getKeys  = __webpack_require__(27);
 
@@ -4337,7 +4337,7 @@ exports.f = {}.propertyIsEnumerable;
 /***/ function(module, exports, __webpack_require__) {
 
 // most Object methods by ES6 should accept primitives
-var $export = __webpack_require__(13)
+var $export = __webpack_require__(12)
   , core    = __webpack_require__(6)
   , fails   = __webpack_require__(18);
 module.exports = function(KEY, exec){
@@ -4373,7 +4373,7 @@ module.exports = __webpack_require__(10);
 'use strict';
 var global      = __webpack_require__(5)
   , core        = __webpack_require__(6)
-  , dP          = __webpack_require__(15)
+  , dP          = __webpack_require__(14)
   , DESCRIPTORS = __webpack_require__(9)
   , SPECIES     = __webpack_require__(4)('species');
 
@@ -4455,7 +4455,7 @@ module.exports = function(it, S){
 
 var classof   = __webpack_require__(35)
   , ITERATOR  = __webpack_require__(4)('iterator')
-  , Iterators = __webpack_require__(14);
+  , Iterators = __webpack_require__(13);
 module.exports = __webpack_require__(6).getIteratorMethod = function(it){
   if(it != undefined)return it[ITERATOR]
     || it['@@iterator']
@@ -4470,7 +4470,7 @@ module.exports = __webpack_require__(6).getIteratorMethod = function(it){
 'use strict';
 var addToUnscopables = __webpack_require__(86)
   , step             = __webpack_require__(96)
-  , Iterators        = __webpack_require__(14)
+  , Iterators        = __webpack_require__(13)
   , toIObject        = __webpack_require__(31);
 
 // 22.1.3.4 Array.prototype.entries()
@@ -4507,7 +4507,7 @@ addToUnscopables('entries');
 /***/ function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(13);
+var $export = __webpack_require__(12);
 
 $export($export.S + $export.F, 'Object', {assign: __webpack_require__(98)});
 
@@ -4515,9 +4515,9 @@ $export($export.S + $export.F, 'Object', {assign: __webpack_require__(98)});
 /* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(13);
+var $export = __webpack_require__(12);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(9), 'Object', {defineProperty: __webpack_require__(15).f});
+$export($export.S + $export.F * !__webpack_require__(9), 'Object', {defineProperty: __webpack_require__(14).f});
 
 /***/ },
 /* 117 */
@@ -4549,7 +4549,7 @@ var LIBRARY            = __webpack_require__(40)
   , global             = __webpack_require__(5)
   , ctx                = __webpack_require__(17)
   , classof            = __webpack_require__(35)
-  , $export            = __webpack_require__(13)
+  , $export            = __webpack_require__(12)
   , isObject           = __webpack_require__(20)
   , aFunction          = __webpack_require__(24)
   , anInstance         = __webpack_require__(87)
@@ -4874,7 +4874,7 @@ __webpack_require__(39)(String, 'String', function(iterated){
 __webpack_require__(114);
 var global        = __webpack_require__(5)
   , hide          = __webpack_require__(10)
-  , Iterators     = __webpack_require__(14)
+  , Iterators     = __webpack_require__(13)
   , TO_STRING_TAG = __webpack_require__(4)('toStringTag');
 
 for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
@@ -6625,6 +6625,7 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "href": "javascript:;"
     }
+<<<<<<< HEAD
   }, [_vm._c('img', {
     staticClass: "avatar-img",
     attrs: {
@@ -6633,6 +6634,28 @@ module.exports={render:function (){var _vm=this;
     }
   })])
 }]}
+=======
+  }, [_vm._h('i', {
+    staticClass: "icon icon-action-fav"
+  }), _vm._h('i', {
+    staticClass: "icon icon-action-fav-active"
+  }), _vm._h('span', {
+    staticClass: "text"
+  }, [_vm._s(_vm.item.visit) + " 浏览"])]), " ", _vm._h('a', {
+    staticClass: "action-item",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.share
+    }
+  }, [_vm._h('i', {
+    staticClass: "icon icon-action-share"
+  }), _vm._h('span', {
+    staticClass: "text"
+  }, ["分享"])])])
+},staticRenderFns: []}
+>>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
 
 /***/ },
 /* 141 */
@@ -7059,7 +7082,11 @@ module.exports={render:function (){var _vm=this;
 module.exports={render:function (){var _vm=this;
   return _vm._c('div', {
     staticClass: "main wrap clearfix"
+<<<<<<< HEAD
   }, [_vm._c('div', {
+=======
+  }, [(_vm.article.data._id) ? _vm._h('div', {
+>>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
     staticClass: "main-left"
   }, [_vm._c('div', {
     staticClass: "card card-question-head"
@@ -7100,7 +7127,17 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "comments": _vm.comments
     }
+<<<<<<< HEAD
   })]), _vm._v(" "), _vm._c('div', {
+=======
+  })]) : _vm._h('div', {
+    staticClass: "main-left"
+  }, [_vm._h('div', {
+    staticClass: "card card-answer"
+  }, [_vm._h('div', {
+    staticClass: "answer-content"
+  }, ["该文章不存在, 或者该文章已经被删除"])])]), " ", " ", _vm._h('div', {
+>>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
     staticClass: "main-right"
   }, [_vm._c('category', {
     attrs: {
