@@ -67,7 +67,7 @@ export default {
     },
     metaInfo () {
         var title = 'M.M.F 小屋'
-        const {params: {id, key, by}} = this.$store.state.route
+        const {id, key, by} = this.$route.params
         if (id) {
             const obj = this.category.find(item => item._id === id)
             if (obj) {
