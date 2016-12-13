@@ -2911,7 +2911,7 @@ exports.default = {
             var _this = this;
 
             return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-                var username, _ref, _ref$data, code, message;
+                var username, url, _ref, _ref$data, code, message;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
@@ -2929,10 +2929,13 @@ exports.default = {
                                 return _context.abrupt('return');
 
                             case 5:
-                                _context.next = 7;
-                                return _api2.default.get('frontend/like', { id: _this.item._id });
+                                url = 'frontend/like';
 
-                            case 7:
+                                if (_this.item.like_status) url = 'frontend/unlike';
+                                _context.next = 9;
+                                return _api2.default.get(url, { id: _this.item._id });
+
+                            case 9:
                                 _ref = _context.sent;
                                 _ref$data = _ref.data;
                                 code = _ref$data.code;
@@ -2943,64 +2946,16 @@ exports.default = {
                                         content: message,
                                         type: 'success'
                                     });
-                                    _this.item.like++;
+                                    if (_this.item.like_status) _this.item.like--;else _this.item.like++;
                                     _this.item.like_status = !_this.item.like_status;
                                 }
 
-                            case 12:
+                            case 14:
                             case 'end':
                                 return _context.stop();
                         }
                     }
                 }, _callee, _this);
-            }))();
-        },
-        unlike: function unlike() {
-            var _this2 = this;
-
-            return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-                var username, _ref2, _ref2$data, code, message;
-
-                return _regenerator2.default.wrap(function _callee2$(_context2) {
-                    while (1) {
-                        switch (_context2.prev = _context2.next) {
-                            case 0:
-                                username = _jsCookie2.default.get('user');
-
-                                if (username) {
-                                    _context2.next = 5;
-                                    break;
-                                }
-
-                                _this2.$store.dispatch('showMsg', '请先登录!');
-                                _this2.$store.commit('global/showLoginModal', true);
-                                return _context2.abrupt('return');
-
-                            case 5:
-                                _context2.next = 7;
-                                return _api2.default.get('frontend/unlike', { id: _this2.item._id });
-
-                            case 7:
-                                _ref2 = _context2.sent;
-                                _ref2$data = _ref2.data;
-                                code = _ref2$data.code;
-                                message = _ref2$data.message;
-
-                                if (code === 200) {
-                                    _this2.$store.dispatch('showMsg', {
-                                        content: message,
-                                        type: 'success'
-                                    });
-                                    _this2.item.like--;
-                                    _this2.item.like_status = !_this2.item.like_status;
-                                }
-
-                            case 12:
-                            case 'end':
-                                return _context2.stop();
-                        }
-                    }
-                }, _callee2, _this2);
             }))();
         },
         share: function share() {
@@ -6836,8 +6791,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
   return _c('div', {
     staticClass: "actions-wrap"
-  }, [(!_vm.item.like_status) ? _c('a', {
+  }, [_c('a', {
     staticClass: "action-item",
+    class: _vm.item.like_status ? 'active' : '',
     attrs: {
       "href": "javascript:;"
     },
@@ -6845,10 +6801,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.like
     }
   }, [_c('i', {
-    staticClass: "icon icon-action-voteup"
+    staticClass: "icon",
+    class: _vm.item.like_status ? 'icon-action-voteup-active' : 'icon-action-voteup'
   }), _c('span', {
     staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]) : _vm._e(), _vm._v(" "), _c('a', {
+  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]), _vm._v(" "), _c('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
@@ -7012,9 +6969,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
   return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [(_vm.article.data._id) ? _c('div', {
-    staticClass: "main-left"
   }, [_c('div', {
+    staticClass: "main-left"
+  }, [(_vm.article.data._id) ? [_c('div', {
     staticClass: "card card-question-head"
   }, [_c('div', {
     staticClass: "question-content"
@@ -7053,13 +7010,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "comments": _vm.comments
     }
-  })]) : _c('div', {
-    staticClass: "main-left"
-  }, [_c('div', {
+  })] : [_c('div', {
     staticClass: "card card-answer"
   }, [_c('div', {
     staticClass: "answer-content"
-  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])]), _vm._v(" "), _vm._v(" "), _c('div', {
+  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])], _vm._v(" ")], true), _vm._v(" "), _c('div', {
     staticClass: "main-right"
   }, [_c('category', {
     attrs: {
