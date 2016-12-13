@@ -60,7 +60,7 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         const scrollTop = document.body.scrollTop
-        const path = this.$route.path
+        const path = from.path
         if (scrollTop) ls.set(path, scrollTop)
         else ls.remove(path)
         next()

@@ -27,9 +27,6 @@ export default {
             if (!content) return ''
             return content.substring(0, 500) + '...'
         }
-    },
-    serverCacheKey: props => {
-        return `${ props.item._id }::${ props.item.creat_date }`
     }
 }
 </script>

@@ -1038,24 +1038,22 @@ module.exports = function(key){
 /* 46 */
 /***/ function(module, exports) {
 
-// Load modules
+"use strict";
+'use strict';
 
+var hexTable = (function () {
+    var array = new Array(256);
+    for (var i = 0; i < 256; ++i) {
+        array[i] = '%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase();
+    }
 
-// Declare internals
-
-var internals = {};
-internals.hexTable = new Array(256);
-for (var h = 0; h < 256; ++h) {
-    internals.hexTable[h] = '%' + ((h < 16 ? '0' : '') + h.toString(16)).toUpperCase();
-}
-
+    return array;
+}());
 
 exports.arrayToObject = function (source, options) {
-
     var obj = options.plainObjects ? Object.create(null) : {};
-    for (var i = 0, il = source.length; i < il; ++i) {
+    for (var i = 0; i < source.length; ++i) {
         if (typeof source[i] !== 'undefined') {
-
             obj[i] = source[i];
         }
     }
@@ -1063,9 +1061,7 @@ exports.arrayToObject = function (source, options) {
     return obj;
 };
 
-
 exports.merge = function (target, source, options) {
-
     if (!source) {
         return target;
     }
@@ -1073,47 +1069,37 @@ exports.merge = function (target, source, options) {
     if (typeof source !== 'object') {
         if (Array.isArray(target)) {
             target.push(source);
-        }
-        else if (typeof target === 'object') {
+        } else if (typeof target === 'object') {
             target[source] = true;
-        }
-        else {
-            target = [target, source];
+        } else {
+            return [target, source];
         }
 
         return target;
     }
 
     if (typeof target !== 'object') {
-        target = [target].concat(source);
-        return target;
+        return [target].concat(source);
     }
 
-    if (Array.isArray(target) &&
-        !Array.isArray(source)) {
-
-        target = exports.arrayToObject(target, options);
+    var mergeTarget = target;
+    if (Array.isArray(target) && !Array.isArray(source)) {
+        mergeTarget = exports.arrayToObject(target, options);
     }
 
-    var keys = Object.keys(source);
-    for (var k = 0, kl = keys.length; k < kl; ++k) {
-        var key = keys[k];
+    return Object.keys(source).reduce(function (acc, key) {
         var value = source[key];
 
-        if (!Object.prototype.hasOwnProperty.call(target, key)) {
-            target[key] = value;
+        if (Object.prototype.hasOwnProperty.call(acc, key)) {
+            acc[key] = exports.merge(acc[key], value, options);
+        } else {
+            acc[key] = value;
         }
-        else {
-            target[key] = exports.merge(target[key], value, options);
-        }
-    }
-
-    return target;
+        return acc;
+    }, mergeTarget);
 };
 
-
 exports.decode = function (str) {
-
     try {
         return decodeURIComponent(str.replace(/\+/g, ' '));
     } catch (e) {
@@ -1122,65 +1108,60 @@ exports.decode = function (str) {
 };
 
 exports.encode = function (str) {
-
     // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
     // It has been adapted here for stricter adherence to RFC 3986
     if (str.length === 0) {
         return str;
     }
 
-    if (typeof str !== 'string') {
-        str = '' + str;
-    }
+    var string = typeof str === 'string' ? str : String(str);
 
     var out = '';
-    for (var i = 0, il = str.length; i < il; ++i) {
-        var c = str.charCodeAt(i);
+    for (var i = 0; i < string.length; ++i) {
+        var c = string.charCodeAt(i);
 
-        if (c === 0x2D || // -
+        if (
+            c === 0x2D || // -
             c === 0x2E || // .
             c === 0x5F || // _
             c === 0x7E || // ~
             (c >= 0x30 && c <= 0x39) || // 0-9
             (c >= 0x41 && c <= 0x5A) || // a-z
-            (c >= 0x61 && c <= 0x7A)) { // A-Z
-
-            out += str[i];
+            (c >= 0x61 && c <= 0x7A) // A-Z
+        ) {
+            out += string.charAt(i);
             continue;
         }
 
         if (c < 0x80) {
-            out += internals.hexTable[c];
+            out = out + hexTable[c];
             continue;
         }
 
         if (c < 0x800) {
-            out += internals.hexTable[0xC0 | (c >> 6)] + internals.hexTable[0x80 | (c & 0x3F)];
+            out = out + (hexTable[0xC0 | (c >> 6)] + hexTable[0x80 | (c & 0x3F)]);
             continue;
         }
 
         if (c < 0xD800 || c >= 0xE000) {
-            out += internals.hexTable[0xE0 | (c >> 12)] + internals.hexTable[0x80 | ((c >> 6) & 0x3F)] + internals.hexTable[0x80 | (c & 0x3F)];
+            out = out + (hexTable[0xE0 | (c >> 12)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)]);
             continue;
         }
 
-        ++i;
-        c = 0x10000 + (((c & 0x3FF) << 10) | (str.charCodeAt(i) & 0x3FF));
-        out += internals.hexTable[0xF0 | (c >> 18)] + internals.hexTable[0x80 | ((c >> 12) & 0x3F)] + internals.hexTable[0x80 | ((c >> 6) & 0x3F)] + internals.hexTable[0x80 | (c & 0x3F)];
+        i += 1;
+        c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
+        out += hexTable[0xF0 | (c >> 18)] + hexTable[0x80 | ((c >> 12) & 0x3F)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)];
     }
 
     return out;
 };
 
-exports.compact = function (obj, refs) {
-
-    if (typeof obj !== 'object' ||
-        obj === null) {
-
+exports.compact = function (obj, references) {
+    if (typeof obj !== 'object' || obj === null) {
         return obj;
     }
 
-    refs = refs || [];
+    var refs = references || [];
     var lookup = refs.indexOf(obj);
     if (lookup !== -1) {
         return refs[lookup];
@@ -1191,8 +1172,10 @@ exports.compact = function (obj, refs) {
     if (Array.isArray(obj)) {
         var compacted = [];
 
-        for (var i = 0, il = obj.length; i < il; ++i) {
-            if (typeof obj[i] !== 'undefined') {
+        for (var i = 0; i < obj.length; ++i) {
+            if (obj[i] && typeof obj[i] === 'object') {
+                compacted.push(exports.compact(obj[i], refs));
+            } else if (typeof obj[i] !== 'undefined') {
                 compacted.push(obj[i]);
             }
         }
@@ -1201,32 +1184,24 @@ exports.compact = function (obj, refs) {
     }
 
     var keys = Object.keys(obj);
-    for (i = 0, il = keys.length; i < il; ++i) {
-        var key = keys[i];
+    for (var j = 0; j < keys.length; ++j) {
+        var key = keys[j];
         obj[key] = exports.compact(obj[key], refs);
     }
 
     return obj;
 };
 
-
 exports.isRegExp = function (obj) {
-
     return Object.prototype.toString.call(obj) === '[object RegExp]';
 };
 
-
 exports.isBuffer = function (obj) {
-
-    if (obj === null ||
-        typeof obj === 'undefined') {
-
+    if (obj === null || typeof obj === 'undefined') {
         return false;
     }
 
-    return !!(obj.constructor &&
-              obj.constructor.isBuffer &&
-              obj.constructor.isBuffer(obj));
+    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
 };
 
 
@@ -3324,9 +3299,6 @@ exports.default = {
             if (!content) return '';
             return content.substring(0, 500) + '...';
         }
-    },
-    serverCacheKey: function serverCacheKey(props) {
-        return props.item._id + '::' + props.item.creat_date;
     }
 };
 
@@ -3591,7 +3563,7 @@ var fetchInitialData = function () {
         }, _callee, undefined);
     }));
 
-    return function fetchInitialData(_x, _x2) {
+    return function fetchInitialData(_x) {
         return _ref.apply(this, arguments);
     };
 }();
@@ -3629,7 +3601,7 @@ exports.default = {
     },
     beforeRouteLeave: function beforeRouteLeave(to, from, next) {
         var scrollTop = document.body.scrollTop;
-        var path = this.$route.path;
+        var path = from.path;
         if (scrollTop) _store2.default.set(path, scrollTop);else _store2.default.remove(path);
         next();
     },
@@ -4889,16 +4861,11 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 /* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
-// Load modules
+"use strict";
+'use strict';
 
 var Stringify = __webpack_require__(124);
 var Parse = __webpack_require__(123);
-
-
-// Declare internals
-
-var internals = {};
-
 
 module.exports = {
     stringify: Stringify,
@@ -4910,49 +4877,45 @@ module.exports = {
 /* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
-// Load modules
+"use strict";
+'use strict';
 
 var Utils = __webpack_require__(46);
 
-
-// Declare internals
-
-var internals = {
+var defaults = {
     delimiter: '&',
     depth: 5,
     arrayLimit: 20,
     parameterLimit: 1000,
     strictNullHandling: false,
     plainObjects: false,
-    allowPrototypes: false
+    allowPrototypes: false,
+    allowDots: false,
+    decoder: Utils.decode
 };
 
-
-internals.parseValues = function (str, options) {
-
+var parseValues = function parseValues(str, options) {
     var obj = {};
     var parts = str.split(options.delimiter, options.parameterLimit === Infinity ? undefined : options.parameterLimit);
 
-    for (var i = 0, il = parts.length; i < il; ++i) {
+    for (var i = 0; i < parts.length; ++i) {
         var part = parts[i];
         var pos = part.indexOf(']=') === -1 ? part.indexOf('=') : part.indexOf(']=') + 1;
 
         if (pos === -1) {
-            obj[Utils.decode(part)] = '';
+            obj[options.decoder(part)] = '';
 
             if (options.strictNullHandling) {
-                obj[Utils.decode(part)] = null;
+                obj[options.decoder(part)] = null;
             }
-        }
-        else {
-            var key = Utils.decode(part.slice(0, pos));
-            var val = Utils.decode(part.slice(pos + 1));
+        } else {
+            var key = options.decoder(part.slice(0, pos));
+            var val = options.decoder(part.slice(pos + 1));
 
-            if (!Object.prototype.hasOwnProperty.call(obj, key)) {
-                obj[key] = val;
-            }
-            else {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
                 obj[key] = [].concat(obj[key]).concat(val);
+            } else {
+                obj[key] = val;
             }
         }
     }
@@ -4960,9 +4923,7 @@ internals.parseValues = function (str, options) {
     return obj;
 };
 
-
-internals.parseObject = function (chain, val, options) {
-
+var parseObject = function parseObject(chain, val, options) {
     if (!chain.length) {
         return val;
     }
@@ -4972,43 +4933,35 @@ internals.parseObject = function (chain, val, options) {
     var obj;
     if (root === '[]') {
         obj = [];
-        obj = obj.concat(internals.parseObject(chain, val, options));
-    }
-    else {
+        obj = obj.concat(parseObject(chain, val, options));
+    } else {
         obj = options.plainObjects ? Object.create(null) : {};
         var cleanRoot = root[0] === '[' && root[root.length - 1] === ']' ? root.slice(1, root.length - 1) : root;
         var index = parseInt(cleanRoot, 10);
-        var indexString = '' + index;
-        if (!isNaN(index) &&
+        if (
+            !isNaN(index) &&
             root !== cleanRoot &&
-            indexString === cleanRoot &&
+            String(index) === cleanRoot &&
             index >= 0 &&
-            (options.parseArrays &&
-             index <= options.arrayLimit)) {
-
+            (options.parseArrays && index <= options.arrayLimit)
+        ) {
             obj = [];
-            obj[index] = internals.parseObject(chain, val, options);
-        }
-        else {
-            obj[cleanRoot] = internals.parseObject(chain, val, options);
+            obj[index] = parseObject(chain, val, options);
+        } else {
+            obj[cleanRoot] = parseObject(chain, val, options);
         }
     }
 
     return obj;
 };
 
-
-internals.parseKeys = function (key, val, options) {
-
-    if (!key) {
+var parseKeys = function parseKeys(givenKey, val, options) {
+    if (!givenKey) {
         return;
     }
 
     // Transform dot notation to bracket notation
-
-    if (options.allowDots) {
-        key = key.replace(/\.([^\.\[]+)/g, '[$1]');
-    }
+    var key = options.allowDots ? givenKey.replace(/\.([^\.\[]+)/g, '[$1]') : givenKey;
 
     // The regex chunks
 
@@ -5025,9 +4978,7 @@ internals.parseKeys = function (key, val, options) {
     if (segment[1]) {
         // If we aren't using plain objects, optionally prefix keys
         // that would overwrite object prototype properties
-        if (!options.plainObjects &&
-            Object.prototype.hasOwnProperty(segment[1])) {
-
+        if (!options.plainObjects && Object.prototype.hasOwnProperty(segment[1])) {
             if (!options.allowPrototypes) {
                 return;
             }
@@ -5040,11 +4991,8 @@ internals.parseKeys = function (key, val, options) {
 
     var i = 0;
     while ((segment = child.exec(key)) !== null && i < options.depth) {
-
-        ++i;
-        if (!options.plainObjects &&
-            Object.prototype.hasOwnProperty(segment[1].replace(/\[|\]/g, ''))) {
-
+        i += 1;
+        if (!options.plainObjects && Object.prototype.hasOwnProperty(segment[1].replace(/\[|\]/g, ''))) {
             if (!options.allowPrototypes) {
                 continue;
             }
@@ -5058,39 +5006,40 @@ internals.parseKeys = function (key, val, options) {
         keys.push('[' + key.slice(segment.index) + ']');
     }
 
-    return internals.parseObject(keys, val, options);
+    return parseObject(keys, val, options);
 };
 
+module.exports = function (str, opts) {
+    var options = opts || {};
 
-module.exports = function (str, options) {
+    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
+        throw new TypeError('Decoder has to be a function.');
+    }
 
-    options = options || {};
-    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : internals.delimiter;
-    options.depth = typeof options.depth === 'number' ? options.depth : internals.depth;
-    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : internals.arrayLimit;
+    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
+    options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
+    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
     options.parseArrays = options.parseArrays !== false;
-    options.allowDots = options.allowDots !== false;
-    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : internals.plainObjects;
-    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : internals.allowPrototypes;
-    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : internals.parameterLimit;
-    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : internals.strictNullHandling;
+    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults.decoder;
+    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults.allowDots;
+    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults.plainObjects;
+    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults.allowPrototypes;
+    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults.parameterLimit;
+    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
 
-    if (str === '' ||
-        str === null ||
-        typeof str === 'undefined') {
-
+    if (str === '' || str === null || typeof str === 'undefined') {
         return options.plainObjects ? Object.create(null) : {};
     }
 
-    var tempObj = typeof str === 'string' ? internals.parseValues(str, options) : str;
+    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
     var obj = options.plainObjects ? Object.create(null) : {};
 
     // Iterate over the keys and setup the new object
 
     var keys = Object.keys(tempObj);
-    for (var i = 0, il = keys.length; i < il; ++i) {
+    for (var i = 0; i < keys.length; ++i) {
         var key = keys[i];
-        var newObj = internals.parseKeys(key, tempObj[key], options);
+        var newObj = parseKeys(key, tempObj[key], options);
         obj = Utils.merge(obj, newObj, options);
     }
 
@@ -5102,57 +5051,50 @@ module.exports = function (str, options) {
 /* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
-// Load modules
+"use strict";
+'use strict';
 
 var Utils = __webpack_require__(46);
 
-
-// Declare internals
-
-var internals = {
-    delimiter: '&',
-    arrayPrefixGenerators: {
-        brackets: function (prefix, key) {
-
-            return prefix + '[]';
-        },
-        indices: function (prefix, key) {
-
-            return prefix + '[' + key + ']';
-        },
-        repeat: function (prefix, key) {
-
-            return prefix;
-        }
+var arrayPrefixGenerators = {
+    brackets: function brackets(prefix) {
+        return prefix + '[]';
     },
-    strictNullHandling: false
+    indices: function indices(prefix, key) {
+        return prefix + '[' + key + ']';
+    },
+    repeat: function repeat(prefix) {
+        return prefix;
+    }
 };
 
+var defaults = {
+    delimiter: '&',
+    strictNullHandling: false,
+    skipNulls: false,
+    encode: true,
+    encoder: Utils.encode
+};
 
-internals.stringify = function (obj, prefix, generateArrayPrefix, strictNullHandling, filter) {
-
+var stringify = function stringify(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots) {
+    var obj = object;
     if (typeof filter === 'function') {
         obj = filter(prefix, obj);
-    }
-    else if (Utils.isBuffer(obj)) {
-        obj = obj.toString();
-    }
-    else if (obj instanceof Date) {
+    } else if (obj instanceof Date) {
         obj = obj.toISOString();
-    }
-    else if (obj === null) {
+    } else if (obj === null) {
         if (strictNullHandling) {
-            return Utils.encode(prefix);
+            return encoder ? encoder(prefix) : prefix;
         }
 
         obj = '';
     }
 
-    if (typeof obj === 'string' ||
-        typeof obj === 'number' ||
-        typeof obj === 'boolean') {
-
-        return [Utils.encode(prefix) + '=' + Utils.encode(obj)];
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || Utils.isBuffer(obj)) {
+        if (encoder) {
+            return [encoder(prefix) + '=' + encoder(obj)];
+        }
+        return [prefix + '=' + String(obj)];
     }
 
     var values = [];
@@ -5161,64 +5103,88 @@ internals.stringify = function (obj, prefix, generateArrayPrefix, strictNullHand
         return values;
     }
 
-    var objKeys = Array.isArray(filter) ? filter : Object.keys(obj);
-    for (var i = 0, il = objKeys.length; i < il; ++i) {
+    var objKeys;
+    if (Array.isArray(filter)) {
+        objKeys = filter;
+    } else {
+        var keys = Object.keys(obj);
+        objKeys = sort ? keys.sort(sort) : keys;
+    }
+
+    for (var i = 0; i < objKeys.length; ++i) {
         var key = objKeys[i];
 
-        if (Array.isArray(obj)) {
-            values = values.concat(internals.stringify(obj[key], generateArrayPrefix(prefix, key), generateArrayPrefix, strictNullHandling, filter));
+        if (skipNulls && obj[key] === null) {
+            continue;
         }
-        else {
-            values = values.concat(internals.stringify(obj[key], prefix + '[' + key + ']', generateArrayPrefix, strictNullHandling, filter));
+
+        if (Array.isArray(obj)) {
+            values = values.concat(stringify(obj[key], generateArrayPrefix(prefix, key), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
+        } else {
+            values = values.concat(stringify(obj[key], prefix + (allowDots ? '.' + key : '[' + key + ']'), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
         }
     }
 
     return values;
 };
 
-
-module.exports = function (obj, options) {
-
-    options = options || {};
-    var delimiter = typeof options.delimiter === 'undefined' ? internals.delimiter : options.delimiter;
-    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : internals.strictNullHandling;
+module.exports = function (object, opts) {
+    var obj = object;
+    var options = opts || {};
+    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
+    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
+    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
+    var encoder = encode ? (typeof options.encoder === 'function' ? options.encoder : defaults.encoder) : null;
+    var sort = typeof options.sort === 'function' ? options.sort : null;
+    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
     var objKeys;
     var filter;
+
+    if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
+        throw new TypeError('Encoder has to be a function.');
+    }
+
     if (typeof options.filter === 'function') {
         filter = options.filter;
         obj = filter('', obj);
-    }
-    else if (Array.isArray(options.filter)) {
+    } else if (Array.isArray(options.filter)) {
         objKeys = filter = options.filter;
     }
 
     var keys = [];
 
-    if (typeof obj !== 'object' ||
-        obj === null) {
-
+    if (typeof obj !== 'object' || obj === null) {
         return '';
     }
 
     var arrayFormat;
-    if (options.arrayFormat in internals.arrayPrefixGenerators) {
+    if (options.arrayFormat in arrayPrefixGenerators) {
         arrayFormat = options.arrayFormat;
-    }
-    else if ('indices' in options) {
+    } else if ('indices' in options) {
         arrayFormat = options.indices ? 'indices' : 'repeat';
-    }
-    else {
+    } else {
         arrayFormat = 'indices';
     }
 
-    var generateArrayPrefix = internals.arrayPrefixGenerators[arrayFormat];
+    var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
 
     if (!objKeys) {
         objKeys = Object.keys(obj);
     }
-    for (var i = 0, il = objKeys.length; i < il; ++i) {
+
+    if (sort) {
+        objKeys.sort(sort);
+    }
+
+    for (var i = 0; i < objKeys.length; ++i) {
         var key = objKeys[i];
-        keys = keys.concat(internals.stringify(obj[key], key, generateArrayPrefix, strictNullHandling, filter));
+
+        if (skipNulls && obj[key] === null) {
+            continue;
+        }
+
+        keys = keys.concat(stringify(obj[key], key, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
     }
 
     return keys.join(delimiter);
@@ -6278,17 +6244,17 @@ module.exports = __vue_exports__
 /* 138 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "modal-wrap modal-signin-wrap",
     class: _vm.show ? 'active' : ''
-  }, [_vm._c('span', {
+  }, [_c('span', {
     staticClass: "center-helper"
-  }), _vm._v(" "), _vm._c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "modal modal-signup"
-  }, [_vm._c('h2', {
+  }, [_c('h2', {
     staticClass: "modal-title"
-  }, [_vm._v("登录")]), _vm._c('a', {
+  }, [_vm._v("登录")]), _c('a', {
     staticClass: "modal-close",
     attrs: {
       "href": "javascript:;"
@@ -6296,15 +6262,15 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.close
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-close-black"
-  })]), _vm._v(" "), _vm._c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "modal-content"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "signup-form"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6325,11 +6291,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6350,9 +6316,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.password = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('a', {
     staticClass: "btn signup-btn btn-yellow",
     attrs: {
       "href": "javascript:;"
@@ -6360,7 +6326,7 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.login
     }
-  }, [_vm._v("确认登录")]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("确认登录")]), _vm._v(" "), _c('a', {
     staticClass: "btn signup-btn btn-blue",
     attrs: {
       "href": "javascript:;"
@@ -6375,17 +6341,17 @@ module.exports={render:function (){var _vm=this;
 /* 139 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "modal-wrap modal-signup-wrap",
     class: _vm.show ? 'active' : ''
-  }, [_vm._c('span', {
+  }, [_c('span', {
     staticClass: "center-helper"
-  }), _vm._v(" "), _vm._c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "modal modal-signup"
-  }, [_vm._c('h2', {
+  }, [_c('h2', {
     staticClass: "modal-title"
-  }, [_vm._v("注册")]), _vm._c('a', {
+  }, [_vm._v("注册")]), _c('a', {
     staticClass: "modal-close",
     attrs: {
       "href": "javascript:;"
@@ -6393,15 +6359,15 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.close
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-close-black"
-  })]), _vm._v(" "), _vm._c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "modal-content"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "signup-form"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6422,11 +6388,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6447,11 +6413,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.email = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6472,11 +6438,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.password = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('div', {
     staticClass: "input-wrap"
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6497,9 +6463,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.re_password = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('p', {
+  }), _vm._v(" "), _c('p', {
     staticClass: "error-info input-info hidden"
-  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _c('a', {
     staticClass: "btn signup-btn btn-yellow",
     attrs: {
       "href": "javascript:;"
@@ -6507,7 +6473,7 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.register
     }
-  }, [_vm._v("确认注册")]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("确认注册")]), _vm._v(" "), _c('a', {
     staticClass: "btn signup-btn btn-blue",
     attrs: {
       "href": "javascript:;"
@@ -6522,22 +6488,22 @@ module.exports={render:function (){var _vm=this;
 /* 140 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "card"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "comments"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "comment-post-wrap"
-  }, [_vm._c('img', {
+  }, [_c('img', {
     staticClass: "avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
       "alt": ""
     }
-  }), _vm._v(" "), _vm._c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "comment-post-input-wrap base-textarea-wrap"
-  }, [_vm._c('textarea', {
+  }, [_c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6559,9 +6525,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.content = $event.target.value
       }
     }
-  })]), _vm._v(" "), _vm._c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "comment-post-actions clearfix"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "btn btn-blue",
     attrs: {
       "href": "javascript:;"
@@ -6569,33 +6535,33 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.postComment
     }
-  }, [_vm._v("发表评论")])])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("发表评论")])])]), _vm._v(" "), _c('div', {
     staticClass: "comment-items-wrap"
   }, _vm._l((_vm.comments.data), function(item) {
-    return _vm._c('div', {
+    return _c('div', {
       staticClass: "comment-item"
-    }, [_vm._m(0, true), _vm._v(" "), _vm._c('div', {
+    }, [_vm._m(0, true), _vm._v(" "), _c('div', {
       staticClass: "comment-content-wrap"
-    }, [_vm._c('span', {
+    }, [_c('span', {
       staticClass: "comment-author-wrap"
-    }, [_vm._c('a', {
+    }, [_c('a', {
       staticClass: "comment-author",
       attrs: {
         "href": "javascript:;"
       }
-    }, [_vm._v(_vm._s(item.username))])]), _vm._v(" "), _vm._c('div', {
+    }, [_vm._v(_vm._s(item.username))])]), _vm._v(" "), _c('div', {
       staticClass: "comment-content",
       domProps: {
         "textContent": _vm._s(item.content)
       }
-    }), _vm._v(" "), _vm._c('div', {
+    }), _vm._v(" "), _c('div', {
       staticClass: "comment-footer"
-    }, [_vm._c('span', {
+    }, [_c('span', {
       staticClass: "comment-time",
       domProps: {
         "textContent": _vm._s(item.creat_date)
       }
-    }), _vm._v(" "), _vm._c('a', {
+    }), _vm._v(" "), _c('a', {
       staticClass: "comment-action-item comment-reply",
       attrs: {
         "href": "javascript:;"
@@ -6606,9 +6572,9 @@ module.exports={render:function (){var _vm=this;
         }
       }
     }, [_vm._v("回复")])])])])
-  })), _vm._v(" "), (_vm.comments.hasNext) ? _vm._c('div', {
+  })), _vm._v(" "), (_vm.comments.hasNext) ? _c('div', {
     staticClass: "load-more-wrap"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "comments-load-more",
     attrs: {
       "href": "javascript:;"
@@ -6619,13 +6585,13 @@ module.exports={render:function (){var _vm=this;
       }
     }
   }, [_vm._v("加载更多")])]) : _vm._e()])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._c('a', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('a', {
     staticClass: "comment-author-avatar-link",
     attrs: {
       "href": "javascript:;"
     }
-  }, [_vm._c('img', {
+  }, [_c('img', {
     staticClass: "avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
@@ -6638,66 +6604,66 @@ module.exports={render:function (){var _vm=this;
 /* 141 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('nav', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('nav', {
     staticClass: "global-nav"
-  }, [(_vm.backend) ? _vm._c('div', {
+  }, [(_vm.backend) ? _c('div', {
     staticClass: "wrap clearfix"
-  }, [_vm._m(0)]) : _vm._c('div', {
+  }, [_vm._m(0)]) : _c('div', {
     staticClass: "wrap clearfix"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "left-part"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "logo-link",
     attrs: {
       "to": "/",
       "active-class": "current",
       "exact": ""
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-logo"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "hidden"
-  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _c('div', {
     staticClass: "main-nav"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "nav-link",
     attrs: {
       "to": "/",
       "active-class": "current",
       "exact": ""
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-home"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("首页")])]), _vm._v(" "), _vm._c('router-link', {
+  }, [_vm._v("首页")])]), _vm._v(" "), _c('router-link', {
     staticClass: "nav-link",
     attrs: {
       "to": "/trending/visit",
       "active-class": "current"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-explore"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("热门")])]), _vm._v(" "), _vm._c('router-link', {
+  }, [_vm._v("热门")])]), _vm._v(" "), _c('router-link', {
     staticClass: "nav-link",
     attrs: {
       "to": "/about",
       "active-class": "current"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-features"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("关于")])])])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("关于")])])])]), _vm._v(" "), _c('div', {
     staticClass: "right-part"
-  }, [_vm._c('span', {
+  }, [_c('span', {
     staticClass: "nav-search"
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-search-white"
-  }), _vm._c('input', {
+  }), _c('input', {
     staticClass: "nav-search-input",
     attrs: {
       "placeholder": "记得按回车哦"
@@ -6708,21 +6674,21 @@ module.exports={render:function (){var _vm=this;
         _vm.search($event)
       }
     }
-  })]), _vm._v(" "), (_vm.isLogin) ? _vm._c('span', {
+  })]), _vm._v(" "), (_vm.isLogin) ? _c('span', {
     staticClass: "nav-me"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "nav-me-link",
     attrs: {
       "to": "/user/account"
     }
-  }, [_vm._c('img', {
+  }, [_c('img', {
     staticClass: "nav-avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
-  })])]) : _vm._c('span', {
+  })])]) : _c('span', {
     staticClass: "nav-me"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "nav-me-link",
     attrs: {
       "href": "javascript:;"
@@ -6730,53 +6696,53 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.login
     }
-  }, [_vm._c('img', {
+  }, [_c('img', {
     staticClass: "nav-avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
   })])]), _vm._v(" ")])]), _vm._v(" ")])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._c('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "left-part"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "logo-link",
     attrs: {
       "href": "/",
       "exact": ""
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-logo"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "hidden"
-  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _c('div', {
     staticClass: "main-nav"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "nav-link",
     attrs: {
       "href": "/"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-home"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("首页")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("首页")])]), _vm._v(" "), _c('a', {
     staticClass: "nav-link",
     attrs: {
       "href": "/trending/visit"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-explore"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("热门")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v("热门")])]), _vm._v(" "), _c('a', {
     staticClass: "nav-link",
     attrs: {
       "href": "/about"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-nav-features"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
   }, [_vm._v("关于")])])])])
 }]}
@@ -6785,29 +6751,29 @@ module.exports={render:function (){var _vm=this;
 /* 142 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "g-doc",
     attrs: {
       "id": "app"
     }
-  }, [_vm._c('Navigation', {
+  }, [_c('Navigation', {
     attrs: {
       "backend": _vm.backend
     }
-  }), _vm._v(" "), _vm._c('transition', {
+  }), _vm._v(" "), _c('transition', {
     attrs: {
       "name": "fade",
       "mode": "out-in"
     }
-  }, [_vm._c('router-view', {
+  }, [_c('router-view', {
     key: _vm.key,
     staticClass: "router"
-  })]), _vm._v(" "), (!_vm.backend) ? _vm._c('sign-up', {
+  })]), _vm._v(" "), (!_vm.backend) ? _c('sign-up', {
     attrs: {
       "show": _vm.global.showRegisterModal
     }
-  }) : _vm._e(), _vm._v(" "), (!_vm.backend) ? _vm._c('sign-in', {
+  }) : _vm._e(), _vm._v(" "), (!_vm.backend) ? _c('sign-in', {
     attrs: {
       "show": _vm.global.showLoginModal
     }
@@ -6818,28 +6784,28 @@ module.exports={render:function (){var _vm=this;
 /* 143 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "card card-me"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "side-entry",
     attrs: {
       "to": "/user/account",
       "active-class": "active"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-arrow-right"
-  }), _vm._c('i', {
+  }), _c('i', {
     staticClass: "icon icon-articles"
-  }), _vm._v("帐号")]), _vm._v(" "), _vm._c('router-link', {
+  }), _vm._v("帐号")]), _vm._v(" "), _c('router-link', {
     staticClass: "side-entry",
     attrs: {
       "to": "/user/password",
       "active-class": "active"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-arrow-right"
-  }), _vm._c('i', {
+  }), _c('i', {
     staticClass: "icon icon-articles"
   }), _vm._v("密码")])])
 },staticRenderFns: []}
@@ -6848,17 +6814,17 @@ module.exports={render:function (){var _vm=this;
 /* 144 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "settings-section"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-item with-input"
-  }, [_vm._c('h4', {
+  }, [_c('h4', {
     staticClass: "settings-title"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', {
     staticClass: "settings-item-content",
     class: _vm.classes
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-input-wrap"
   }, [_vm._t("default")], true)])])])
 },staticRenderFns: []}
@@ -6867,22 +6833,10 @@ module.exports={render:function (){var _vm=this;
 /* 145 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "actions-wrap"
-  }, [(_vm.item.like_status) ? _vm._c('a', {
-    staticClass: "action-item active",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.unlike
-    }
-  }, [_vm._c('i', {
-    staticClass: "icon icon-action-voteup-active"
-  }), _vm._c('span', {
-    staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]) : _vm._c('a', {
+  }, [(!_vm.item.like_status) ? _c('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
@@ -6890,31 +6844,29 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.like
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-action-voteup"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]), _vm._v(" "), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]) : _vm._e(), _vm._v(" "), _c('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-action-comment"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.comment_count) + " 评论")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v(_vm._s(_vm.item.comment_count) + " 评论")])]), _vm._v(" "), _c('a', {
     staticClass: "action-item action-item-fav",
     attrs: {
       "href": "javascript:;"
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-action-fav"
-  }), _vm._c('i', {
-    staticClass: "icon icon-action-fav-active"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.visit) + " 浏览")])]), _vm._v(" "), _vm._c('a', {
+  }, [_vm._v(_vm._s(_vm.item.visit) + " 浏览")])]), _vm._v(" "), _c('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
@@ -6922,9 +6874,9 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.share
     }
-  }, [_vm._c('i', {
+  }, [_c('i', {
     staticClass: "icon icon-action-share"
-  }), _vm._c('span', {
+  }), _c('span', {
     staticClass: "text"
   }, [_vm._v("分享")])])])
 },staticRenderFns: []}
@@ -6933,16 +6885,16 @@ module.exports={render:function (){var _vm=this;
 /* 146 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "card feed"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "feed-content"
-  }, [_vm._c('span', {
+  }, [_c('span', {
     staticClass: "feed-time"
-  }, [_vm._v(_vm._s(_vm.item.creat_date))]), _vm._c('span', {
+  }, [_vm._v(_vm._s(_vm.item.creat_date))]), _c('span', {
     staticClass: "feed-source"
-  }, [_vm._v("来自分类 "), _vm._c('router-link', {
+  }, [_vm._v("来自分类 "), _c('router-link', {
     staticClass: "feed-minor-link",
     attrs: {
       "to": '/category/' + _vm.item.category
@@ -6950,9 +6902,9 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "textContent": _vm._s(_vm.item.category_name)
     }
-  })]), _vm._v(" "), _vm._c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "feed-main-link-wrap"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "feed-main-link",
     attrs: {
       "to": '/article/' + _vm.item._id
@@ -6960,14 +6912,14 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "textContent": _vm._s(_vm.item.title)
     }
-  })]), _vm._v(" "), _vm._c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "feed-desc-wrap"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "feed-article-content markdown-body",
     domProps: {
       "textContent": _vm._s(_vm.cutStr(_vm.item.content))
     }
-  })])]), _vm._v(" "), _vm._c('actions', {
+  })])]), _vm._v(" "), _c('actions', {
     attrs: {
       "item": _vm.item
     }
@@ -6978,22 +6930,22 @@ module.exports={render:function (){var _vm=this;
 /* 147 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "home-feeds cards-wrap"
   }, [_vm._l((_vm.topics.data), function(item) {
-    return _vm._c('topics-item', {
+    return _c('topics-item', {
       attrs: {
         "item": item
       }
     })
-  }), _vm._v(" "), _vm._c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "load-more-wrap"
-  }, [(_vm.topics.hasNext) ? _vm._c('a', {
+  }, [(_vm.topics.hasNext) ? _c('a', {
     staticClass: "load-more",
     attrs: {
       "href": "javascript:;"
@@ -7003,15 +6955,15 @@ module.exports={render:function (){var _vm=this;
         _vm.loadMore()
       }
     }
-  }, [_vm._v("更多"), _vm._c('i', {
+  }, [_vm._v("更多"), _c('i', {
     staticClass: "icon icon-circle-loading"
-  })]) : _vm._e()])], true)]), _vm._v(" "), _vm._c('div', {
+  })]) : _vm._e()])], true)]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_vm._c('category', {
+  }, [_c('category', {
     attrs: {
       "category": _vm.category
     }
-  }), _vm._v(" "), _vm._c('trending', {
+  }), _vm._v(" "), _c('trending', {
     attrs: {
       "trending": _vm.trending
     }
@@ -7022,32 +6974,32 @@ module.exports={render:function (){var _vm=this;
 /* 148 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "card card-trending"
-  }, [_vm._c('h2', {
+  }, [_c('h2', {
     staticClass: "card-title"
-  }, [_vm._v("热门文章")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("热门文章")]), _vm._v(" "), _c('div', {
     staticClass: "card-content"
   }, _vm._l((_vm.trending), function(item, index) {
-    return _vm._c('div', {
+    return _c('div', {
       staticClass: "trending-item"
-    }, [_vm._c('span', {
+    }, [_c('span', {
       staticClass: "trending-rank-num"
-    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _vm._c('router-link', {
+    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c('router-link', {
       staticClass: "trending-title",
       attrs: {
         "to": ("/article/" + (item._id))
       }
-    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _vm._c('div', {
+    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _c('div', {
       staticClass: "trending-meta"
-    }, [_vm._c('div', {
+    }, [_c('div', {
       staticClass: "trending-meta-item"
-    }, [_vm._c('i', {
+    }, [_c('i', {
       staticClass: "icon icon-action-voteup"
-    }), _vm._v(_vm._s(item.like))]), _vm._v(" "), _vm._c('div', {
+    }), _vm._v(_vm._s(item.like))]), _vm._v(" "), _c('div', {
       staticClass: "trending-meta-item"
-    }, [_vm._c('i', {
+    }, [_c('i', {
       staticClass: "icon icon-action-comment"
     }), _vm._v(_vm._s(item.comment_count))])])])
   }))])
@@ -7057,16 +7009,16 @@ module.exports={render:function (){var _vm=this;
 /* 149 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [(_vm.article.data._id) ? _vm._c('div', {
+  }, [(_vm.article.data._id) ? _c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "card card-question-head"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "question-content"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "topic-link-item",
     attrs: {
       "to": '/category/' + _vm.article.data.category
@@ -7074,9 +7026,9 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "textContent": _vm._s(_vm.article.data.category_name)
     }
-  }), _vm._v(" "), _vm._c('h2', {
+  }), _vm._v(" "), _c('h2', {
     staticClass: "question-title"
-  }, [_vm._c('router-link', {
+  }, [_c('router-link', {
     staticClass: "question-title-link",
     attrs: {
       "to": '/article/' + _vm.article.data._id
@@ -7084,36 +7036,36 @@ module.exports={render:function (){var _vm=this;
     domProps: {
       "textContent": _vm._s(_vm.article.data.title)
     }
-  })])])]), _vm._v(" "), _vm._c('div', {
+  })])])]), _vm._v(" "), _c('div', {
     staticClass: "card card-answer"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "answer-content"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "article-content markdown-body",
     domProps: {
       "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
     }
-  })]), _vm._v(" "), _vm._c('actions', {
+  })]), _vm._v(" "), _c('actions', {
     attrs: {
       "item": _vm.article.data
     }
-  })]), _vm._v(" "), _vm._c('comment', {
+  })]), _vm._v(" "), _c('comment', {
     attrs: {
       "comments": _vm.comments
     }
-  })]) : _vm._c('div', {
+  })]) : _c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "card card-answer"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "answer-content"
-  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])]), _vm._v(" "), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])]), _vm._v(" "), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_vm._c('category', {
+  }, [_c('category', {
     attrs: {
       "category": _vm.category
     }
-  }), _vm._v(" "), _vm._c('trending', {
+  }), _vm._v(" "), _c('trending', {
     attrs: {
       "trending": _vm.trending
     }
@@ -7124,27 +7076,27 @@ module.exports={render:function (){var _vm=this;
 /* 150 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "card card-topics"
   }, [_vm._l((_vm.category), function(item) {
-    return [_vm._c('router-link', {
+    return [_c('router-link', {
       staticClass: "topic-item clearfix",
       attrs: {
         "to": ("/category/" + (item._id))
       }
-    }, [_vm._c('span', {
+    }, [_c('span', {
       staticClass: "avatar-link"
-    }, [_vm._c('img', {
+    }, [_c('img', {
       staticClass: "avatar-image",
       attrs: {
         "src": "/static/images/topic-1.png"
       }
-    })]), _vm._v(" "), _vm._c('h3', {
+    })]), _vm._v(" "), _c('h3', {
       staticClass: "topic-title"
-    }, [_vm._v(_vm._s(item.cate_name))]), _vm._v(" "), _vm._c('p', {
+    }, [_vm._v(_vm._s(item.cate_name))]), _vm._v(" "), _c('p', {
       staticClass: "topic-meta"
-    }, [_vm._v(_vm._s(item.cate_num || 0) + " 篇文章")]), _vm._c('i', {
+    }, [_vm._v(_vm._s(item.cate_num || 0) + " 篇文章")]), _c('i', {
       staticClass: "icon icon-arrow-right"
     })])]
   })], true)
@@ -7154,89 +7106,89 @@ module.exports={render:function (){var _vm=this;
 /* 151 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._m(0), _vm._v(" "), _vm._c('div', {
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_vm._c('trending', {
+  }, [_c('trending', {
     attrs: {
       "trending": _vm.trending
     }
   })])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._c('div', {
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "card card-answer"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "answer-content"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "article-content"
-  }, [_vm._c('h3', {
+  }, [_c('h3', {
     staticClass: "about-title"
-  }, [_vm._v("关于作者")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("关于作者")]), _vm._v(" "), _c('div', {
     staticClass: "flex-item"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "flex-label"
-  }, [_vm._v("姓名:")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("姓名:")]), _vm._v(" "), _c('div', {
     staticClass: "flex-content"
-  }, [_vm._v("林岑影")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("林岑影")])]), _vm._v(" "), _c('div', {
     staticClass: "flex-item"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "flex-label"
-  }, [_vm._v("年龄:")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("年龄:")]), _vm._v(" "), _c('div', {
     staticClass: "flex-content"
-  }, [_vm._v("1987.09")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("1987.09")])]), _vm._v(" "), _c('div', {
     staticClass: "flex-item"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "flex-label"
-  }, [_vm._v("职业:")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("职业:")]), _vm._v(" "), _c('div', {
     staticClass: "flex-content"
-  }, [_vm._v("前端开发")])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("前端开发")])]), _vm._v(" "), _c('div', {
     staticClass: "flex-item"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "flex-label"
-  }, [_vm._v("Github:")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("Github:")]), _vm._v(" "), _c('div', {
     staticClass: "flex-content"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     attrs: {
       "href": "https://github.com/lincenying",
       "target": "_blank"
     }
-  }, [_vm._v("@lincenying")])])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("@lincenying")])])]), _vm._v(" "), _c('div', {
     staticClass: "flex-item"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "flex-label"
-  }, [_vm._v("技能:")]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("技能:")]), _vm._v(" "), _c('div', {
     staticClass: "flex-content"
-  }, [_vm._c('ul', {
+  }, [_c('ul', {
     staticClass: "about-ul"
-  }, [_vm._c('li', [_vm._v("HTML5 + CSS3")]), _vm._v(" "), _vm._c('li', [_vm._v("NodeJS")]), _vm._v(" "), _vm._c('li', [_vm._v("React")]), _vm._v(" "), _vm._c('li', [_vm._v("Vue")]), _vm._v(" "), _vm._c('li', [_vm._v("ES6")]), _vm._v(" "), _vm._c('li', [_vm._v("Gulp")]), _vm._v(" "), _vm._c('li', [_vm._v("WebPack")]), _vm._v(" "), _vm._c('li', [_vm._v("jQuery")]), _vm._v(" "), _vm._c('li', [_vm._v("PHP")])])])]), _vm._v(" "), _vm._c('h3', {
+  }, [_c('li', [_vm._v("HTML5 + CSS3")]), _vm._v(" "), _c('li', [_vm._v("NodeJS")]), _vm._v(" "), _c('li', [_vm._v("React")]), _vm._v(" "), _c('li', [_vm._v("Vue")]), _vm._v(" "), _c('li', [_vm._v("ES6")]), _vm._v(" "), _c('li', [_vm._v("Gulp")]), _vm._v(" "), _c('li', [_vm._v("WebPack")]), _vm._v(" "), _c('li', [_vm._v("jQuery")]), _vm._v(" "), _c('li', [_vm._v("PHP")])])])]), _vm._v(" "), _c('h3', {
     staticClass: "about-title"
-  }, [_vm._v("关于网站")]), _vm._v(" "), _vm._c('p', [_vm._v("本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建")]), _vm._v(" "), _vm._c('p', [_vm._v("网站分成前台和后台, 前台采用 SSR 模式渲染, 后台采用 SPA 模式")]), _vm._v(" "), _vm._c('p', [_vm._v("主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞")]), _vm._v(" "), _vm._c('p', [_vm._v("主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint")])])])])])
+  }, [_vm._v("关于网站")]), _vm._v(" "), _c('p', [_vm._v("本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建")]), _vm._v(" "), _c('p', [_vm._v("网站分成前台和后台, 前台采用 SSR 模式渲染, 后台采用 SPA 模式")]), _vm._v(" "), _c('p', [_vm._v("主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞")]), _vm._v(" "), _c('p', [_vm._v("主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint")])])])])])
 }]}
 
 /***/ },
 /* 152 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "home-feeds cards-wrap"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-main card"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-main-content"
-  }, [_vm._c('a-input', {
+  }, [_c('a-input', {
     attrs: {
       "title": "当前密码"
     }
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7258,11 +7210,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.old_password = $event.target.value
       }
     }
-  })]), _vm._v(" "), _vm._c('a-input', {
+  })]), _vm._v(" "), _c('a-input', {
     attrs: {
       "title": "新的密码"
     }
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7284,11 +7236,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.password = $event.target.value
       }
     }
-  })]), _vm._v(" "), _vm._c('a-input', {
+  })]), _vm._v(" "), _c('a-input', {
     attrs: {
       "title": "确认密码"
     }
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7310,9 +7262,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.re_password = $event.target.value
       }
     }
-  })])]), _vm._v(" "), _vm._c('div', {
+  })])]), _vm._v(" "), _c('div', {
     staticClass: "settings-footer clearfix"
-  }, [_vm._c('a', {
+  }, [_c('a', {
     staticClass: "btn btn-yellow",
     attrs: {
       "href": "javascript:;"
@@ -7320,31 +7272,31 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.modify
     }
-  }, [_vm._v("保存设置")])])])])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("保存设置")])])])])]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_vm._c('account')])])
+  }, [_c('account')])])
 },staticRenderFns: []}
 
 /***/ },
 /* 153 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;
-  return _vm._c('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "main-left"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "home-feeds cards-wrap"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-main card"
-  }, [_vm._c('div', {
+  }, [_c('div', {
     staticClass: "settings-main-content"
-  }, [_vm._c('a-input', {
+  }, [_c('a-input', {
     attrs: {
       "title": "昵称"
     }
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7366,13 +7318,13 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('span', {
+  }), _vm._v(" "), _c('span', {
     staticClass: "input-info error"
-  }, [_vm._v("请输入昵称")])]), _vm._v(" "), _vm._c('a-input', {
+  }, [_vm._v("请输入昵称")])]), _vm._v(" "), _c('a-input', {
     attrs: {
       "title": "邮箱"
     }
-  }, [_vm._c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7394,11 +7346,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.email = $event.target.value
       }
     }
-  }), _vm._v(" "), _vm._c('span', {
+  }), _vm._v(" "), _c('span', {
     staticClass: "input-info error"
-  }, [_vm._v("请输入邮箱")])])]), _vm._v(" ")])])]), _vm._v(" "), _vm._c('div', {
+  }, [_vm._v("请输入邮箱")])])]), _vm._v(" ")])])]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_vm._c('account')])])
+  }, [_c('account')])])
 },staticRenderFns: []}
 
 /***/ },
