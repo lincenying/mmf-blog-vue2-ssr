@@ -3635,10 +3635,10 @@ exports.default = {
     },
     metaInfo: function metaInfo() {
         var title = 'M.M.F 小屋';
-        var _$store$state$route$p = this.$store.state.route.params,
-            id = _$store$state$route$p.id,
-            key = _$store$state$route$p.key,
-            by = _$store$state$route$p.by;
+        var _$route$params = this.$route.params,
+            id = _$route$params.id,
+            key = _$route$params.key,
+            by = _$route$params.by;
 
         if (id) {
             var obj = this.category.find(function (item) {
@@ -6625,7 +6625,6 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "href": "javascript:;"
     }
-<<<<<<< HEAD
   }, [_vm._c('img', {
     staticClass: "avatar-img",
     attrs: {
@@ -6634,28 +6633,6 @@ module.exports={render:function (){var _vm=this;
     }
   })])
 }]}
-=======
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-fav"
-  }), _vm._h('i', {
-    staticClass: "icon icon-action-fav-active"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, [_vm._s(_vm.item.visit) + " 浏览"])]), " ", _vm._h('a', {
-    staticClass: "action-item",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.share
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-share"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["分享"])])])
-},staticRenderFns: []}
->>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
 
 /***/ },
 /* 141 */
@@ -6937,19 +6914,20 @@ module.exports={render:function (){var _vm=this;
     staticClass: "icon icon-action-fav-active"
   }), _vm._c('span', {
     staticClass: "text"
-  }, [_vm._v(_vm._s(_vm.item.visit) + " 浏览")])]), _vm._v(" "), _vm._m(0)])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._c('a', {
+  }, [_vm._v(_vm._s(_vm.item.visit) + " 浏览")])]), _vm._v(" "), _vm._c('a', {
     staticClass: "action-item",
     attrs: {
       "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.share
     }
   }, [_vm._c('i', {
     staticClass: "icon icon-action-share"
   }), _vm._c('span', {
     staticClass: "text"
-  }, [_vm._v("分享")])])
-}]}
+  }, [_vm._v("分享")])])])
+},staticRenderFns: []}
 
 /***/ },
 /* 146 */
@@ -7082,11 +7060,7 @@ module.exports={render:function (){var _vm=this;
 module.exports={render:function (){var _vm=this;
   return _vm._c('div', {
     staticClass: "main wrap clearfix"
-<<<<<<< HEAD
-  }, [_vm._c('div', {
-=======
-  }, [(_vm.article.data._id) ? _vm._h('div', {
->>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
+  }, [(_vm.article.data._id) ? _vm._c('div', {
     staticClass: "main-left"
   }, [_vm._c('div', {
     staticClass: "card card-question-head"
@@ -7127,17 +7101,13 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "comments": _vm.comments
     }
-<<<<<<< HEAD
-  })]), _vm._v(" "), _vm._c('div', {
-=======
-  })]) : _vm._h('div', {
+  })]) : _vm._c('div', {
     staticClass: "main-left"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "card card-answer"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "answer-content"
-  }, ["该文章不存在, 或者该文章已经被删除"])])]), " ", " ", _vm._h('div', {
->>>>>>> 32221af71f512f98665369bb1eecc9f99c1ffa19
+  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])]), _vm._v(" "), _vm._v(" "), _vm._c('div', {
     staticClass: "main-right"
   }, [_vm._c('category', {
     attrs: {
