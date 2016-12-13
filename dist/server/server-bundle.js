@@ -198,7 +198,7 @@ exports.default = {
             method: 'post',
             url: _apiConfig2.default.api + url,
             data: _qs2.default.stringify(data),
-            timeout: 10000,
+            timeout: _apiConfig2.default.timeout,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -210,7 +210,7 @@ exports.default = {
             method: 'get',
             url: _apiConfig2.default.api + url,
             params: params,
-            timeout: 10000,
+            timeout: _apiConfig2.default.timeout,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
@@ -693,7 +693,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(67)
 
 /* template */
-var __vue_template__ = __webpack_require__(151)
+var __vue_template__ = __webpack_require__(148)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1241,7 +1241,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(64)
 
 /* template */
-var __vue_template__ = __webpack_require__(147)
+var __vue_template__ = __webpack_require__(144)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1270,7 +1270,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(65)
 
 /* template */
-var __vue_template__ = __webpack_require__(146)
+var __vue_template__ = __webpack_require__(143)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1299,7 +1299,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(66)
 
 /* template */
-var __vue_template__ = __webpack_require__(148)
+var __vue_template__ = __webpack_require__(150)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1328,7 +1328,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(69)
 
 /* template */
-var __vue_template__ = __webpack_require__(143)
+var __vue_template__ = __webpack_require__(145)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1422,7 +1422,8 @@ exports.store = _store2.default;
 
 module.exports = {
     api: 'http://localhost:8080/api/',
-    port: 8080
+    port: 8080,
+    timeout: 30000
 };
 
 /***/ },
@@ -1546,7 +1547,7 @@ var router = new _vueRouter2.default({
 });
 
 exports.default = router;
-/* WEBPACK VAR INJECTION */}.call(exports, "src/router"))
+/* WEBPACK VAR INJECTION */}.call(exports, "src\\router"))
 
 /***/ },
 /* 56 */
@@ -5278,7 +5279,8 @@ if (hadRuntime) {
 !(function(global) {
   "use strict";
 
-  var hasOwn = Object.prototype.hasOwnProperty;
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
   var undefined; // More compressible than void 0.
   var $Symbol = typeof Symbol === "function" ? Symbol : {};
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
@@ -5350,10 +5352,29 @@ if (hadRuntime) {
   function GeneratorFunction() {}
   function GeneratorFunctionPrototype() {}
 
-  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
   GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
   GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
 
   // Helper for defining the .next, .throw, and .return methods of the
   // Iterator interface in terms of a single ._invoke method.
@@ -5390,16 +5411,11 @@ if (hadRuntime) {
 
   // Within the body of any async function, `await x` is transformed to
   // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `value instanceof AwaitArgument` to determine if the yielded value is
-  // meant to be awaited. Some may consider the name of this method too
-  // cutesy, but they are curmudgeons.
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
   runtime.awrap = function(arg) {
-    return new AwaitArgument(arg);
+    return { __await: arg };
   };
-
-  function AwaitArgument(arg) {
-    this.arg = arg;
-  }
 
   function AsyncIterator(generator) {
     function invoke(method, arg, resolve, reject) {
@@ -5409,8 +5425,10 @@ if (hadRuntime) {
       } else {
         var result = record.arg;
         var value = result.value;
-        if (value instanceof AwaitArgument) {
-          return Promise.resolve(value.arg).then(function(value) {
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return Promise.resolve(value.__await).then(function(value) {
             invoke("next", value, resolve, reject);
           }, function(err) {
             invoke("throw", err, resolve, reject);
@@ -5479,6 +5497,7 @@ if (hadRuntime) {
   }
 
   defineIteratorMethods(AsyncIterator.prototype);
+  runtime.AsyncIterator = AsyncIterator;
 
   // Note that simple async functions are implemented on top of
   // AsyncIterator objects; they just return a Promise for the value of
@@ -5638,10 +5657,6 @@ if (hadRuntime) {
   // Define Generator.prototype.{next,throw,return} in terms of the
   // unified ._invoke helper method.
   defineIteratorMethods(Gp);
-
-  Gp[iteratorSymbol] = function() {
-    return this;
-  };
 
   Gp[toStringTagSymbol] = "Generator";
 
@@ -5949,7 +5964,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(63)
 
 /* template */
-var __vue_template__ = __webpack_require__(141)
+var __vue_template__ = __webpack_require__(142)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6007,7 +6022,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(70)
 
 /* template */
-var __vue_template__ = __webpack_require__(144)
+var __vue_template__ = __webpack_require__(141)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6036,7 +6051,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(71)
 
 /* template */
-var __vue_template__ = __webpack_require__(153)
+var __vue_template__ = __webpack_require__(138)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6065,7 +6080,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(72)
 
 /* template */
-var __vue_template__ = __webpack_require__(150)
+var __vue_template__ = __webpack_require__(139)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6094,7 +6109,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(73)
 
 /* template */
-var __vue_template__ = __webpack_require__(139)
+var __vue_template__ = __webpack_require__(146)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6125,7 +6140,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(74)
 
 /* template */
-var __vue_template__ = __webpack_require__(138)
+var __vue_template__ = __webpack_require__(151)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6183,7 +6198,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(76)
 
 /* template */
-var __vue_template__ = __webpack_require__(142)
+var __vue_template__ = __webpack_require__(147)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6212,7 +6227,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(77)
 
 /* template */
-var __vue_template__ = __webpack_require__(152)
+var __vue_template__ = __webpack_require__(153)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6241,7 +6256,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(78)
 
 /* template */
-var __vue_template__ = __webpack_require__(145)
+var __vue_template__ = __webpack_require__(152)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -6264,111 +6279,243 @@ module.exports = __vue_exports__
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "main wrap clearfix"
-  }, [_vm._m(0), " ", _vm._h('div', {
-    staticClass: "main-right"
-  }, [_vm._h('trending', {
+  return _vm._c('div', {
+    staticClass: "modal-wrap modal-signin-wrap",
+    class: _vm.show ? 'active' : ''
+  }, [_vm._c('span', {
+    staticClass: "center-helper"
+  }), _vm._v(" "), _vm._c('div', {
+    staticClass: "modal modal-signup"
+  }, [_vm._c('h2', {
+    staticClass: "modal-title"
+  }, [_vm._v("登录")]), _vm._c('a', {
+    staticClass: "modal-close",
     attrs: {
-      "trending": _vm.trending
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.close
     }
-  })])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "main-left"
-  }, [_vm._h('div', {
-    staticClass: "card card-answer"
-  }, [_vm._h('div', {
-    staticClass: "answer-content"
-  }, [_vm._h('div', {
-    staticClass: "article-content"
-  }, [_vm._h('h3', {
-    staticClass: "about-title"
-  }, ["关于作者"]), " ", _vm._h('div', {
-    staticClass: "flex-item"
-  }, [_vm._h('div', {
-    staticClass: "flex-label"
-  }, ["姓名:"]), " ", _vm._h('div', {
-    staticClass: "flex-content"
-  }, ["林岑影"])]), " ", _vm._h('div', {
-    staticClass: "flex-item"
-  }, [_vm._h('div', {
-    staticClass: "flex-label"
-  }, ["年龄:"]), " ", _vm._h('div', {
-    staticClass: "flex-content"
-  }, ["1987.09"])]), " ", _vm._h('div', {
-    staticClass: "flex-item"
-  }, [_vm._h('div', {
-    staticClass: "flex-label"
-  }, ["职业:"]), " ", _vm._h('div', {
-    staticClass: "flex-content"
-  }, ["前端开发"])]), " ", _vm._h('div', {
-    staticClass: "flex-item"
-  }, [_vm._h('div', {
-    staticClass: "flex-label"
-  }, ["Github:"]), " ", _vm._h('div', {
-    staticClass: "flex-content"
-  }, [_vm._h('a', {
+  }, [_vm._c('i', {
+    staticClass: "icon icon-close-black"
+  })]), _vm._v(" "), _vm._c('div', {
+    staticClass: "modal-content"
+  }, [_vm._c('div', {
+    staticClass: "signup-form"
+  }, [_vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.username),
+      expression: "form.username"
+    }],
+    staticClass: "base-input",
     attrs: {
-      "href": "https://github.com/lincenying",
-      "target": "_blank"
+      "type": "text",
+      "placeholder": "昵称"
+    },
+    domProps: {
+      "value": _vm._s(_vm.form.username)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.username = $event.target.value
+      }
     }
-  }, ["@lincenying"])])]), " ", _vm._h('div', {
-    staticClass: "flex-item"
-  }, [_vm._h('div', {
-    staticClass: "flex-label"
-  }, ["技能:"]), " ", _vm._h('div', {
-    staticClass: "flex-content"
-  }, [_vm._h('ul', {
-    staticClass: "about-ul"
-  }, [_vm._h('li', ["HTML5 + CSS3"]), " ", _vm._h('li', ["NodeJS"]), " ", _vm._h('li', ["React"]), " ", _vm._h('li', ["Vue"]), " ", _vm._h('li', ["ES6"]), " ", _vm._h('li', ["Gulp"]), " ", _vm._h('li', ["WebPack"]), " ", _vm._h('li', ["jQuery"]), " ", _vm._h('li', ["PHP"])])])]), " ", _vm._h('h3', {
-    staticClass: "about-title"
-  }, ["关于网站"]), " ", _vm._h('p', ["本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建"]), " ", _vm._h('p', ["网站分成前台和后台, 前台采用 SSR 模式渲染, 后台采用 SPA 模式"]), " ", _vm._h('p', ["主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞"]), " ", _vm._h('p', ["主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint"])])])])])
-}]}
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.password),
+      expression: "form.password"
+    }],
+    staticClass: "base-input",
+    attrs: {
+      "type": "password",
+      "placeholder": "密码"
+    },
+    domProps: {
+      "value": _vm._s(_vm.form.password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.password = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('a', {
+    staticClass: "btn signup-btn btn-yellow",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.login
+    }
+  }, [_vm._v("确认登录")]), _vm._v(" "), _vm._c('a', {
+    staticClass: "btn signup-btn btn-blue",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.register
+    }
+  }, [_vm._v("我要注册")])])])])])
+},staticRenderFns: []}
 
 /***/ },
 /* 139 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "card feed"
-  }, [_vm._h('div', {
-    staticClass: "feed-content"
-  }, [_vm._h('span', {
-    staticClass: "feed-time"
-  }, [_vm._s(_vm.item.creat_date)]), _vm._h('span', {
-    staticClass: "feed-source"
-  }, ["来自分类 ", _vm._h('router-link', {
-    staticClass: "feed-minor-link",
+  return _vm._c('div', {
+    staticClass: "modal-wrap modal-signup-wrap",
+    class: _vm.show ? 'active' : ''
+  }, [_vm._c('span', {
+    staticClass: "center-helper"
+  }), _vm._v(" "), _vm._c('div', {
+    staticClass: "modal modal-signup"
+  }, [_vm._c('h2', {
+    staticClass: "modal-title"
+  }, [_vm._v("注册")]), _vm._c('a', {
+    staticClass: "modal-close",
     attrs: {
-      "to": '/category/' + _vm.item.category
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.close
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-close-black"
+  })]), _vm._v(" "), _vm._c('div', {
+    staticClass: "modal-content"
+  }, [_vm._c('div', {
+    staticClass: "signup-form"
+  }, [_vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.username),
+      expression: "form.username"
+    }],
+    staticClass: "base-input",
+    attrs: {
+      "type": "text",
+      "placeholder": "昵称"
     },
     domProps: {
-      "textContent": _vm._s(_vm.item.category_name)
+      "value": _vm._s(_vm.form.username)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.username = $event.target.value
+      }
     }
-  })]), " ", _vm._h('div', {
-    staticClass: "feed-main-link-wrap"
-  }, [_vm._h('router-link', {
-    staticClass: "feed-main-link",
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.email),
+      expression: "form.email"
+    }],
+    staticClass: "base-input",
     attrs: {
-      "to": '/article/' + _vm.item._id
+      "type": "text",
+      "placeholder": "邮箱"
     },
     domProps: {
-      "textContent": _vm._s(_vm.item.title)
+      "value": _vm._s(_vm.form.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.email = $event.target.value
+      }
     }
-  })]), " ", _vm._h('div', {
-    staticClass: "feed-desc-wrap"
-  }, [_vm._h('div', {
-    staticClass: "feed-article-content markdown-body",
-    domProps: {
-      "textContent": _vm._s(_vm.cutStr(_vm.item.content))
-    }
-  })])]), " ", _vm._h('actions', {
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.password),
+      expression: "form.password"
+    }],
+    staticClass: "base-input",
     attrs: {
-      "item": _vm.item
+      "type": "password",
+      "placeholder": "密码"
+    },
+    domProps: {
+      "value": _vm._s(_vm.form.password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.password = $event.target.value
+      }
     }
-  })])
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "input-wrap"
+  }, [_vm._c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.form.re_password),
+      expression: "form.re_password"
+    }],
+    staticClass: "base-input",
+    attrs: {
+      "type": "password",
+      "placeholder": "重复密码"
+    },
+    domProps: {
+      "value": _vm._s(_vm.form.re_password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.form.re_password = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._c('p', {
+    staticClass: "error-info input-info hidden"
+  }, [_vm._v("长度至少 6 位")])]), _vm._v(" "), _vm._c('a', {
+    staticClass: "btn signup-btn btn-yellow",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.register
+    }
+  }, [_vm._v("确认注册")]), _vm._v(" "), _vm._c('a', {
+    staticClass: "btn signup-btn btn-blue",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.login
+    }
+  }, [_vm._v("直接登录")])])])])])
 },staticRenderFns: []}
 
 /***/ },
@@ -6376,21 +6523,21 @@ module.exports={render:function (){var _vm=this;
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+  return _vm._c('div', {
     staticClass: "card"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "comments"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "comment-post-wrap"
-  }, [_vm._h('img', {
+  }, [_vm._c('img', {
     staticClass: "avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
       "alt": ""
     }
-  }), " ", _vm._h('div', {
+  }), _vm._v(" "), _vm._c('div', {
     staticClass: "comment-post-input-wrap base-textarea-wrap"
-  }, [_vm._h('textarea', {
+  }, [_vm._c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6412,9 +6559,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.content = $event.target.value
       }
     }
-  })]), " ", _vm._h('div', {
+  })]), _vm._v(" "), _vm._c('div', {
     staticClass: "comment-post-actions clearfix"
-  }, [_vm._h('a', {
+  }, [_vm._c('a', {
     staticClass: "btn btn-blue",
     attrs: {
       "href": "javascript:;"
@@ -6422,33 +6569,33 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.postComment
     }
-  }, ["发表评论"])])]), " ", _vm._h('div', {
+  }, [_vm._v("发表评论")])])]), _vm._v(" "), _vm._c('div', {
     staticClass: "comment-items-wrap"
-  }, [_vm._l((_vm.comments.data), function(item) {
-    return _vm._h('div', {
+  }, _vm._l((_vm.comments.data), function(item) {
+    return _vm._c('div', {
       staticClass: "comment-item"
-    }, [_vm._m(0, true), " ", _vm._h('div', {
+    }, [_vm._m(0, true), _vm._v(" "), _vm._c('div', {
       staticClass: "comment-content-wrap"
-    }, [_vm._h('span', {
+    }, [_vm._c('span', {
       staticClass: "comment-author-wrap"
-    }, [_vm._h('a', {
+    }, [_vm._c('a', {
       staticClass: "comment-author",
       attrs: {
         "href": "javascript:;"
       }
-    }, [_vm._s(item.username)])]), " ", _vm._h('div', {
+    }, [_vm._v(_vm._s(item.username))])]), _vm._v(" "), _vm._c('div', {
       staticClass: "comment-content",
       domProps: {
         "textContent": _vm._s(item.content)
       }
-    }), " ", _vm._h('div', {
+    }), _vm._v(" "), _vm._c('div', {
       staticClass: "comment-footer"
-    }, [_vm._h('span', {
+    }, [_vm._c('span', {
       staticClass: "comment-time",
       domProps: {
         "textContent": _vm._s(item.creat_date)
       }
-    }), " ", _vm._h('a', {
+    }), _vm._v(" "), _vm._c('a', {
       staticClass: "comment-action-item comment-reply",
       attrs: {
         "href": "javascript:;"
@@ -6458,10 +6605,10 @@ module.exports={render:function (){var _vm=this;
           _vm.reply(item)
         }
       }
-    }, ["回复"])])])])
-  })]), " ", (_vm.comments.hasNext) ? _vm._h('div', {
+    }, [_vm._v("回复")])])])])
+  })), _vm._v(" "), (_vm.comments.hasNext) ? _vm._c('div', {
     staticClass: "load-more-wrap"
-  }, [_vm._h('a', {
+  }, [_vm._c('a', {
     staticClass: "comments-load-more",
     attrs: {
       "href": "javascript:;"
@@ -6471,14 +6618,14 @@ module.exports={render:function (){var _vm=this;
         _vm.loadcomment()
       }
     }
-  }, ["加载更多"])]) : _vm._e()])])
+  }, [_vm._v("加载更多")])]) : _vm._e()])])
 },staticRenderFns: [function (){var _vm=this;
-  return _vm._h('a', {
+  return _vm._c('a', {
     staticClass: "comment-author-avatar-link",
     attrs: {
       "href": "javascript:;"
     }
-  }, [_vm._h('img', {
+  }, [_vm._c('img', {
     staticClass: "avatar-img",
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
@@ -6492,28 +6639,175 @@ module.exports={render:function (){var _vm=this;
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+  return _vm._c('nav', {
+    staticClass: "global-nav"
+  }, [(_vm.backend) ? _vm._c('div', {
+    staticClass: "wrap clearfix"
+  }, [_vm._m(0)]) : _vm._c('div', {
+    staticClass: "wrap clearfix"
+  }, [_vm._c('div', {
+    staticClass: "left-part"
+  }, [_vm._c('router-link', {
+    staticClass: "logo-link",
+    attrs: {
+      "to": "/",
+      "active-class": "current",
+      "exact": ""
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-logo"
+  }), _vm._c('span', {
+    staticClass: "hidden"
+  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "main-nav"
+  }, [_vm._c('router-link', {
+    staticClass: "nav-link",
+    attrs: {
+      "to": "/",
+      "active-class": "current",
+      "exact": ""
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-home"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("首页")])]), _vm._v(" "), _vm._c('router-link', {
+    staticClass: "nav-link",
+    attrs: {
+      "to": "/trending/visit",
+      "active-class": "current"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-explore"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("热门")])]), _vm._v(" "), _vm._c('router-link', {
+    staticClass: "nav-link",
+    attrs: {
+      "to": "/about",
+      "active-class": "current"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-features"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("关于")])])])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "right-part"
+  }, [_vm._c('span', {
+    staticClass: "nav-search"
+  }, [_vm._c('i', {
+    staticClass: "icon icon-search-white"
+  }), _vm._c('input', {
+    staticClass: "nav-search-input",
+    attrs: {
+      "placeholder": "记得按回车哦"
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "enter", 13)) { return; }
+        _vm.search($event)
+      }
+    }
+  })]), _vm._v(" "), (_vm.isLogin) ? _vm._c('span', {
+    staticClass: "nav-me"
+  }, [_vm._c('router-link', {
+    staticClass: "nav-me-link",
+    attrs: {
+      "to": "/user/account"
+    }
+  }, [_vm._c('img', {
+    staticClass: "nav-avatar-img",
+    attrs: {
+      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
+    }
+  })])]) : _vm._c('span', {
+    staticClass: "nav-me"
+  }, [_vm._c('a', {
+    staticClass: "nav-me-link",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.login
+    }
+  }, [_vm._c('img', {
+    staticClass: "nav-avatar-img",
+    attrs: {
+      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
+    }
+  })])]), _vm._v(" ")])]), _vm._v(" ")])
+},staticRenderFns: [function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "left-part"
+  }, [_vm._c('a', {
+    staticClass: "logo-link",
+    attrs: {
+      "href": "/",
+      "exact": ""
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-logo"
+  }), _vm._c('span', {
+    staticClass: "hidden"
+  }, [_vm._v("M.M.F 小屋")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "main-nav"
+  }, [_vm._c('a', {
+    staticClass: "nav-link",
+    attrs: {
+      "href": "/"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-home"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("首页")])]), _vm._v(" "), _vm._c('a', {
+    staticClass: "nav-link",
+    attrs: {
+      "href": "/trending/visit"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-explore"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("热门")])]), _vm._v(" "), _vm._c('a', {
+    staticClass: "nav-link",
+    attrs: {
+      "href": "/about"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-nav-features"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("关于")])])])])
+}]}
+
+/***/ },
+/* 142 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
     staticClass: "g-doc",
     attrs: {
       "id": "app"
     }
-  }, [_vm._h('Navigation', {
+  }, [_vm._c('Navigation', {
     attrs: {
       "backend": _vm.backend
     }
-  }), " ", _vm._h('transition', {
+  }), _vm._v(" "), _vm._c('transition', {
     attrs: {
       "name": "fade",
       "mode": "out-in"
     }
-  }, [_vm._h('router-view', {
+  }, [_vm._c('router-view', {
     key: _vm.key,
     staticClass: "router"
-  })]), " ", (!_vm.backend) ? _vm._h('sign-up', {
+  })]), _vm._v(" "), (!_vm.backend) ? _vm._c('sign-up', {
     attrs: {
       "show": _vm.global.showRegisterModal
     }
-  }) : _vm._e(), " ", (!_vm.backend) ? _vm._h('sign-in', {
+  }) : _vm._e(), _vm._v(" "), (!_vm.backend) ? _vm._c('sign-in', {
     attrs: {
       "show": _vm.global.showLoginModal
     }
@@ -6521,25 +6815,184 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
-/* 142 */
+/* 143 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+  return _vm._c('div', {
+    staticClass: "card card-me"
+  }, [_vm._c('router-link', {
+    staticClass: "side-entry",
+    attrs: {
+      "to": "/user/account",
+      "active-class": "active"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-arrow-right"
+  }), _vm._c('i', {
+    staticClass: "icon icon-articles"
+  }), _vm._v("帐号")]), _vm._v(" "), _vm._c('router-link', {
+    staticClass: "side-entry",
+    attrs: {
+      "to": "/user/password",
+      "active-class": "active"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-arrow-right"
+  }), _vm._c('i', {
+    staticClass: "icon icon-articles"
+  }), _vm._v("密码")])])
+},staticRenderFns: []}
+
+/***/ },
+/* 144 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "settings-section"
+  }, [_vm._c('div', {
+    staticClass: "settings-item with-input"
+  }, [_vm._c('h4', {
+    staticClass: "settings-title"
+  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _vm._c('div', {
+    staticClass: "settings-item-content",
+    class: _vm.classes
+  }, [_vm._c('div', {
+    staticClass: "settings-input-wrap"
+  }, [_vm._t("default")], true)])])])
+},staticRenderFns: []}
+
+/***/ },
+/* 145 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "actions-wrap"
+  }, [(_vm.item.like_status) ? _vm._c('a', {
+    staticClass: "action-item active",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.unlike
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-action-voteup-active"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]) : _vm._c('a', {
+    staticClass: "action-item",
+    attrs: {
+      "href": "javascript:;"
+    },
+    on: {
+      "click": _vm.like
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-action-voteup"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v(_vm._s(_vm.item.like) + " 赞")])]), _vm._v(" "), _vm._v(" "), _vm._c('a', {
+    staticClass: "action-item",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-action-comment"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v(_vm._s(_vm.item.comment_count) + " 评论")])]), _vm._v(" "), _vm._c('a', {
+    staticClass: "action-item action-item-fav",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-action-fav"
+  }), _vm._c('i', {
+    staticClass: "icon icon-action-fav-active"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v(_vm._s(_vm.item.visit) + " 浏览")])]), _vm._v(" "), _vm._m(0)])
+},staticRenderFns: [function (){var _vm=this;
+  return _vm._c('a', {
+    staticClass: "action-item",
+    attrs: {
+      "href": "javascript:;"
+    }
+  }, [_vm._c('i', {
+    staticClass: "icon icon-action-share"
+  }), _vm._c('span', {
+    staticClass: "text"
+  }, [_vm._v("分享")])])
+}]}
+
+/***/ },
+/* 146 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "card feed"
+  }, [_vm._c('div', {
+    staticClass: "feed-content"
+  }, [_vm._c('span', {
+    staticClass: "feed-time"
+  }, [_vm._v(_vm._s(_vm.item.creat_date))]), _vm._c('span', {
+    staticClass: "feed-source"
+  }, [_vm._v("来自分类 "), _vm._c('router-link', {
+    staticClass: "feed-minor-link",
+    attrs: {
+      "to": '/category/' + _vm.item.category
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.category_name)
+    }
+  })]), _vm._v(" "), _vm._c('div', {
+    staticClass: "feed-main-link-wrap"
+  }, [_vm._c('router-link', {
+    staticClass: "feed-main-link",
+    attrs: {
+      "to": '/article/' + _vm.item._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.item.title)
+    }
+  })]), _vm._v(" "), _vm._c('div', {
+    staticClass: "feed-desc-wrap"
+  }, [_vm._c('div', {
+    staticClass: "feed-article-content markdown-body",
+    domProps: {
+      "textContent": _vm._s(_vm.cutStr(_vm.item.content))
+    }
+  })])]), _vm._v(" "), _vm._c('actions', {
+    attrs: {
+      "item": _vm.item
+    }
+  })])
+},staticRenderFns: []}
+
+/***/ },
+/* 147 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "main-left"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "home-feeds cards-wrap"
   }, [_vm._l((_vm.topics.data), function(item) {
-    return _vm._h('topics-item', {
+    return _vm._c('topics-item', {
       attrs: {
         "item": item
       }
     })
-  }), " ", _vm._h('div', {
+  }), _vm._v(" "), _vm._c('div', {
     staticClass: "load-more-wrap"
-  }, [(_vm.topics.hasNext) ? _vm._h('a', {
+  }, [(_vm.topics.hasNext) ? _vm._c('a', {
     staticClass: "load-more",
     attrs: {
       "href": "javascript:;"
@@ -6549,15 +7002,15 @@ module.exports={render:function (){var _vm=this;
         _vm.loadMore()
       }
     }
-  }, ["更多", _vm._h('i', {
+  }, [_vm._v("更多"), _vm._c('i', {
     staticClass: "icon icon-circle-loading"
-  })]) : _vm._e()])])]), " ", _vm._h('div', {
+  })]) : _vm._e()])], true)]), _vm._v(" "), _vm._c('div', {
     staticClass: "main-right"
-  }, [_vm._h('category', {
+  }, [_vm._c('category', {
     attrs: {
       "category": _vm.category
     }
-  }), " ", _vm._h('trending', {
+  }), _vm._v(" "), _vm._c('trending', {
     attrs: {
       "trending": _vm.trending
     }
@@ -6565,237 +7018,218 @@ module.exports={render:function (){var _vm=this;
 },staticRenderFns: []}
 
 /***/ },
-/* 143 */
+/* 148 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "actions-wrap"
-  }, [(_vm.item.like_status) ? _vm._h('a', {
-    staticClass: "action-item active",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.unlike
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-voteup-active"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, [_vm._s(_vm.item.like) + " 赞"])]) : _vm._h('a', {
-    staticClass: "action-item",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.like
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-voteup"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, [_vm._s(_vm.item.like) + " 赞"])]), " ", " ", _vm._h('a', {
-    staticClass: "action-item",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-comment"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, [_vm._s(_vm.item.comment_count) + " 评论"])]), " ", _vm._h('a', {
-    staticClass: "action-item action-item-fav",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-fav"
-  }), _vm._h('i', {
-    staticClass: "icon icon-action-fav-active"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, [_vm._s(_vm.item.visit) + " 浏览"])]), " ", _vm._m(0)])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('a', {
-    staticClass: "action-item",
-    attrs: {
-      "href": "javascript:;"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-action-share"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["分享"])])
-}]}
-
-/***/ },
-/* 144 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('nav', {
-    staticClass: "global-nav"
-  }, [(_vm.backend) ? _vm._h('div', {
-    staticClass: "wrap clearfix"
-  }, [_vm._m(0)]) : _vm._h('div', {
-    staticClass: "wrap clearfix"
-  }, [_vm._h('div', {
-    staticClass: "left-part"
-  }, [_vm._h('router-link', {
-    staticClass: "logo-link",
-    attrs: {
-      "to": "/",
-      "active-class": "current",
-      "exact": ""
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-logo"
-  }), _vm._h('span', {
-    staticClass: "hidden"
-  }, ["M.M.F 小屋"])]), " ", _vm._h('div', {
-    staticClass: "main-nav"
-  }, [_vm._h('router-link', {
-    staticClass: "nav-link",
-    attrs: {
-      "to": "/",
-      "active-class": "current",
-      "exact": ""
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-home"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["首页"])]), " ", _vm._h('router-link', {
-    staticClass: "nav-link",
-    attrs: {
-      "to": "/trending/visit",
-      "active-class": "current"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-explore"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["热门"])]), " ", _vm._h('router-link', {
-    staticClass: "nav-link",
-    attrs: {
-      "to": "/about",
-      "active-class": "current"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-features"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["关于"])])])]), " ", _vm._h('div', {
-    staticClass: "right-part"
-  }, [_vm._h('span', {
-    staticClass: "nav-search"
-  }, [_vm._h('i', {
-    staticClass: "icon icon-search-white"
-  }), _vm._h('input', {
-    staticClass: "nav-search-input",
-    attrs: {
-      "placeholder": "记得按回车哦"
-    },
-    on: {
-      "keyup": function($event) {
-        if ($event.keyCode !== 13) { return; }
-        _vm.search($event)
+  return _vm._c('div', {
+    staticClass: "card card-trending"
+  }, [_vm._c('h2', {
+    staticClass: "card-title"
+  }, [_vm._v("热门文章")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "card-content"
+  }, _vm._l((_vm.trending), function(item, index) {
+    return _vm._c('div', {
+      staticClass: "trending-item"
+    }, [_vm._c('span', {
+      staticClass: "trending-rank-num"
+    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _vm._c('router-link', {
+      staticClass: "trending-title",
+      attrs: {
+        "to": ("/article/" + (item._id))
       }
-    }
-  })]), " ", (_vm.isLogin) ? _vm._h('span', {
-    staticClass: "nav-me"
-  }, [_vm._h('router-link', {
-    staticClass: "nav-me-link",
-    attrs: {
-      "to": "/user/account"
-    }
-  }, [_vm._h('img', {
-    staticClass: "nav-avatar-img",
-    attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
-    }
-  })])]) : _vm._h('span', {
-    staticClass: "nav-me"
-  }, [_vm._h('a', {
-    staticClass: "nav-me-link",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.login
-    }
-  }, [_vm._h('img', {
-    staticClass: "nav-avatar-img",
-    attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
-    }
-  })])]), " "])]), " "])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "left-part"
-  }, [_vm._h('a', {
-    staticClass: "logo-link",
-    attrs: {
-      "href": "/",
-      "exact": ""
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-logo"
-  }), _vm._h('span', {
-    staticClass: "hidden"
-  }, ["M.M.F 小屋"])]), " ", _vm._h('div', {
-    staticClass: "main-nav"
-  }, [_vm._h('a', {
-    staticClass: "nav-link",
-    attrs: {
-      "href": "/"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-home"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["首页"])]), " ", _vm._h('a', {
-    staticClass: "nav-link",
-    attrs: {
-      "href": "/trending/visit"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-explore"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["热门"])]), " ", _vm._h('a', {
-    staticClass: "nav-link",
-    attrs: {
-      "href": "/about"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-nav-features"
-  }), _vm._h('span', {
-    staticClass: "text"
-  }, ["关于"])])])])
-}]}
+    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _vm._c('div', {
+      staticClass: "trending-meta"
+    }, [_vm._c('div', {
+      staticClass: "trending-meta-item"
+    }, [_vm._c('i', {
+      staticClass: "icon icon-action-voteup"
+    }), _vm._v(_vm._s(item.like))]), _vm._v(" "), _vm._c('div', {
+      staticClass: "trending-meta-item"
+    }, [_vm._c('i', {
+      staticClass: "icon icon-action-comment"
+    }), _vm._v(_vm._s(item.comment_count))])])])
+  }))])
+},staticRenderFns: []}
 
 /***/ },
-/* 145 */
+/* 149 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+  return _vm._c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "main-left"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
+    staticClass: "card card-question-head"
+  }, [_vm._c('div', {
+    staticClass: "question-content"
+  }, [_vm._c('router-link', {
+    staticClass: "topic-link-item",
+    attrs: {
+      "to": '/category/' + _vm.article.data.category
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.category_name)
+    }
+  }), _vm._v(" "), _vm._c('h2', {
+    staticClass: "question-title"
+  }, [_vm._c('router-link', {
+    staticClass: "question-title-link",
+    attrs: {
+      "to": '/article/' + _vm.article.data._id
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.article.data.title)
+    }
+  })])])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "card card-answer"
+  }, [_vm._c('div', {
+    staticClass: "answer-content"
+  }, [_vm._c('div', {
+    staticClass: "article-content markdown-body",
+    domProps: {
+      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
+    }
+  })]), _vm._v(" "), _vm._c('actions', {
+    attrs: {
+      "item": _vm.article.data
+    }
+  })]), _vm._v(" "), _vm._c('comment', {
+    attrs: {
+      "comments": _vm.comments
+    }
+  })]), _vm._v(" "), _vm._c('div', {
+    staticClass: "main-right"
+  }, [_vm._c('category', {
+    attrs: {
+      "category": _vm.category
+    }
+  }), _vm._v(" "), _vm._c('trending', {
+    attrs: {
+      "trending": _vm.trending
+    }
+  })])])
+},staticRenderFns: []}
+
+/***/ },
+/* 150 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "card card-topics"
+  }, [_vm._l((_vm.category), function(item) {
+    return [_vm._c('router-link', {
+      staticClass: "topic-item clearfix",
+      attrs: {
+        "to": ("/category/" + (item._id))
+      }
+    }, [_vm._c('span', {
+      staticClass: "avatar-link"
+    }, [_vm._c('img', {
+      staticClass: "avatar-image",
+      attrs: {
+        "src": "/static/images/topic-1.png"
+      }
+    })]), _vm._v(" "), _vm._c('h3', {
+      staticClass: "topic-title"
+    }, [_vm._v(_vm._s(item.cate_name))]), _vm._v(" "), _vm._c('p', {
+      staticClass: "topic-meta"
+    }, [_vm._v(_vm._s(item.cate_num || 0) + " 篇文章")]), _vm._c('i', {
+      staticClass: "icon icon-arrow-right"
+    })])]
+  })], true)
+},staticRenderFns: []}
+
+/***/ },
+/* 151 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "main wrap clearfix"
+  }, [_vm._m(0), _vm._v(" "), _vm._c('div', {
+    staticClass: "main-right"
+  }, [_vm._c('trending', {
+    attrs: {
+      "trending": _vm.trending
+    }
+  })])])
+},staticRenderFns: [function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "main-left"
+  }, [_vm._c('div', {
+    staticClass: "card card-answer"
+  }, [_vm._c('div', {
+    staticClass: "answer-content"
+  }, [_vm._c('div', {
+    staticClass: "article-content"
+  }, [_vm._c('h3', {
+    staticClass: "about-title"
+  }, [_vm._v("关于作者")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-item"
+  }, [_vm._c('div', {
+    staticClass: "flex-label"
+  }, [_vm._v("姓名:")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-content"
+  }, [_vm._v("林岑影")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-item"
+  }, [_vm._c('div', {
+    staticClass: "flex-label"
+  }, [_vm._v("年龄:")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-content"
+  }, [_vm._v("1987.09")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-item"
+  }, [_vm._c('div', {
+    staticClass: "flex-label"
+  }, [_vm._v("职业:")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-content"
+  }, [_vm._v("前端开发")])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-item"
+  }, [_vm._c('div', {
+    staticClass: "flex-label"
+  }, [_vm._v("Github:")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-content"
+  }, [_vm._c('a', {
+    attrs: {
+      "href": "https://github.com/lincenying",
+      "target": "_blank"
+    }
+  }, [_vm._v("@lincenying")])])]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-item"
+  }, [_vm._c('div', {
+    staticClass: "flex-label"
+  }, [_vm._v("技能:")]), _vm._v(" "), _vm._c('div', {
+    staticClass: "flex-content"
+  }, [_vm._c('ul', {
+    staticClass: "about-ul"
+  }, [_vm._c('li', [_vm._v("HTML5 + CSS3")]), _vm._v(" "), _vm._c('li', [_vm._v("NodeJS")]), _vm._v(" "), _vm._c('li', [_vm._v("React")]), _vm._v(" "), _vm._c('li', [_vm._v("Vue")]), _vm._v(" "), _vm._c('li', [_vm._v("ES6")]), _vm._v(" "), _vm._c('li', [_vm._v("Gulp")]), _vm._v(" "), _vm._c('li', [_vm._v("WebPack")]), _vm._v(" "), _vm._c('li', [_vm._v("jQuery")]), _vm._v(" "), _vm._c('li', [_vm._v("PHP")])])])]), _vm._v(" "), _vm._c('h3', {
+    staticClass: "about-title"
+  }, [_vm._v("关于网站")]), _vm._v(" "), _vm._c('p', [_vm._v("本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建")]), _vm._v(" "), _vm._c('p', [_vm._v("网站分成前台和后台, 前台采用 SSR 模式渲染, 后台采用 SPA 模式")]), _vm._v(" "), _vm._c('p', [_vm._v("主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞")]), _vm._v(" "), _vm._c('p', [_vm._v("主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint")])])])])])
+}]}
+
+/***/ },
+/* 152 */
+/***/ function(module, exports) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._c('div', {
+    staticClass: "main wrap clearfix"
+  }, [_vm._c('div', {
+    staticClass: "main-left"
+  }, [_vm._c('div', {
     staticClass: "home-feeds cards-wrap"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "settings-main card"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "settings-main-content"
-  }, [_vm._h('a-input', {
+  }, [_vm._c('a-input', {
     attrs: {
       "title": "当前密码"
     }
-  }, [_vm._h('input', {
+  }, [_vm._c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6817,11 +7251,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.old_password = $event.target.value
       }
     }
-  })]), " ", _vm._h('a-input', {
+  })]), _vm._v(" "), _vm._c('a-input', {
     attrs: {
       "title": "新的密码"
     }
-  }, [_vm._h('input', {
+  }, [_vm._c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6843,11 +7277,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.password = $event.target.value
       }
     }
-  })]), " ", _vm._h('a-input', {
+  })]), _vm._v(" "), _vm._c('a-input', {
     attrs: {
       "title": "确认密码"
     }
-  }, [_vm._h('input', {
+  }, [_vm._c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6869,9 +7303,9 @@ module.exports={render:function (){var _vm=this;
         _vm.form.re_password = $event.target.value
       }
     }
-  })])]), " ", _vm._h('div', {
+  })])]), _vm._v(" "), _vm._c('div', {
     staticClass: "settings-footer clearfix"
-  }, [_vm._h('a', {
+  }, [_vm._c('a', {
     staticClass: "btn btn-yellow",
     attrs: {
       "href": "javascript:;"
@@ -6879,353 +7313,31 @@ module.exports={render:function (){var _vm=this;
     on: {
       "click": _vm.modify
     }
-  }, ["保存设置"])])])])]), " ", _vm._h('div', {
+  }, [_vm._v("保存设置")])])])])]), _vm._v(" "), _vm._c('div', {
     staticClass: "main-right"
-  }, [_vm._h('account')])])
+  }, [_vm._c('account')])])
 },staticRenderFns: []}
 
 /***/ },
-/* 146 */
+/* 153 */
 /***/ function(module, exports) {
 
 module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "card card-me"
-  }, [_vm._h('router-link', {
-    staticClass: "side-entry",
-    attrs: {
-      "to": "/user/account",
-      "active-class": "active"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-arrow-right"
-  }), _vm._h('i', {
-    staticClass: "icon icon-articles"
-  }), "帐号"]), " ", _vm._h('router-link', {
-    staticClass: "side-entry",
-    attrs: {
-      "to": "/user/password",
-      "active-class": "active"
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-arrow-right"
-  }), _vm._h('i', {
-    staticClass: "icon icon-articles"
-  }), "密码"])])
-},staticRenderFns: []}
-
-/***/ },
-/* 147 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "settings-section"
-  }, [_vm._h('div', {
-    staticClass: "settings-item with-input"
-  }, [_vm._h('h4', {
-    staticClass: "settings-title"
-  }, [_vm._s(_vm.title)]), " ", _vm._h('div', {
-    staticClass: "settings-item-content",
-    class: _vm.classes
-  }, [_vm._h('div', {
-    staticClass: "settings-input-wrap"
-  }, [_vm._t("default")])])])])
-},staticRenderFns: []}
-
-/***/ },
-/* 148 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "card card-topics"
-  }, [_vm._l((_vm.category), function(item) {
-    return [_vm._h('router-link', {
-      staticClass: "topic-item clearfix",
-      attrs: {
-        "to": ("/category/" + (item._id))
-      }
-    }, [_vm._h('span', {
-      staticClass: "avatar-link"
-    }, [_vm._h('img', {
-      staticClass: "avatar-image",
-      attrs: {
-        "src": "/static/images/topic-1.png"
-      }
-    })]), " ", _vm._h('h3', {
-      staticClass: "topic-title"
-    }, [_vm._s(item.cate_name)]), " ", _vm._h('p', {
-      staticClass: "topic-meta"
-    }, [_vm._s(item.cate_num || 0) + " 篇文章"]), _vm._h('i', {
-      staticClass: "icon icon-arrow-right"
-    })])]
-  })])
-},staticRenderFns: []}
-
-/***/ },
-/* 149 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
+  return _vm._c('div', {
     staticClass: "main wrap clearfix"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "main-left"
-  }, [_vm._h('div', {
-    staticClass: "card card-question-head"
-  }, [_vm._h('div', {
-    staticClass: "question-content"
-  }, [_vm._h('router-link', {
-    staticClass: "topic-link-item",
-    attrs: {
-      "to": '/category/' + _vm.article.data.category
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.category_name)
-    }
-  }), " ", _vm._h('h2', {
-    staticClass: "question-title"
-  }, [_vm._h('router-link', {
-    staticClass: "question-title-link",
-    attrs: {
-      "to": '/article/' + _vm.article.data._id
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.article.data.title)
-    }
-  })])])]), " ", _vm._h('div', {
-    staticClass: "card card-answer"
-  }, [_vm._h('div', {
-    staticClass: "answer-content"
-  }, [_vm._h('div', {
-    staticClass: "article-content markdown-body",
-    domProps: {
-      "innerHTML": _vm._s(_vm.addTarget(_vm.article.data.html))
-    }
-  })]), " ", _vm._h('actions', {
-    attrs: {
-      "item": _vm.article.data
-    }
-  })]), " ", _vm._h('comment', {
-    attrs: {
-      "comments": _vm.comments
-    }
-  })]), " ", _vm._h('div', {
-    staticClass: "main-right"
-  }, [_vm._h('category', {
-    attrs: {
-      "category": _vm.category
-    }
-  }), " ", _vm._h('trending', {
-    attrs: {
-      "trending": _vm.trending
-    }
-  })])])
-},staticRenderFns: []}
-
-/***/ },
-/* 150 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "modal-wrap modal-signup-wrap",
-    class: _vm.show ? 'active' : ''
-  }, [_vm._h('span', {
-    staticClass: "center-helper"
-  }), " ", _vm._h('div', {
-    staticClass: "modal modal-signup"
-  }, [_vm._h('h2', {
-    staticClass: "modal-title"
-  }, ["注册"]), _vm._h('a', {
-    staticClass: "modal-close",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.close
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-close-black"
-  })]), " ", _vm._h('div', {
-    staticClass: "modal-content"
-  }, [_vm._h('div', {
-    staticClass: "signup-form"
-  }, [_vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.username),
-      expression: "form.username"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "text",
-      "placeholder": "昵称"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.username)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.username = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.email),
-      expression: "form.email"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "text",
-      "placeholder": "邮箱"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.email)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.email = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.password),
-      expression: "form.password"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "password",
-      "placeholder": "密码"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.password)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.password = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.re_password),
-      expression: "form.re_password"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "password",
-      "placeholder": "重复密码"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.re_password)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.re_password = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('a', {
-    staticClass: "btn signup-btn btn-yellow",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.register
-    }
-  }, ["确认注册"]), " ", _vm._h('a', {
-    staticClass: "btn signup-btn btn-blue",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.login
-    }
-  }, ["直接登录"])])])])])
-},staticRenderFns: []}
-
-/***/ },
-/* 151 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "card card-trending"
-  }, [_vm._h('h2', {
-    staticClass: "card-title"
-  }, ["热门文章"]), " ", _vm._h('div', {
-    staticClass: "card-content"
-  }, [_vm._l((_vm.trending), function(item, index) {
-    return _vm._h('div', {
-      staticClass: "trending-item"
-    }, [_vm._h('span', {
-      staticClass: "trending-rank-num"
-    }, [_vm._s(index + 1)]), " ", _vm._h('router-link', {
-      staticClass: "trending-title",
-      attrs: {
-        "to": ("/article/" + (item._id))
-      }
-    }, [_vm._s(item.title)]), " ", _vm._h('div', {
-      staticClass: "trending-meta"
-    }, [_vm._h('div', {
-      staticClass: "trending-meta-item"
-    }, [_vm._h('i', {
-      staticClass: "icon icon-action-voteup"
-    }), _vm._s(item.like)]), " ", _vm._h('div', {
-      staticClass: "trending-meta-item"
-    }, [_vm._h('i', {
-      staticClass: "icon icon-action-comment"
-    }), _vm._s(item.comment_count)])])])
-  })])])
-},staticRenderFns: []}
-
-/***/ },
-/* 152 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "main wrap clearfix"
-  }, [_vm._h('div', {
-    staticClass: "main-left"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "home-feeds cards-wrap"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "settings-main card"
-  }, [_vm._h('div', {
+  }, [_vm._c('div', {
     staticClass: "settings-main-content"
-  }, [_vm._h('a-input', {
+  }, [_vm._c('a-input', {
     attrs: {
       "title": "昵称"
     }
-  }, [_vm._h('input', {
+  }, [_vm._c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7247,13 +7359,13 @@ module.exports={render:function (){var _vm=this;
         _vm.form.username = $event.target.value
       }
     }
-  }), " ", _vm._h('span', {
+  }), _vm._v(" "), _vm._c('span', {
     staticClass: "input-info error"
-  }, ["请输入昵称"])]), " ", _vm._h('a-input', {
+  }, [_vm._v("请输入昵称")])]), _vm._v(" "), _vm._c('a-input', {
     attrs: {
       "title": "邮箱"
     }
-  }, [_vm._h('input', {
+  }, [_vm._c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7275,108 +7387,11 @@ module.exports={render:function (){var _vm=this;
         _vm.form.email = $event.target.value
       }
     }
-  }), " ", _vm._h('span', {
+  }), _vm._v(" "), _vm._c('span', {
     staticClass: "input-info error"
-  }, ["请输入邮箱"])])]), " "])])]), " ", _vm._h('div', {
+  }, [_vm._v("请输入邮箱")])])]), _vm._v(" ")])])]), _vm._v(" "), _vm._c('div', {
     staticClass: "main-right"
-  }, [_vm._h('account')])])
-},staticRenderFns: []}
-
-/***/ },
-/* 153 */
-/***/ function(module, exports) {
-
-module.exports={render:function (){var _vm=this;
-  return _vm._h('div', {
-    staticClass: "modal-wrap modal-signin-wrap",
-    class: _vm.show ? 'active' : ''
-  }, [_vm._h('span', {
-    staticClass: "center-helper"
-  }), " ", _vm._h('div', {
-    staticClass: "modal modal-signup"
-  }, [_vm._h('h2', {
-    staticClass: "modal-title"
-  }, ["登录"]), _vm._h('a', {
-    staticClass: "modal-close",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.close
-    }
-  }, [_vm._h('i', {
-    staticClass: "icon icon-close-black"
-  })]), " ", _vm._h('div', {
-    staticClass: "modal-content"
-  }, [_vm._h('div', {
-    staticClass: "signup-form"
-  }, [_vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.username),
-      expression: "form.username"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "text",
-      "placeholder": "昵称"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.username)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.username = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('div', {
-    staticClass: "input-wrap"
-  }, [_vm._h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.form.password),
-      expression: "form.password"
-    }],
-    staticClass: "base-input",
-    attrs: {
-      "type": "password",
-      "placeholder": "密码"
-    },
-    domProps: {
-      "value": _vm._s(_vm.form.password)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.form.password = $event.target.value
-      }
-    }
-  }), " ", _vm._h('p', {
-    staticClass: "error-info input-info hidden"
-  }, ["长度至少 6 位"])]), " ", _vm._h('a', {
-    staticClass: "btn signup-btn btn-yellow",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.login
-    }
-  }, ["确认登录"]), " ", _vm._h('a', {
-    staticClass: "btn signup-btn btn-blue",
-    attrs: {
-      "href": "javascript:;"
-    },
-    on: {
-      "click": _vm.register
-    }
-  }, ["我要注册"])])])])])
+  }, [_vm._c('account')])])
 },staticRenderFns: []}
 
 /***/ },
