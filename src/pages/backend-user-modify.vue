@@ -26,7 +26,7 @@ import { mapGetters } from 'vuex'
 import api from '~api'
 import aInput from '~components/_input.vue'
 const fetchInitialData = async store => {
-    await store.dispatch('backend/getUserItem')
+    await store.dispatch('backend/user/getUserItem')
 }
 export default {
     data() {
@@ -44,22 +44,22 @@ export default {
     },
     computed: {
         ...mapGetters({
-            item: 'backend/getUserItem'
+            item: 'backend/user/getUserItem'
         })
     },
     methods: {
         async modify() {
             if (!this.form.username || !this.form.password || !this.form.email) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             const { data: { message, code} } = await api.post('backend/user/modify', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/updateUserItem', this.form)
+                this.$store.commit('backend/user/updateUserItem', this.form)
                 this.$router.push('/backend/user/list')
             }
         }

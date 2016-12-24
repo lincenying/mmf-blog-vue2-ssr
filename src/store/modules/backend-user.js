@@ -15,20 +15,20 @@ const state = {
 }
 
 const actions = {
-    async ['backend/getUserList'] ({commit, rootState: {route: { path }}}, config) {
+    async ['getUserList'] ({commit, rootState: {route: { path }}}, config) {
         const { data: { data, code} } = await api.get('backend/user/list', config)
         if (data && code === 200) {
-            commit('backend/receiveUserList', {
+            commit('receiveUserList', {
                 ...data,
                 path,
                 page: config.page
             })
         }
     },
-    async ['backend/getUserItem'] ({commit, rootState: {route: { path, params: { id } }}}) {
+    async ['getUserItem'] ({commit, rootState: {route: { path, params: { id } }}}) {
         const { data: { data, code} } = await api.get('backend/user/item', { id })
         if (data && code === 200) {
-            commit('backend/receiveUserItem', {
+            commit('receiveUserItem', {
                 data,
                 path
             })
@@ -37,7 +37,7 @@ const actions = {
 }
 
 const mutations = {
-    ['backend/receiveUserList'](state, {list, path, hasNext, hasPrev, page}) {
+    ['receiveUserList'](state, {list, path, hasNext, hasPrev, page}) {
         if (page === 1) {
             list = [].concat(list)
         } else {
@@ -48,10 +48,10 @@ const mutations = {
             data: list, hasNext, hasPrev, page, path
         }
     },
-    ['backend/receiveUserItem'](state, payload) {
+    ['receiveUserItem'](state, payload) {
         state.item = payload
     },
-    ['backend/updateUserItem'](state, payload) {
+    ['updateUserItem'](state, payload) {
         state.item = {
             ...state.item.data,
             ...payload
@@ -62,26 +62,27 @@ const mutations = {
             obj.email = payload.email
         }
     },
-    ['backend/deleteUser'](state, id) {
+    ['deleteUser'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 1
     },
-    ['backend/recoverUser'](state, id) {
+    ['recoverUser'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 0
     }
 }
 
 const getters = {
-    ['backend/getUserList'] (state) {
+    ['getUserList'] (state) {
         return state.lists
     },
-    ['backend/getUserItem'] (state) {
+    ['getUserItem'] (state) {
         return state.item
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

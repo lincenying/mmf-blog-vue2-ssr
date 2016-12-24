@@ -1,7 +1,7 @@
 import { app, store, router } from './app'
 
 router.beforeEach((route, redirect, next) => {
-    store.dispatch('gProgress', 0)
+    store.dispatch('global/gProgress', 0)
     next()
 })
 

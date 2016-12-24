@@ -11,38 +11,38 @@ const state = {
 }
 
 const actions = {
-    async ['backend/getArticleList'] ({commit, rootState: {route: { path, params: { page } }}}, config) {
+    async ['getArticleList'] ({commit, rootState: {route: { path, params: { page } }}}, config) {
         const { data: { data, code} } = await api.get('backend/article/list', config)
         if (data && code === 200) {
-            commit('backend/receiveArticleList', {
+            commit('receiveArticleList', {
                 ...data,
                 path,
                 page: config.page
             })
         }
     },
-    async ['backend/getArticleItem'] ({ rootState: {route: { params: { id }}} }) {
+    async ['getArticleItem'] ({ rootState: {route: { params: { id }}} }) {
         const { data: { data, code} } = await api.get('backend/article/item', { id })
         if (data && code === 200) {
             return data
         }
     },
-    async ['backend/deleteArticle'] ({commit}, config) {
+    async ['deleteArticle'] ({commit}, config) {
         const { data: { code} } = await api.get('backend/article/delete', config)
         if (code === 200) {
-            commit('backend/deleteArticle', config.id)
+            commit('deleteArticle', config.id)
         }
     },
-    async ['backend/recoverArticle'] ({commit}, config) {
+    async ['recoverArticle'] ({commit}, config) {
         const { data: { code} } = await api.get('backend/article/recover', config)
         if (code === 200) {
-            commit('backend/recoverArticle', config.id)
+            commit('recoverArticle', config.id)
         }
     }
 }
 
 const mutations = {
-    ['backend/receiveArticleList'](state, {list, path, hasNext, hasPrev, page}) {
+    ['receiveArticleList'](state, {list, path, hasNext, hasPrev, page}) {
         if (page === 1) {
             list = [].concat(list)
         } else {
@@ -52,12 +52,12 @@ const mutations = {
             data: list,  path, hasNext, hasPrev, page
         }
     },
-    ['backend/insertArticleItem'](state, payload) {
+    ['insertArticleItem'](state, payload) {
         if (state.lists.path) {
             state.lists.data = [payload].concat(state.lists.data)
         }
     },
-    ['backend/updateArticleItem'](state, data) {
+    ['updateArticleItem'](state, data) {
         const obj = state.lists.data.find(ii => ii._id === data.id)
         for (const jj in obj) {
             if (obj.hasOwnProperty(jj) && data[jj]) {
@@ -65,26 +65,27 @@ const mutations = {
             }
         }
     },
-    ['backend/deleteArticle'](state, id) {
+    ['deleteArticle'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 1
     },
-    ['backend/recoverArticle'](state, id) {
+    ['recoverArticle'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 0
     }
 }
 
 const getters = {
-    ['backend/getArticleList'] (state) {
+    ['getArticleList'] (state) {
         return state.lists
     },
-    ['backend/getArticleItem'] (state) {
+    ['getArticleItem'] (state) {
         return state.item
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

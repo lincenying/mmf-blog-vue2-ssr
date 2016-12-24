@@ -54,21 +54,21 @@ export default {
         },
         async register() {
             if (!this.form.username || !this.form.password || !this.form.email) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             } else if (strlen(this.form.username) < 4) {
-                this.$store.dispatch('showMsg', '用户长度至少 2 个中文或 4 个英文!')
+                this.$store.dispatch('global/showMsg', '用户长度至少 2 个中文或 4 个英文!')
                 return
             } else if (strlen(this.form.password) < 8) {
-                this.$store.dispatch('showMsg', '密码长度至少 8 位!')
+                this.$store.dispatch('global/showMsg', '密码长度至少 8 位!')
                 return
             } else if (this.form.password !== this.form.re_password) {
-                this.$store.dispatch('showMsg', '两次输入的密码不一致!')
+                this.$store.dispatch('global/showMsg', '两次输入的密码不一致!')
                 return
             }
             const { data: { message, code} } = await api.post('frontend/user/insert', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })

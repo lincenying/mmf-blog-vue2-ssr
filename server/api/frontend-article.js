@@ -52,7 +52,7 @@ exports.getList = (req, res) => {
             data = result[0],
             total = result[1],
             totalPage = Math.ceil(total / limit),
-            user_id = req.cookies.user_id
+            user_id = req.cookies.userid
         var json = {
             code: 200,
             data: {
@@ -105,7 +105,7 @@ exports.getList = (req, res) => {
 
 exports.getItem = (req, res) => {
     var _id = req.query.id,
-        user_id = req.cookies.user_id
+        user_id = req.cookies.userid
     if (!_id) {
         res.json({
             code: -200,

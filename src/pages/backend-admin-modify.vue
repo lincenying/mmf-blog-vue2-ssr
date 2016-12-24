@@ -27,7 +27,7 @@ import api from '~api'
 import backendMenu from '~components/backend-menu.vue'
 import aInput from '~components/_input.vue'
 const fetchInitialData = async store => {
-    await store.dispatch('backend/getAdminItem')
+    await store.dispatch('backend/admin/getAdminItem')
 }
 export default {
     data() {
@@ -46,22 +46,22 @@ export default {
     },
     computed: {
         ...mapGetters({
-            item: 'backend/getAdminItem'
+            item: 'backend/admin/getAdminItem'
         })
     },
     methods: {
         async modify() {
             if (!this.form.username || !this.form.password || !this.form.email) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             const { data: { message, code} } = await api.post('backend/admin/modify', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/updateAdminItem', this.form)
+                this.$store.commit('backend/admin/updateAdminItem', this.form)
                 this.$router.push('/backend/admin/list')
             }
         }

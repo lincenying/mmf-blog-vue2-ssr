@@ -16,7 +16,7 @@ export default {
         async like() {
             const username = cookies.get('user')
             if (!username) {
-                this.$store.dispatch('showMsg', '请先登录!')
+                this.$store.dispatch('global/showMsg', '请先登录!')
                 this.$store.commit('global/showLoginModal', true)
                 return
             }
@@ -24,7 +24,7 @@ export default {
             if (this.item.like_status) url = 'frontend/unlike'
             const { data: {code, message} } = await api.get(url, { id: this.item._id })
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     content: message,
                     type: 'success'
                 })

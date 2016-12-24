@@ -6,31 +6,31 @@ const state = {
 }
 
 const actions = {
-    async ['backend/getCategoryList']({ commit }, config) {
+    async ['getCategoryList']({ commit }, config) {
         const { data: { data, code} } = await api.get('backend/category/list', config)
         if (data && code === 200) {
-            commit('frontend/receiveCategoryList', data.list)
+            commit('receiveCategoryList', data.list)
         }
     },
-    async ['backend/getCategoryItem'] ({commit, rootState: {route: { params: { id } }}}) {
+    async ['getCategoryItem'] ({commit, rootState: {route: { params: { id } }}}) {
         const { data: { data, code} } = await api.get('backend/category/item', { id })
         if (data && code === 200) {
-            commit('backend/receiveCategoryItem', data)
+            commit('receiveCategoryItem', data)
         }
     }
 }
 
 const mutations = {
-    ['frontend/receiveCategoryList'](state, payload) {
+    ['receiveCategoryList'](state, payload) {
         state.lists = payload
     },
-    ['backend/receiveCategoryItem'](state, payload) {
+    ['receiveCategoryItem'](state, payload) {
         state.item = payload
     },
-    ['backend/insertCategoryItem'](state, payload) {
+    ['insertCategoryItem'](state, payload) {
         state.lists = [payload].concat(state.lists)
     },
-    ['backend/updateCategoryItem'](state, payload) {
+    ['updateCategoryItem'](state, payload) {
         state.item = {
             ...state.item,
             ...payload
@@ -44,15 +44,16 @@ const mutations = {
 }
 
 const getters = {
-    ['backend/getCategoryList'] (state) {
+    ['getCategoryList'] (state) {
         return state.lists
     },
-    ['backend/getCategoryItem'] (state) {
+    ['getCategoryItem'] (state) {
         return state.item
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

@@ -29,13 +29,13 @@
 import api from '~api'
 import { mapGetters } from 'vuex'
 const fetchInitialData = async (store, config = { page: 1}) => {
-    await store.dispatch('backend/getArticleList', config)
+    await store.dispatch('backend/article/getArticleList', config)
 }
 export default {
     name: 'backend-article-list',
     computed: {
         ...mapGetters({
-            topics: 'backend/getArticleList'
+            topics: 'backend/article/getArticleList'
         })
     },
     methods: {
@@ -45,21 +45,21 @@ export default {
         async recover(id) {
             const { data: { code, message} } = await api.get('backend/article/recover', { id })
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/recoverArticle', id)
+                this.$store.commit('backend/article/recoverArticle', id)
             }
         },
         async deletes(id) {
             const { data: { code, message} } = await api.get('backend/article/delete', { id })
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/deleteArticle', id)
+                this.$store.commit('backend/article/deleteArticle', id)
             }
         }
     },

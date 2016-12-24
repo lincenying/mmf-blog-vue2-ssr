@@ -42,12 +42,12 @@ export default {
         },
         async login() {
             if (!this.form.username || !this.form.password) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             const { data: { message, code} } = await api.post('frontend/user/login', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })

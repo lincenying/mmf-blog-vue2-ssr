@@ -22,9 +22,9 @@ import { ssp } from '../utils'
 const fetchInitialData = async (store, config = { page: 1}) => {
     const {params: {id, key, by}, path} = store.state.route
     const base = { ...config, limit: 10, id, key, by }
-    store.dispatch('backend/getCategoryList')
-    store.dispatch('frontend/getTrending')
-    await store.dispatch('frontend/getArticleList', base)
+    store.dispatch('global/category/getCategoryList')
+    store.dispatch('frontend/article/getTrending')
+    await store.dispatch('frontend/article/getArticleList', base)
     if (config.page === 1) ssp(path)
 }
 export default {
@@ -35,9 +35,9 @@ export default {
     },
     computed: {
         ...mapGetters({
-            topics: 'frontend/getArticleList',
-            category: 'backend/getCategoryList',
-            trending: 'frontend/getTrending'
+            topics: 'frontend/article/getArticleList',
+            category: 'global/category/getCategoryList',
+            trending: 'frontend/article/getTrending'
         })
     },
     methods: {
@@ -50,7 +50,7 @@ export default {
             fetchInitialData(this.$store, {page: 1})
         } else {
             ssp(this.$route.path)
-            this.$store.dispatch('gProgress', 100)
+            this.$store.dispatch('global/gProgress', 100)
         }
     },
     watch: {

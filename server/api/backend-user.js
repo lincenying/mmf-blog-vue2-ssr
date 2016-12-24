@@ -1,11 +1,14 @@
 var md5 = require('md5')
 var fs = require('fs')
 var moment = require('moment')
+var jwt = require('jsonwebtoken')
 
 var mongoose = require('../mongoose')
 var Admin = mongoose.model('Admin')
 var fsExistsSync = require('../utils').fsExistsSync
-var md5Pre = require('../config').md5Pre
+var config = require('../config')
+var md5Pre = config.md5Pre
+var secret = config.secret
 const general = require('./general')
 
 const list = general.list
@@ -52,7 +55,7 @@ exports.login = (req, res) => {
             code: -200,
             message: '请输入用户名和密码'
         }
-        res.json(json)
+        return res.json(json)
     }
     Admin.findOneAsync({
         username,
@@ -62,23 +65,26 @@ exports.login = (req, res) => {
     .then(result => {
         if (result) {
             var id = result._id
-            var remember_me = req.body.remember_me ? 2592000000 : 86400000
-            var token = md5(id + md5Pre + username)
+            var remember_me = 2592000000
+            var token = jwt.sign({
+                id,
+                username
+            }, secret, {
+                expiresIn: 60*60*24*30
+            })
             res.cookie('b_user', token, { maxAge: remember_me })
             res.cookie('b_userid', id, { maxAge: remember_me })
             res.cookie('b_username', username, { maxAge: remember_me })
-            json = {
+            return res.json({
                 code: 200,
                 message: '登录成功',
                 data: token
-            }
-        } else {
-            json = {
-                code: -200,
-                message: '用户名或者密码错误'
-            }
+            })
         }
-        res.json(json)
+        return res.json({
+            code: -200,
+            message: '用户名或者密码错误'
+        })
     }).catch(err => {
         res.json({
             code: -200,
@@ -101,34 +107,29 @@ exports.insert = (req, res, next) => {
         username = req.body.username
 
     if (fsExistsSync('./admin.lock')) {
-        res.render('admin-add.html', {message: '请先把 admin.lock 删除'})
-    } else {
-        if (!username || !password || !email) {
-            res.render('admin-add.html', { message: '请将表单填写完整' })
-        } else {
-            Admin.findOneAsync({
-                username
-            })
-            .then(result => {
-                if (result) {
-                    return '该用户已经存在'
-                }
-                return Admin.createAsync({
-                    username,
-                    password: md5(md5Pre + password),
-                    email,
-                    creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
-                    is_delete: 0,
-                    timestamp: moment().format('X')
-                }).then(() => {
-                    fs.writeFileSync('./admin.lock', username)
-                    return '添加用户成功: '+username+', 密码: '+password
-                })
-            }).then(message => {
-                res.render('admin-add.html', { message })
-            }).catch(err => next(err))
-        }
+        return res.render('admin-add.html', {message: '请先把 admin.lock 删除'})
     }
+    if (!username || !password || !email) {
+        return res.render('admin-add.html', { message: '请将表单填写完整' })
+    }
+    Admin.findOneAsync({ username }).then(result => {
+        if (result) {
+            return '该用户已经存在'
+        }
+        return Admin.createAsync({
+            username,
+            password: md5(md5Pre + password),
+            email,
+            creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+            is_delete: 0,
+            timestamp: moment().format('X')
+        }).then(() => {
+            fs.writeFileSync('./admin.lock', username)
+            return '添加用户成功: '+username+', 密码: '+password
+        })
+    }).then(message => {
+        res.render('admin-add.html', { message })
+    }).catch(err => next(err))
 }
 
 /**

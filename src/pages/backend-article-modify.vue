@@ -32,7 +32,7 @@ import api from '~api'
 import { mapGetters } from 'vuex'
 import aInput from '../components/_input.vue'
 const fetchInitialData = async (store, config = { limit: 99}) => {
-    await store.dispatch('backend/getCategoryList', config)
+    await store.dispatch('global/category/getCategoryList', config)
 }
 export default {
     name: 'backend-article-modify',
@@ -53,24 +53,24 @@ export default {
     },
     computed: {
         ...mapGetters({
-            category: 'backend/getCategoryList'
+            category: 'global/category/getCategoryList'
         })
     },
     methods: {
         async modify() {
             const content = modifyEditor.getMarkdown()
             if (!this.form.title || !this.form.category || !content) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             this.form.content = content
             const { data: { message, code} } = await api.post('backend/article/modify', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/updateArticleItem', this.form)
+                this.$store.commit('backend/article/updateArticleItem', this.form)
                 this.$router.push('/backend/article/list')
             }
         }
@@ -79,7 +79,7 @@ export default {
         if (this.category.length <= 0) {
             fetchInitialData(this.$store)
         }
-        this.$store.dispatch('backend/getArticleItem').then(data => {
+        this.$store.dispatch('backend/article/getArticleItem').then(data => {
             this.form.title = data.title
             this.form.category_old = data.category
             this.form.category = data.category

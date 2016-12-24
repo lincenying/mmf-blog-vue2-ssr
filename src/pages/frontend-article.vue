@@ -36,20 +36,20 @@ import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
 import comment from '../components/frontend-comment.vue'
 const fetchInitialData = async store => {
-    store.dispatch('backend/getCategoryList')
-    store.dispatch('frontend/getTrending')
-    store.dispatch(`global/getCommentList`, { page: 1, limit: 5})
-    await store.dispatch(`frontend/getArticleItem`)
+    store.dispatch('global/category/getCategoryList')
+    store.dispatch('frontend/article/getTrending')
+    store.dispatch(`global/comment/getCommentList`, { page: 1, limit: 5})
+    await store.dispatch(`frontend/article/getArticleItem`)
 }
 export default {
     name: 'frontend-article',
     prefetch: fetchInitialData,
     computed: {
         ...mapGetters({
-            article: 'frontend/getArticleItem',
-            comments: 'global/getCommentList',
-            category: 'backend/getCategoryList',
-            trending: 'frontend/getTrending'
+            article: 'frontend/article/getArticleItem',
+            comments: 'global/comment/getCommentList',
+            category: 'global/category/getCategoryList',
+            trending: 'frontend/article/getTrending'
         })
     },
     components: {
@@ -68,7 +68,7 @@ export default {
         if (this.$route.path !== this.article.path) {
             fetchInitialData(this.$store)
         } else {
-            this.$store.dispatch('gProgress', 100)
+            this.$store.dispatch('global/gProgress', 100)
         }
     },
     watch: {

@@ -15,20 +15,20 @@ const state = {
 }
 
 const actions = {
-    async ['backend/getAdminList'] ({commit, rootState: {route: { path }}}, config) {
+    async ['getAdminList'] ({commit, rootState: {route: { path }}}, config) {
         const { data: { data, code} } = await api.get('backend/admin/list', config)
         if (data && code === 200) {
-            commit('backend/receiveAdminList', {
+            commit('receiveAdminList', {
                 ...data,
                 path,
                 page: config.page
             })
         }
     },
-    async ['backend/getAdminItem'] ({commit, rootState: {route: { path, params: { id } }}}) {
+    async ['getAdminItem'] ({commit, rootState: {route: { path, params: { id } }}}) {
         const { data: { data, code} } = await api.get('backend/admin/item', { id })
         if (data && code === 200) {
-            commit('backend/receiveAdminItem', {
+            commit('receiveAdminItem', {
                 data,
                 path
             })
@@ -37,7 +37,7 @@ const actions = {
 }
 
 const mutations = {
-    ['backend/receiveAdminList'](state, {list, path, hasNext, hasPrev, page}) {
+    ['receiveAdminList'](state, {list, path, hasNext, hasPrev, page}) {
         if (page === 1) {
             list = [].concat(list)
         } else {
@@ -48,10 +48,10 @@ const mutations = {
             data: list, hasNext, hasPrev, page, path
         }
     },
-    ['backend/receiveAdminItem'](state, payload) {
+    ['receiveAdminItem'](state, payload) {
         state.item = payload
     },
-    ['backend/updateAdminItem'](state, payload) {
+    ['updateAdminItem'](state, payload) {
         state.item = {
             ...state.item.data,
             ...payload
@@ -62,26 +62,27 @@ const mutations = {
             obj.email = payload.email
         }
     },
-    ['backend/deleteAdmin'](state, id) {
+    ['deleteAdmin'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 1
     },
-    ['backend/recoverAdmin'](state, id) {
+    ['recoverAdmin'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         if (obj) obj.is_delete = 0
     }
 }
 
 const getters = {
-    ['backend/getAdminList'] (state) {
+    ['getAdminList'] (state) {
         return state.lists
     },
-    ['backend/getAdminItem'] (state) {
+    ['getAdminItem'] (state) {
         return state.item
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

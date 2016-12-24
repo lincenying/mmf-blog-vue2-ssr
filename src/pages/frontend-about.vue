@@ -56,7 +56,7 @@ import { mapGetters } from 'vuex'
 import trending from '../components/aside-trending.vue'
 
 const fetchInitialData = async store => {
-    await store.dispatch('frontend/getTrending')
+    await store.dispatch('frontend/article/getTrending')
 }
 
 export default {
@@ -67,14 +67,14 @@ export default {
     },
     computed: {
         ...mapGetters({
-            trending: 'frontend/getTrending'
+            trending: 'frontend/article/getTrending'
         })
     },
     mounted() {
         if (this.trending.length <= 0) {
             fetchInitialData(this.$store)
         } else {
-            this.$store.dispatch('gProgress', 100)
+            this.$store.dispatch('global/gProgress', 100)
         }
     },
     metaInfo () {

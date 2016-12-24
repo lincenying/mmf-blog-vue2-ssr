@@ -15,35 +15,35 @@ const state = {
 }
 
 const actions = {
-    async ['frontend/getArticleList']({commit, rootState: {route: { path }}}, config) {
+    async ['getArticleList']({commit, rootState: {route: { path }}}, config) {
         const { data: { data, code} } = await api.get('frontend/article/list', config)
         if (data && code === 200) {
-            commit('frontend/receiveArticleList', {
+            commit('receiveArticleList', {
                 ...config,
                 ...data,
                 path
             })
         }
     },
-    async ['frontend/getArticleItem']({ commit, rootState: {route: { path, params: { id }}} }) {
+    async ['getArticleItem']({ commit, rootState: {route: { path, params: { id }}} }) {
         const { data: { data, code} } = await api.get('frontend/article/item', { markdown: 1, id })
         if (data && code === 200) {
-            commit('frontend/receiveArticleItem', {
+            commit('receiveArticleItem', {
                 data,
                 path
             })
         }
     },
-    async ['frontend/getTrending']({ commit }) {
+    async ['getTrending']({ commit }) {
         const { data: { data, code} } = await api.get('frontend/trending')
         if (data && code === 200) {
-            commit('frontend/receiveTrending', data)
+            commit('receiveTrending', data)
         }
     }
 }
 
 const mutations = {
-    ['frontend/receiveArticleList'](state, {list, hasNext, hasPrev, page, path}) {
+    ['receiveArticleList'](state, {list, hasNext, hasPrev, page, path}) {
         if (page === 1) {
             list = [].concat(list)
         } else {
@@ -53,29 +53,30 @@ const mutations = {
             data: list, hasNext, hasPrev, page, path
         }
     },
-    ['frontend/receiveArticleItem'](state, {data, path}) {
+    ['receiveArticleItem'](state, {data, path}) {
         state.item = {
             data, path
         }
     },
-    ['frontend/receiveTrending'](state, data) {
+    ['receiveTrending'](state, data) {
         state.trending = data.list
     }
 }
 
 const getters = {
-    ['frontend/getArticleList'](state) {
+    ['getArticleList'](state) {
         return state.lists
     },
-    ['frontend/getArticleItem'](state) {
+    ['getArticleItem'](state) {
         return state.item
     },
-    ['frontend/getTrending'](state) {
+    ['getTrending'](state) {
         return state.trending
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

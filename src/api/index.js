@@ -5,18 +5,18 @@ import { inBrowser } from '../utils'
 import config from 'api-config'
 
 axios.interceptors.request.use(config => {
-    store.dispatch('gProgress', 50)
+    store.dispatch('global/gProgress', 50)
     return config
 }, error => {
     return Promise.reject(error)
 })
 
 axios.interceptors.response.use(response => {
-    store.dispatch('gProgress', 100)
+    store.dispatch('global/gProgress', 100)
     return response
 }, error => {
-    store.dispatch('gProgress', 100)
-    store.dispatch('showMsg', error.toString())
+    store.dispatch('global/gProgress', 100)
+    store.dispatch('global/showMsg', error.toString())
     return Promise.reject(error)
 })
 
@@ -40,7 +40,7 @@ function checkCode(res) {
         window.location.href = '/'
         return
     } else if (res.data.code !== 200) {
-        store.dispatch('showMsg', res.data.message)
+        store.dispatch('global/showMsg', res.data.message)
     }
     return res
 }

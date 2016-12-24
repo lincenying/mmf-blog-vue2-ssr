@@ -152,18 +152,18 @@ var _apiConfig2 = _interopRequireDefault(_apiConfig);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _axios2.default.interceptors.request.use(function (config) {
-    _store2.default.dispatch('gProgress', 50);
+    _store2.default.dispatch('global/gProgress', 50);
     return config;
 }, function (error) {
     return _promise2.default.reject(error);
 });
 
 _axios2.default.interceptors.response.use(function (response) {
-    _store2.default.dispatch('gProgress', 100);
+    _store2.default.dispatch('global/gProgress', 100);
     return response;
 }, function (error) {
-    _store2.default.dispatch('gProgress', 100);
-    _store2.default.dispatch('showMsg', error.toString());
+    _store2.default.dispatch('global/gProgress', 100);
+    _store2.default.dispatch('global/showMsg', error.toString());
     return _promise2.default.reject(error);
 });
 
@@ -187,7 +187,7 @@ function checkCode(res) {
         window.location.href = '/';
         return;
     } else if (res.data.code !== 200) {
-        _store2.default.dispatch('showMsg', res.data.message);
+        _store2.default.dispatch('global/showMsg', res.data.message);
     }
     return res;
 }
@@ -722,6 +722,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends2 = __webpack_require__(3);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _vue = __webpack_require__(22);
 
 var _vue2 = _interopRequireDefault(_vue);
@@ -738,21 +742,21 @@ var _backendArticle = __webpack_require__(57);
 
 var _backendArticle2 = _interopRequireDefault(_backendArticle);
 
-var _backendCategory = __webpack_require__(58);
-
-var _backendCategory2 = _interopRequireDefault(_backendCategory);
-
-var _backendUser = __webpack_require__(59);
+var _backendUser = __webpack_require__(58);
 
 var _backendUser2 = _interopRequireDefault(_backendUser);
 
-var _frontendArticle = __webpack_require__(60);
+var _frontendArticle = __webpack_require__(59);
 
 var _frontendArticle2 = _interopRequireDefault(_frontendArticle);
 
 var _global = __webpack_require__(62);
 
 var _global2 = _interopRequireDefault(_global);
+
+var _globalCategory = __webpack_require__(60);
+
+var _globalCategory2 = _interopRequireDefault(_globalCategory);
 
 var _globalComment = __webpack_require__(61);
 
@@ -764,13 +768,28 @@ _vue2.default.use(_vuex2.default);
 
 exports.default = new _vuex2.default.Store({
     modules: {
-        backendAdmin: _backendAdmin2.default,
-        backendArticle: _backendArticle2.default,
-        backendCategory: _backendCategory2.default,
-        backendUser: _backendUser2.default,
-        frontendArticle: _frontendArticle2.default,
-        global: _global2.default,
-        globalComment: _globalComment2.default
+        backend: {
+            namespaced: true,
+            modules: {
+                admin: _backendAdmin2.default,
+                article: _backendArticle2.default,
+                user: _backendUser2.default
+            }
+        },
+        frontend: {
+            namespaced: true,
+            modules: {
+                article: _frontendArticle2.default
+            }
+        },
+        global: (0, _extends3.default)({
+            namespaced: true
+        }, _global2.default, {
+            modules: {
+                category: _globalCategory2.default,
+                comment: _globalComment2.default
+            }
+        })
     }
 });
 
@@ -1038,22 +1057,24 @@ module.exports = function(key){
 /* 46 */
 /***/ function(module, exports) {
 
-"use strict";
-'use strict';
+// Load modules
 
-var hexTable = (function () {
-    var array = new Array(256);
-    for (var i = 0; i < 256; ++i) {
-        array[i] = '%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase();
-    }
 
-    return array;
-}());
+// Declare internals
+
+var internals = {};
+internals.hexTable = new Array(256);
+for (var h = 0; h < 256; ++h) {
+    internals.hexTable[h] = '%' + ((h < 16 ? '0' : '') + h.toString(16)).toUpperCase();
+}
+
 
 exports.arrayToObject = function (source, options) {
+
     var obj = options.plainObjects ? Object.create(null) : {};
-    for (var i = 0; i < source.length; ++i) {
+    for (var i = 0, il = source.length; i < il; ++i) {
         if (typeof source[i] !== 'undefined') {
+
             obj[i] = source[i];
         }
     }
@@ -1061,7 +1082,9 @@ exports.arrayToObject = function (source, options) {
     return obj;
 };
 
+
 exports.merge = function (target, source, options) {
+
     if (!source) {
         return target;
     }
@@ -1069,37 +1092,47 @@ exports.merge = function (target, source, options) {
     if (typeof source !== 'object') {
         if (Array.isArray(target)) {
             target.push(source);
-        } else if (typeof target === 'object') {
+        }
+        else if (typeof target === 'object') {
             target[source] = true;
-        } else {
-            return [target, source];
+        }
+        else {
+            target = [target, source];
         }
 
         return target;
     }
 
     if (typeof target !== 'object') {
-        return [target].concat(source);
+        target = [target].concat(source);
+        return target;
     }
 
-    var mergeTarget = target;
-    if (Array.isArray(target) && !Array.isArray(source)) {
-        mergeTarget = exports.arrayToObject(target, options);
+    if (Array.isArray(target) &&
+        !Array.isArray(source)) {
+
+        target = exports.arrayToObject(target, options);
     }
 
-    return Object.keys(source).reduce(function (acc, key) {
+    var keys = Object.keys(source);
+    for (var k = 0, kl = keys.length; k < kl; ++k) {
+        var key = keys[k];
         var value = source[key];
 
-        if (Object.prototype.hasOwnProperty.call(acc, key)) {
-            acc[key] = exports.merge(acc[key], value, options);
-        } else {
-            acc[key] = value;
+        if (!Object.prototype.hasOwnProperty.call(target, key)) {
+            target[key] = value;
         }
-        return acc;
-    }, mergeTarget);
+        else {
+            target[key] = exports.merge(target[key], value, options);
+        }
+    }
+
+    return target;
 };
 
+
 exports.decode = function (str) {
+
     try {
         return decodeURIComponent(str.replace(/\+/g, ' '));
     } catch (e) {
@@ -1108,60 +1141,65 @@ exports.decode = function (str) {
 };
 
 exports.encode = function (str) {
+
     // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
     // It has been adapted here for stricter adherence to RFC 3986
     if (str.length === 0) {
         return str;
     }
 
-    var string = typeof str === 'string' ? str : String(str);
+    if (typeof str !== 'string') {
+        str = '' + str;
+    }
 
     var out = '';
-    for (var i = 0; i < string.length; ++i) {
-        var c = string.charCodeAt(i);
+    for (var i = 0, il = str.length; i < il; ++i) {
+        var c = str.charCodeAt(i);
 
-        if (
-            c === 0x2D || // -
+        if (c === 0x2D || // -
             c === 0x2E || // .
             c === 0x5F || // _
             c === 0x7E || // ~
             (c >= 0x30 && c <= 0x39) || // 0-9
             (c >= 0x41 && c <= 0x5A) || // a-z
-            (c >= 0x61 && c <= 0x7A) // A-Z
-        ) {
-            out += string.charAt(i);
+            (c >= 0x61 && c <= 0x7A)) { // A-Z
+
+            out += str[i];
             continue;
         }
 
         if (c < 0x80) {
-            out = out + hexTable[c];
+            out += internals.hexTable[c];
             continue;
         }
 
         if (c < 0x800) {
-            out = out + (hexTable[0xC0 | (c >> 6)] + hexTable[0x80 | (c & 0x3F)]);
+            out += internals.hexTable[0xC0 | (c >> 6)] + internals.hexTable[0x80 | (c & 0x3F)];
             continue;
         }
 
         if (c < 0xD800 || c >= 0xE000) {
-            out = out + (hexTable[0xE0 | (c >> 12)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)]);
+            out += internals.hexTable[0xE0 | (c >> 12)] + internals.hexTable[0x80 | ((c >> 6) & 0x3F)] + internals.hexTable[0x80 | (c & 0x3F)];
             continue;
         }
 
-        i += 1;
-        c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
-        out += hexTable[0xF0 | (c >> 18)] + hexTable[0x80 | ((c >> 12) & 0x3F)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)];
+        ++i;
+        c = 0x10000 + (((c & 0x3FF) << 10) | (str.charCodeAt(i) & 0x3FF));
+        out += internals.hexTable[0xF0 | (c >> 18)] + internals.hexTable[0x80 | ((c >> 12) & 0x3F)] + internals.hexTable[0x80 | ((c >> 6) & 0x3F)] + internals.hexTable[0x80 | (c & 0x3F)];
     }
 
     return out;
 };
 
-exports.compact = function (obj, references) {
-    if (typeof obj !== 'object' || obj === null) {
+exports.compact = function (obj, refs) {
+
+    if (typeof obj !== 'object' ||
+        obj === null) {
+
         return obj;
     }
 
-    var refs = references || [];
+    refs = refs || [];
     var lookup = refs.indexOf(obj);
     if (lookup !== -1) {
         return refs[lookup];
@@ -1172,10 +1210,8 @@ exports.compact = function (obj, references) {
     if (Array.isArray(obj)) {
         var compacted = [];
 
-        for (var i = 0; i < obj.length; ++i) {
-            if (obj[i] && typeof obj[i] === 'object') {
-                compacted.push(exports.compact(obj[i], refs));
-            } else if (typeof obj[i] !== 'undefined') {
+        for (var i = 0, il = obj.length; i < il; ++i) {
+            if (typeof obj[i] !== 'undefined') {
                 compacted.push(obj[i]);
             }
         }
@@ -1184,24 +1220,32 @@ exports.compact = function (obj, references) {
     }
 
     var keys = Object.keys(obj);
-    for (var j = 0; j < keys.length; ++j) {
-        var key = keys[j];
+    for (i = 0, il = keys.length; i < il; ++i) {
+        var key = keys[i];
         obj[key] = exports.compact(obj[key], refs);
     }
 
     return obj;
 };
 
+
 exports.isRegExp = function (obj) {
+
     return Object.prototype.toString.call(obj) === '[object RegExp]';
 };
 
+
 exports.isBuffer = function (obj) {
-    if (obj === null || typeof obj === 'undefined') {
+
+    if (obj === null ||
+        typeof obj === 'undefined') {
+
         return false;
     }
 
-    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
+    return !!(obj.constructor &&
+              obj.constructor.isBuffer &&
+              obj.constructor.isBuffer(obj));
 };
 
 
@@ -1573,7 +1617,7 @@ var state = {
     }
 };
 
-var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/getAdminList', function backendGetAdminList(_ref, config) {
+var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'getAdminList', function getAdminList(_ref, config) {
     var _this = this;
 
     var commit = _ref.commit,
@@ -1595,7 +1639,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref2$data.code;
 
                         if (data && code === 200) {
-                            commit('backend/receiveAdminList', (0, _extends3.default)({}, data, {
+                            commit('receiveAdminList', (0, _extends3.default)({}, data, {
                                 path: path,
                                 page: config.page
                             }));
@@ -1608,7 +1652,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
             }
         }, _callee, _this);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/getAdminItem', function backendGetAdminItem(_ref3) {
+}), (0, _defineProperty3.default)(_actions, 'getAdminItem', function getAdminItem(_ref3) {
     var _this2 = this;
 
     var commit = _ref3.commit,
@@ -1632,7 +1676,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref4$data.code;
 
                         if (data && code === 200) {
-                            commit('backend/receiveAdminItem', {
+                            commit('receiveAdminItem', {
                                 data: data,
                                 path: path
                             });
@@ -1647,7 +1691,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
     }))();
 }), _actions);
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'backend/receiveAdminList', function backendReceiveAdminList(state, _ref5) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'receiveAdminList', function receiveAdminList(state, _ref5) {
     var list = _ref5.list,
         path = _ref5.path,
         hasNext = _ref5.hasNext,
@@ -1663,9 +1707,9 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
     state.lists = {
         data: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
-}), (0, _defineProperty3.default)(_mutations, 'backend/receiveAdminItem', function backendReceiveAdminItem(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'receiveAdminItem', function receiveAdminItem(state, payload) {
     state.item = payload;
-}), (0, _defineProperty3.default)(_mutations, 'backend/updateAdminItem', function backendUpdateAdminItem(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'updateAdminItem', function updateAdminItem(state, payload) {
     state.item = (0, _extends3.default)({}, state.item.data, payload);
     var obj = state.lists.data.find(function (ii) {
         return ii._id === payload.id;
@@ -1674,25 +1718,26 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
         obj.username = payload.username;
         obj.email = payload.email;
     }
-}), (0, _defineProperty3.default)(_mutations, 'backend/deleteAdmin', function backendDeleteAdmin(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'deleteAdmin', function deleteAdmin(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 1;
-}), (0, _defineProperty3.default)(_mutations, 'backend/recoverAdmin', function backendRecoverAdmin(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'recoverAdmin', function recoverAdmin(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 0;
 }), _mutations);
 
-var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'backend/getAdminList', function backendGetAdminList(state) {
+var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'getAdminList', function getAdminList(state) {
     return state.lists;
-}), (0, _defineProperty3.default)(_getters, 'backend/getAdminItem', function backendGetAdminItem(state) {
+}), (0, _defineProperty3.default)(_getters, 'getAdminItem', function getAdminItem(state) {
     return state.item;
 }), _getters);
 
 exports.default = {
+    namespaced: true,
     state: state,
     actions: actions,
     mutations: mutations,
@@ -1744,7 +1789,7 @@ var state = {
     }
 };
 
-var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/getArticleList', function backendGetArticleList(_ref, config) {
+var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'getArticleList', function getArticleList(_ref, config) {
     var _this = this;
 
     var commit = _ref.commit,
@@ -1768,7 +1813,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref2$data.code;
 
                         if (data && code === 200) {
-                            commit('backend/receiveArticleList', (0, _extends3.default)({}, data, {
+                            commit('receiveArticleList', (0, _extends3.default)({}, data, {
                                 path: path,
                                 page: config.page
                             }));
@@ -1781,7 +1826,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
             }
         }, _callee, _this);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/getArticleItem', function backendGetArticleItem(_ref3) {
+}), (0, _defineProperty3.default)(_actions, 'getArticleItem', function getArticleItem(_ref3) {
     var _this2 = this;
 
     var id = _ref3.rootState.route.params.id;
@@ -1815,7 +1860,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
             }
         }, _callee2, _this2);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/deleteArticle', function backendDeleteArticle(_ref5, config) {
+}), (0, _defineProperty3.default)(_actions, 'deleteArticle', function deleteArticle(_ref5, config) {
     var _this3 = this;
 
     var commit = _ref5.commit;
@@ -1834,7 +1879,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref6.data.code;
 
                         if (code === 200) {
-                            commit('backend/deleteArticle', config.id);
+                            commit('deleteArticle', config.id);
                         }
 
                     case 5:
@@ -1844,7 +1889,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
             }
         }, _callee3, _this3);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/recoverArticle', function backendRecoverArticle(_ref7, config) {
+}), (0, _defineProperty3.default)(_actions, 'recoverArticle', function recoverArticle(_ref7, config) {
     var _this4 = this;
 
     var commit = _ref7.commit;
@@ -1863,7 +1908,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref8.data.code;
 
                         if (code === 200) {
-                            commit('backend/recoverArticle', config.id);
+                            commit('recoverArticle', config.id);
                         }
 
                     case 5:
@@ -1875,7 +1920,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
     }))();
 }), _actions);
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'backend/receiveArticleList', function backendReceiveArticleList(state, _ref9) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'receiveArticleList', function receiveArticleList(state, _ref9) {
     var list = _ref9.list,
         path = _ref9.path,
         hasNext = _ref9.hasNext,
@@ -1890,11 +1935,11 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
     state.lists = {
         data: list, path: path, hasNext: hasNext, hasPrev: hasPrev, page: page
     };
-}), (0, _defineProperty3.default)(_mutations, 'backend/insertArticleItem', function backendInsertArticleItem(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'insertArticleItem', function insertArticleItem(state, payload) {
     if (state.lists.path) {
         state.lists.data = [payload].concat(state.lists.data);
     }
-}), (0, _defineProperty3.default)(_mutations, 'backend/updateArticleItem', function backendUpdateArticleItem(state, data) {
+}), (0, _defineProperty3.default)(_mutations, 'updateArticleItem', function updateArticleItem(state, data) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === data.id;
     });
@@ -1903,25 +1948,26 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
             obj[jj] = data[jj];
         }
     }
-}), (0, _defineProperty3.default)(_mutations, 'backend/deleteArticle', function backendDeleteArticle(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'deleteArticle', function deleteArticle(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 1;
-}), (0, _defineProperty3.default)(_mutations, 'backend/recoverArticle', function backendRecoverArticle(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'recoverArticle', function recoverArticle(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 0;
 }), _mutations);
 
-var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'backend/getArticleList', function backendGetArticleList(state) {
+var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'getArticleList', function getArticleList(state) {
     return state.lists;
-}), (0, _defineProperty3.default)(_getters, 'backend/getArticleItem', function backendGetArticleItem(state) {
+}), (0, _defineProperty3.default)(_getters, 'getArticleItem', function getArticleItem(state) {
     return state.item;
 }), _getters);
 
 exports.default = {
+    namespaced: true,
     state: state,
     actions: actions,
     mutations: mutations,
@@ -1930,141 +1976,6 @@ exports.default = {
 
 /***/ },
 /* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends2 = __webpack_require__(3);
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _defineProperty2 = __webpack_require__(7);
-
-var _defineProperty3 = _interopRequireDefault(_defineProperty2);
-
-var _regenerator = __webpack_require__(1);
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = __webpack_require__(0);
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-var _actions, _mutations, _getters;
-
-var _api = __webpack_require__(2);
-
-var _api2 = _interopRequireDefault(_api);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var state = {
-    lists: [],
-    item: {}
-};
-
-var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/getCategoryList', function backendGetCategoryList(_ref, config) {
-    var _this = this;
-
-    var commit = _ref.commit;
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-        var _ref2, _ref2$data, data, code;
-
-        return _regenerator2.default.wrap(function _callee$(_context) {
-            while (1) {
-                switch (_context.prev = _context.next) {
-                    case 0:
-                        _context.next = 2;
-                        return _api2.default.get('backend/category/list', config);
-
-                    case 2:
-                        _ref2 = _context.sent;
-                        _ref2$data = _ref2.data;
-                        data = _ref2$data.data;
-                        code = _ref2$data.code;
-
-                        if (data && code === 200) {
-                            commit('frontend/receiveCategoryList', data.list);
-                        }
-
-                    case 7:
-                    case 'end':
-                        return _context.stop();
-                }
-            }
-        }, _callee, _this);
-    }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/getCategoryItem', function backendGetCategoryItem(_ref3) {
-    var _this2 = this;
-
-    var commit = _ref3.commit,
-        id = _ref3.rootState.route.params.id;
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-        var _ref4, _ref4$data, data, code;
-
-        return _regenerator2.default.wrap(function _callee2$(_context2) {
-            while (1) {
-                switch (_context2.prev = _context2.next) {
-                    case 0:
-                        _context2.next = 2;
-                        return _api2.default.get('backend/category/item', { id: id });
-
-                    case 2:
-                        _ref4 = _context2.sent;
-                        _ref4$data = _ref4.data;
-                        data = _ref4$data.data;
-                        code = _ref4$data.code;
-
-                        if (data && code === 200) {
-                            commit('backend/receiveCategoryItem', data);
-                        }
-
-                    case 7:
-                    case 'end':
-                        return _context2.stop();
-                }
-            }
-        }, _callee2, _this2);
-    }))();
-}), _actions);
-
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'frontend/receiveCategoryList', function frontendReceiveCategoryList(state, payload) {
-    state.lists = payload;
-}), (0, _defineProperty3.default)(_mutations, 'backend/receiveCategoryItem', function backendReceiveCategoryItem(state, payload) {
-    state.item = payload;
-}), (0, _defineProperty3.default)(_mutations, 'backend/insertCategoryItem', function backendInsertCategoryItem(state, payload) {
-    state.lists = [payload].concat(state.lists);
-}), (0, _defineProperty3.default)(_mutations, 'backend/updateCategoryItem', function backendUpdateCategoryItem(state, payload) {
-    state.item = (0, _extends3.default)({}, state.item, payload);
-    var obj = state.lists.find(function (ii) {
-        return ii._id === payload.id;
-    });
-    if (obj) {
-        obj.cate_name = payload.cate_name;
-        obj.cate_order = payload.cate_order;
-    }
-}), _mutations);
-
-var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'backend/getCategoryList', function backendGetCategoryList(state) {
-    return state.lists;
-}), (0, _defineProperty3.default)(_getters, 'backend/getCategoryItem', function backendGetCategoryItem(state) {
-    return state.item;
-}), _getters);
-
-exports.default = {
-    state: state,
-    actions: actions,
-    mutations: mutations,
-    getters: getters
-};
-
-/***/ },
-/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2112,7 +2023,7 @@ var state = {
     }
 };
 
-var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/getUserList', function backendGetUserList(_ref, config) {
+var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'getUserList', function getUserList(_ref, config) {
     var _this = this;
 
     var commit = _ref.commit,
@@ -2134,7 +2045,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref2$data.code;
 
                         if (data && code === 200) {
-                            commit('backend/receiveUserList', (0, _extends3.default)({}, data, {
+                            commit('receiveUserList', (0, _extends3.default)({}, data, {
                                 path: path,
                                 page: config.page
                             }));
@@ -2147,7 +2058,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
             }
         }, _callee, _this);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'backend/getUserItem', function backendGetUserItem(_ref3) {
+}), (0, _defineProperty3.default)(_actions, 'getUserItem', function getUserItem(_ref3) {
     var _this2 = this;
 
     var commit = _ref3.commit,
@@ -2171,7 +2082,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
                         code = _ref4$data.code;
 
                         if (data && code === 200) {
-                            commit('backend/receiveUserItem', {
+                            commit('receiveUserItem', {
                                 data: data,
                                 path: path
                             });
@@ -2186,7 +2097,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'backend/g
     }))();
 }), _actions);
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'backend/receiveUserList', function backendReceiveUserList(state, _ref5) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'receiveUserList', function receiveUserList(state, _ref5) {
     var list = _ref5.list,
         path = _ref5.path,
         hasNext = _ref5.hasNext,
@@ -2202,9 +2113,9 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
     state.lists = {
         data: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
-}), (0, _defineProperty3.default)(_mutations, 'backend/receiveUserItem', function backendReceiveUserItem(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'receiveUserItem', function receiveUserItem(state, payload) {
     state.item = payload;
-}), (0, _defineProperty3.default)(_mutations, 'backend/updateUserItem', function backendUpdateUserItem(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'updateUserItem', function updateUserItem(state, payload) {
     state.item = (0, _extends3.default)({}, state.item.data, payload);
     var obj = state.lists.data.find(function (ii) {
         return ii._id === payload.id;
@@ -2213,25 +2124,26 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'bac
         obj.username = payload.username;
         obj.email = payload.email;
     }
-}), (0, _defineProperty3.default)(_mutations, 'backend/deleteUser', function backendDeleteUser(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'deleteUser', function deleteUser(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 1;
-}), (0, _defineProperty3.default)(_mutations, 'backend/recoverUser', function backendRecoverUser(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'recoverUser', function recoverUser(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     if (obj) obj.is_delete = 0;
 }), _mutations);
 
-var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'backend/getUserList', function backendGetUserList(state) {
+var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'getUserList', function getUserList(state) {
     return state.lists;
-}), (0, _defineProperty3.default)(_getters, 'backend/getUserItem', function backendGetUserItem(state) {
+}), (0, _defineProperty3.default)(_getters, 'getUserItem', function getUserItem(state) {
     return state.item;
 }), _getters);
 
 exports.default = {
+    namespaced: true,
     state: state,
     actions: actions,
     mutations: mutations,
@@ -2239,7 +2151,7 @@ exports.default = {
 };
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2287,7 +2199,7 @@ var state = {
     trending: []
 };
 
-var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/getArticleList', function frontendGetArticleList(_ref, config) {
+var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'getArticleList', function getArticleList(_ref, config) {
     var _this = this;
 
     var commit = _ref.commit,
@@ -2309,7 +2221,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
                         code = _ref2$data.code;
 
                         if (data && code === 200) {
-                            commit('frontend/receiveArticleList', (0, _extends3.default)({}, config, data, {
+                            commit('receiveArticleList', (0, _extends3.default)({}, config, data, {
                                 path: path
                             }));
                         }
@@ -2321,7 +2233,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
             }
         }, _callee, _this);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'frontend/getArticleItem', function frontendGetArticleItem(_ref3) {
+}), (0, _defineProperty3.default)(_actions, 'getArticleItem', function getArticleItem(_ref3) {
     var _this2 = this;
 
     var commit = _ref3.commit,
@@ -2345,7 +2257,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
                         code = _ref4$data.code;
 
                         if (data && code === 200) {
-                            commit('frontend/receiveArticleItem', {
+                            commit('receiveArticleItem', {
                                 data: data,
                                 path: path
                             });
@@ -2358,7 +2270,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
             }
         }, _callee2, _this2);
     }))();
-}), (0, _defineProperty3.default)(_actions, 'frontend/getTrending', function frontendGetTrending(_ref5) {
+}), (0, _defineProperty3.default)(_actions, 'getTrending', function getTrending(_ref5) {
     var _this3 = this;
 
     var commit = _ref5.commit;
@@ -2379,7 +2291,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
                         code = _ref6$data.code;
 
                         if (data && code === 200) {
-                            commit('frontend/receiveTrending', data);
+                            commit('receiveTrending', data);
                         }
 
                     case 7:
@@ -2391,7 +2303,7 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'frontend/
     }))();
 }), _actions);
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'frontend/receiveArticleList', function frontendReceiveArticleList(state, _ref7) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'receiveArticleList', function receiveArticleList(state, _ref7) {
     var list = _ref7.list,
         hasNext = _ref7.hasNext,
         hasPrev = _ref7.hasPrev,
@@ -2406,26 +2318,163 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'fro
     state.lists = {
         data: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
-}), (0, _defineProperty3.default)(_mutations, 'frontend/receiveArticleItem', function frontendReceiveArticleItem(state, _ref8) {
+}), (0, _defineProperty3.default)(_mutations, 'receiveArticleItem', function receiveArticleItem(state, _ref8) {
     var data = _ref8.data,
         path = _ref8.path;
 
     state.item = {
         data: data, path: path
     };
-}), (0, _defineProperty3.default)(_mutations, 'frontend/receiveTrending', function frontendReceiveTrending(state, data) {
+}), (0, _defineProperty3.default)(_mutations, 'receiveTrending', function receiveTrending(state, data) {
     state.trending = data.list;
 }), _mutations);
 
-var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'frontend/getArticleList', function frontendGetArticleList(state) {
+var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'getArticleList', function getArticleList(state) {
     return state.lists;
-}), (0, _defineProperty3.default)(_getters, 'frontend/getArticleItem', function frontendGetArticleItem(state) {
+}), (0, _defineProperty3.default)(_getters, 'getArticleItem', function getArticleItem(state) {
     return state.item;
-}), (0, _defineProperty3.default)(_getters, 'frontend/getTrending', function frontendGetTrending(state) {
+}), (0, _defineProperty3.default)(_getters, 'getTrending', function getTrending(state) {
     return state.trending;
 }), _getters);
 
 exports.default = {
+    namespaced: true,
+    state: state,
+    actions: actions,
+    mutations: mutations,
+    getters: getters
+};
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends2 = __webpack_require__(3);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _defineProperty2 = __webpack_require__(7);
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _regenerator = __webpack_require__(1);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(0);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _actions, _mutations, _getters;
+
+var _api = __webpack_require__(2);
+
+var _api2 = _interopRequireDefault(_api);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var state = {
+    lists: [],
+    item: {}
+};
+
+var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'getCategoryList', function getCategoryList(_ref, config) {
+    var _this = this;
+
+    var commit = _ref.commit;
+    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+        var _ref2, _ref2$data, data, code;
+
+        return _regenerator2.default.wrap(function _callee$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        _context.next = 2;
+                        return _api2.default.get('backend/category/list', config);
+
+                    case 2:
+                        _ref2 = _context.sent;
+                        _ref2$data = _ref2.data;
+                        data = _ref2$data.data;
+                        code = _ref2$data.code;
+
+                        if (data && code === 200) {
+                            commit('receiveCategoryList', data.list);
+                        }
+
+                    case 7:
+                    case 'end':
+                        return _context.stop();
+                }
+            }
+        }, _callee, _this);
+    }))();
+}), (0, _defineProperty3.default)(_actions, 'getCategoryItem', function getCategoryItem(_ref3) {
+    var _this2 = this;
+
+    var commit = _ref3.commit,
+        id = _ref3.rootState.route.params.id;
+    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+        var _ref4, _ref4$data, data, code;
+
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+            while (1) {
+                switch (_context2.prev = _context2.next) {
+                    case 0:
+                        _context2.next = 2;
+                        return _api2.default.get('backend/category/item', { id: id });
+
+                    case 2:
+                        _ref4 = _context2.sent;
+                        _ref4$data = _ref4.data;
+                        data = _ref4$data.data;
+                        code = _ref4$data.code;
+
+                        if (data && code === 200) {
+                            commit('receiveCategoryItem', data);
+                        }
+
+                    case 7:
+                    case 'end':
+                        return _context2.stop();
+                }
+            }
+        }, _callee2, _this2);
+    }))();
+}), _actions);
+
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'receiveCategoryList', function receiveCategoryList(state, payload) {
+    state.lists = payload;
+}), (0, _defineProperty3.default)(_mutations, 'receiveCategoryItem', function receiveCategoryItem(state, payload) {
+    state.item = payload;
+}), (0, _defineProperty3.default)(_mutations, 'insertCategoryItem', function insertCategoryItem(state, payload) {
+    state.lists = [payload].concat(state.lists);
+}), (0, _defineProperty3.default)(_mutations, 'updateCategoryItem', function updateCategoryItem(state, payload) {
+    state.item = (0, _extends3.default)({}, state.item, payload);
+    var obj = state.lists.find(function (ii) {
+        return ii._id === payload.id;
+    });
+    if (obj) {
+        obj.cate_name = payload.cate_name;
+        obj.cate_order = payload.cate_order;
+    }
+}), _mutations);
+
+var getters = (_getters = {}, (0, _defineProperty3.default)(_getters, 'getCategoryList', function getCategoryList(state) {
+    return state.lists;
+}), (0, _defineProperty3.default)(_getters, 'getCategoryItem', function getCategoryItem(state) {
+    return state.item;
+}), _getters);
+
+exports.default = {
+    namespaced: true,
     state: state,
     actions: actions,
     mutations: mutations,
@@ -2476,7 +2525,7 @@ var state = {
     }
 };
 
-var actions = (0, _defineProperty3.default)({}, 'global/getCommentList', function globalGetCommentList(_ref, config) {
+var actions = (0, _defineProperty3.default)({}, 'getCommentList', function getCommentList(_ref, config) {
     var _this = this;
 
     var commit = _ref.commit,
@@ -2500,7 +2549,7 @@ var actions = (0, _defineProperty3.default)({}, 'global/getCommentList', functio
                         code = _ref2$data.code;
 
                         if (data && code === 200) {
-                            commit('global/recevieCommentList', (0, _extends3.default)({}, config, data, {
+                            commit('recevieCommentList', (0, _extends3.default)({}, config, data, {
                                 path: path
                             }));
                         }
@@ -2514,7 +2563,7 @@ var actions = (0, _defineProperty3.default)({}, 'global/getCommentList', functio
     }))();
 });
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'global/recevieCommentList', function globalRecevieCommentList(state, _ref3) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'recevieCommentList', function recevieCommentList(state, _ref3) {
     var list = _ref3.list,
         hasNext = _ref3.hasNext,
         hasPrev = _ref3.hasPrev,
@@ -2529,25 +2578,26 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'glo
     state.lists = {
         data: list, hasNext: hasNext, hasPrev: hasPrev, page: page, path: path
     };
-}), (0, _defineProperty3.default)(_mutations, 'global/insertCommentItem', function globalInsertCommentItem(state, data) {
+}), (0, _defineProperty3.default)(_mutations, 'insertCommentItem', function insertCommentItem(state, data) {
     state.lists.data = [data].concat(state.lists.data);
-}), (0, _defineProperty3.default)(_mutations, 'global/deleteComment', function globalDeleteComment(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'deleteComment', function deleteComment(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     obj.is_delete = 1;
-}), (0, _defineProperty3.default)(_mutations, 'global/recoverComment', function globalRecoverComment(state, id) {
+}), (0, _defineProperty3.default)(_mutations, 'recoverComment', function recoverComment(state, id) {
     var obj = state.lists.data.find(function (ii) {
         return ii._id === id;
     });
     obj.is_delete = 0;
 }), _mutations);
 
-var getters = (0, _defineProperty3.default)({}, 'global/getCommentList', function globalGetCommentList(state) {
+var getters = (0, _defineProperty3.default)({}, 'getCommentList', function getCommentList(state) {
     return state.lists;
 });
 
 exports.default = {
+    namespaced: true,
     state: state,
     actions: actions,
     mutations: mutations,
@@ -2591,7 +2641,7 @@ var state = {
 var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'gProgress', function gProgress(_ref, payload) {
     var commit = _ref.commit;
 
-    commit('global/progress', payload);
+    commit('progress', payload);
 }), (0, _defineProperty3.default)(_actions, 'showMsg', function showMsg(_ref2, config) {
     var commit = _ref2.commit;
 
@@ -2609,15 +2659,15 @@ var actions = (_actions = {}, (0, _defineProperty3.default)(_actions, 'gProgress
     _toastr2.default.clear();
 }), _actions);
 
-var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'global/progress', function globalProgress(state, payload) {
+var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'progress', function progress(state, payload) {
     state.progress = payload;
-}), (0, _defineProperty3.default)(_mutations, 'global/showLoginModal', function globalShowLoginModal(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'showLoginModal', function showLoginModal(state, payload) {
     state.showLoginModal = payload;
-}), (0, _defineProperty3.default)(_mutations, 'global/showRegisterModal', function globalShowRegisterModal(state, payload) {
+}), (0, _defineProperty3.default)(_mutations, 'showRegisterModal', function showRegisterModal(state, payload) {
     state.showRegisterModal = payload;
 }), _mutations);
 
-var getters = (0, _defineProperty3.default)({}, 'global/getGlobal', function globalGetGlobal(state) {
+var getters = (0, _defineProperty3.default)({}, 'getGlobal', function getGlobal(state) {
     return state;
 });
 
@@ -2803,7 +2853,7 @@ exports.default = {
 
     methods: {
         loadcomment: function loadcomment() {
-            this.$store.dispatch('global/getCommentList', {
+            this.$store.dispatch('global/comment/getCommentList', {
                 page: this.comments.page + 1,
                 limit: 10
             });
@@ -2825,7 +2875,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请先登录!');
+                                _this.$store.dispatch('global/showMsg', '请先登录!');
                                 _this.$store.commit('global/showLoginModal', true);
                                 _context.next = 17;
                                 break;
@@ -2836,7 +2886,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请输入评论内容!');
+                                _this.$store.dispatch('global/showMsg', '请输入评论内容!');
                                 _context.next = 17;
                                 break;
 
@@ -2852,11 +2902,11 @@ exports.default = {
 
                                 if (code === 200) {
                                     _this.form.content = '';
-                                    _this.$store.dispatch('showMsg', {
+                                    _this.$store.dispatch('global/showMsg', {
                                         content: '评论发布成功!',
                                         type: 'success'
                                     });
-                                    _this.$store.commit('global/insertCommentItem', data);
+                                    _this.$store.commit('global/comment/insertCommentItem', data);
                                 }
 
                             case 17:
@@ -2924,7 +2974,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请先登录!');
+                                _this.$store.dispatch('global/showMsg', '请先登录!');
                                 _this.$store.commit('global/showLoginModal', true);
                                 return _context.abrupt('return');
 
@@ -2942,7 +2992,7 @@ exports.default = {
                                 message = _ref$data.message;
 
                                 if (code === 200) {
-                                    _this.$store.dispatch('showMsg', {
+                                    _this.$store.dispatch('global/showMsg', {
                                         content: message,
                                         type: 'success'
                                     });
@@ -3066,7 +3116,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请将表单填写完整!');
+                                _this.$store.dispatch('global/showMsg', '请将表单填写完整!');
                                 return _context.abrupt('return');
 
                             case 3:
@@ -3080,7 +3130,7 @@ exports.default = {
                                 code = _ref$data.code;
 
                                 if (code === 200) {
-                                    _this.$store.dispatch('showMsg', {
+                                    _this.$store.dispatch('global/showMsg', {
                                         type: 'success',
                                         content: message
                                     });
@@ -3161,7 +3211,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请将表单填写完整!');
+                                _this.$store.dispatch('global/showMsg', '请将表单填写完整!');
                                 return _context.abrupt('return');
 
                             case 5:
@@ -3170,7 +3220,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '用户长度至少 2 个中文或 4 个英文!');
+                                _this.$store.dispatch('global/showMsg', '用户长度至少 2 个中文或 4 个英文!');
                                 return _context.abrupt('return');
 
                             case 10:
@@ -3179,7 +3229,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '密码长度至少 8 位!');
+                                _this.$store.dispatch('global/showMsg', '密码长度至少 8 位!');
                                 return _context.abrupt('return');
 
                             case 15:
@@ -3188,7 +3238,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '两次输入的密码不一致!');
+                                _this.$store.dispatch('global/showMsg', '两次输入的密码不一致!');
                                 return _context.abrupt('return');
 
                             case 18:
@@ -3202,7 +3252,7 @@ exports.default = {
                                 code = _ref$data.code;
 
                                 if (code === 200) {
-                                    _this.$store.dispatch('showMsg', {
+                                    _this.$store.dispatch('global/showMsg', {
                                         type: 'success',
                                         content: message
                                     });
@@ -3295,7 +3345,7 @@ var fetchInitialData = function () {
                 switch (_context.prev = _context.next) {
                     case 0:
                         _context.next = 2;
-                        return store.dispatch('frontend/getTrending');
+                        return store.dispatch('frontend/article/getTrending');
 
                     case 2:
                     case 'end':
@@ -3317,13 +3367,13 @@ exports.default = {
         trending: _asideTrending2.default
     },
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        trending: 'frontend/getTrending'
+        trending: 'frontend/article/getTrending'
     })),
     mounted: function mounted() {
         if (this.trending.length <= 0) {
             fetchInitialData(this.$store);
         } else {
-            this.$store.dispatch('gProgress', 100);
+            this.$store.dispatch('global/gProgress', 100);
         }
     },
     metaInfo: function metaInfo() {
@@ -3383,11 +3433,11 @@ var fetchInitialData = function () {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        store.dispatch('backend/getCategoryList');
-                        store.dispatch('frontend/getTrending');
-                        store.dispatch('global/getCommentList', { page: 1, limit: 5 });
+                        store.dispatch('global/category/getCategoryList');
+                        store.dispatch('frontend/article/getTrending');
+                        store.dispatch('global/comment/getCommentList', { page: 1, limit: 5 });
                         _context.next = 5;
-                        return store.dispatch('frontend/getArticleItem');
+                        return store.dispatch('frontend/article/getArticleItem');
 
                     case 5:
                     case 'end':
@@ -3405,10 +3455,10 @@ exports.default = {
     name: 'frontend-article',
     prefetch: fetchInitialData,
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        article: 'frontend/getArticleItem',
-        comments: 'global/getCommentList',
-        category: 'backend/getCategoryList',
-        trending: 'frontend/getTrending'
+        article: 'frontend/article/getArticleItem',
+        comments: 'global/comment/getCommentList',
+        category: 'global/category/getCategoryList',
+        trending: 'frontend/article/getTrending'
     })),
     components: {
         actions: _itemActions2.default,
@@ -3426,7 +3476,7 @@ exports.default = {
         if (this.$route.path !== this.article.path) {
             fetchInitialData(this.$store);
         } else {
-            this.$store.dispatch('gProgress', 100);
+            this.$store.dispatch('global/gProgress', 100);
         }
     },
 
@@ -3502,10 +3552,10 @@ var fetchInitialData = function () {
                         _store$state$route = store.state.route, _store$state$route$pa = _store$state$route.params, id = _store$state$route$pa.id, key = _store$state$route$pa.key, by = _store$state$route$pa.by, path = _store$state$route.path;
                         base = (0, _extends3.default)({}, config, { limit: 10, id: id, key: key, by: by });
 
-                        store.dispatch('backend/getCategoryList');
-                        store.dispatch('frontend/getTrending');
+                        store.dispatch('global/category/getCategoryList');
+                        store.dispatch('frontend/article/getTrending');
                         _context.next = 6;
-                        return store.dispatch('frontend/getArticleList', base);
+                        return store.dispatch('frontend/article/getArticleList', base);
 
                     case 6:
                         if (config.page === 1) (0, _utils.ssp)(path);
@@ -3529,9 +3579,9 @@ exports.default = {
         topicsItem: _topicsItem2.default, category: _asideCategory2.default, trending: _asideTrending2.default
     },
     computed: (0, _extends3.default)({}, (0, _vuex.mapGetters)({
-        topics: 'frontend/getArticleList',
-        category: 'backend/getCategoryList',
-        trending: 'frontend/getTrending'
+        topics: 'frontend/article/getArticleList',
+        category: 'global/category/getCategoryList',
+        trending: 'frontend/article/getTrending'
     })),
     methods: {
         loadMore: function loadMore() {
@@ -3545,7 +3595,7 @@ exports.default = {
             fetchInitialData(this.$store, { page: 1 });
         } else {
             (0, _utils.ssp)(this.$route.path);
-            this.$store.dispatch('gProgress', 100);
+            this.$store.dispatch('global/gProgress', 100);
         }
     },
 
@@ -3742,7 +3792,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '请将表单填写完整!');
+                                _this.$store.dispatch('global/showMsg', '请将表单填写完整!');
                                 return _context.abrupt('return');
 
                             case 5:
@@ -3751,7 +3801,7 @@ exports.default = {
                                     break;
                                 }
 
-                                _this.$store.dispatch('showMsg', '两次密码输入不一致!');
+                                _this.$store.dispatch('global/showMsg', '两次密码输入不一致!');
                                 return _context.abrupt('return');
 
                             case 8:
@@ -3765,7 +3815,7 @@ exports.default = {
                                 data = _ref$data.data;
 
                                 if (code === 200) {
-                                    _this.$store.dispatch('showMsg', {
+                                    _this.$store.dispatch('global/showMsg', {
                                         type: 'success',
                                         content: data
                                     });
@@ -3784,7 +3834,7 @@ exports.default = {
         }
     },
     mounted: function mounted() {
-        this.$store.dispatch('gProgress', 100);
+        this.$store.dispatch('global/gProgress', 100);
     },
     metaInfo: function metaInfo() {
         return {
@@ -4816,11 +4866,16 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 /* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-'use strict';
+// Load modules
 
 var Stringify = __webpack_require__(124);
 var Parse = __webpack_require__(123);
+
+
+// Declare internals
+
+var internals = {};
+
 
 module.exports = {
     stringify: Stringify,
@@ -4832,45 +4887,49 @@ module.exports = {
 /* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-'use strict';
+// Load modules
 
 var Utils = __webpack_require__(46);
 
-var defaults = {
+
+// Declare internals
+
+var internals = {
     delimiter: '&',
     depth: 5,
     arrayLimit: 20,
     parameterLimit: 1000,
     strictNullHandling: false,
     plainObjects: false,
-    allowPrototypes: false,
-    allowDots: false,
-    decoder: Utils.decode
+    allowPrototypes: false
 };
 
-var parseValues = function parseValues(str, options) {
+
+internals.parseValues = function (str, options) {
+
     var obj = {};
     var parts = str.split(options.delimiter, options.parameterLimit === Infinity ? undefined : options.parameterLimit);
 
-    for (var i = 0; i < parts.length; ++i) {
+    for (var i = 0, il = parts.length; i < il; ++i) {
         var part = parts[i];
         var pos = part.indexOf(']=') === -1 ? part.indexOf('=') : part.indexOf(']=') + 1;
 
         if (pos === -1) {
-            obj[options.decoder(part)] = '';
+            obj[Utils.decode(part)] = '';
 
             if (options.strictNullHandling) {
-                obj[options.decoder(part)] = null;
+                obj[Utils.decode(part)] = null;
             }
-        } else {
-            var key = options.decoder(part.slice(0, pos));
-            var val = options.decoder(part.slice(pos + 1));
+        }
+        else {
+            var key = Utils.decode(part.slice(0, pos));
+            var val = Utils.decode(part.slice(pos + 1));
 
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                obj[key] = [].concat(obj[key]).concat(val);
-            } else {
+            if (!Object.prototype.hasOwnProperty.call(obj, key)) {
                 obj[key] = val;
+            }
+            else {
+                obj[key] = [].concat(obj[key]).concat(val);
             }
         }
     }
@@ -4878,7 +4937,9 @@ var parseValues = function parseValues(str, options) {
     return obj;
 };
 
-var parseObject = function parseObject(chain, val, options) {
+
+internals.parseObject = function (chain, val, options) {
+
     if (!chain.length) {
         return val;
     }
@@ -4888,35 +4949,43 @@ var parseObject = function parseObject(chain, val, options) {
     var obj;
     if (root === '[]') {
         obj = [];
-        obj = obj.concat(parseObject(chain, val, options));
-    } else {
+        obj = obj.concat(internals.parseObject(chain, val, options));
+    }
+    else {
         obj = options.plainObjects ? Object.create(null) : {};
         var cleanRoot = root[0] === '[' && root[root.length - 1] === ']' ? root.slice(1, root.length - 1) : root;
         var index = parseInt(cleanRoot, 10);
-        if (
-            !isNaN(index) &&
+        var indexString = '' + index;
+        if (!isNaN(index) &&
             root !== cleanRoot &&
-            String(index) === cleanRoot &&
+            indexString === cleanRoot &&
             index >= 0 &&
-            (options.parseArrays && index <= options.arrayLimit)
-        ) {
+            (options.parseArrays &&
+             index <= options.arrayLimit)) {
+
             obj = [];
-            obj[index] = parseObject(chain, val, options);
-        } else {
-            obj[cleanRoot] = parseObject(chain, val, options);
+            obj[index] = internals.parseObject(chain, val, options);
+        }
+        else {
+            obj[cleanRoot] = internals.parseObject(chain, val, options);
         }
     }
 
     return obj;
 };
 
-var parseKeys = function parseKeys(givenKey, val, options) {
-    if (!givenKey) {
+
+internals.parseKeys = function (key, val, options) {
+
+    if (!key) {
         return;
     }
 
     // Transform dot notation to bracket notation
-    var key = options.allowDots ? givenKey.replace(/\.([^\.\[]+)/g, '[$1]') : givenKey;
+
+    if (options.allowDots) {
+        key = key.replace(/\.([^\.\[]+)/g, '[$1]');
+    }
 
     // The regex chunks
 
@@ -4933,7 +5002,9 @@ var parseKeys = function parseKeys(givenKey, val, options) {
     if (segment[1]) {
         // If we aren't using plain objects, optionally prefix keys
         // that would overwrite object prototype properties
-        if (!options.plainObjects && Object.prototype.hasOwnProperty(segment[1])) {
+        if (!options.plainObjects &&
+            Object.prototype.hasOwnProperty(segment[1])) {
+
             if (!options.allowPrototypes) {
                 return;
             }
@@ -4946,8 +5017,11 @@ var parseKeys = function parseKeys(givenKey, val, options) {
 
     var i = 0;
     while ((segment = child.exec(key)) !== null && i < options.depth) {
-        i += 1;
-        if (!options.plainObjects && Object.prototype.hasOwnProperty(segment[1].replace(/\[|\]/g, ''))) {
+
+        ++i;
+        if (!options.plainObjects &&
+            Object.prototype.hasOwnProperty(segment[1].replace(/\[|\]/g, ''))) {
+
             if (!options.allowPrototypes) {
                 continue;
             }
@@ -4961,40 +5035,39 @@ var parseKeys = function parseKeys(givenKey, val, options) {
         keys.push('[' + key.slice(segment.index) + ']');
     }
 
-    return parseObject(keys, val, options);
+    return internals.parseObject(keys, val, options);
 };
 
-module.exports = function (str, opts) {
-    var options = opts || {};
 
-    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
-        throw new TypeError('Decoder has to be a function.');
-    }
+module.exports = function (str, options) {
 
-    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
-    options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
-    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
+    options = options || {};
+    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : internals.delimiter;
+    options.depth = typeof options.depth === 'number' ? options.depth : internals.depth;
+    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : internals.arrayLimit;
     options.parseArrays = options.parseArrays !== false;
-    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults.decoder;
-    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults.allowDots;
-    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults.plainObjects;
-    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults.allowPrototypes;
-    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults.parameterLimit;
-    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    options.allowDots = options.allowDots !== false;
+    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : internals.plainObjects;
+    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : internals.allowPrototypes;
+    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : internals.parameterLimit;
+    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : internals.strictNullHandling;
 
-    if (str === '' || str === null || typeof str === 'undefined') {
+    if (str === '' ||
+        str === null ||
+        typeof str === 'undefined') {
+
         return options.plainObjects ? Object.create(null) : {};
     }
 
-    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
+    var tempObj = typeof str === 'string' ? internals.parseValues(str, options) : str;
     var obj = options.plainObjects ? Object.create(null) : {};
 
     // Iterate over the keys and setup the new object
 
     var keys = Object.keys(tempObj);
-    for (var i = 0; i < keys.length; ++i) {
+    for (var i = 0, il = keys.length; i < il; ++i) {
         var key = keys[i];
-        var newObj = parseKeys(key, tempObj[key], options);
+        var newObj = internals.parseKeys(key, tempObj[key], options);
         obj = Utils.merge(obj, newObj, options);
     }
 
@@ -5006,50 +5079,57 @@ module.exports = function (str, opts) {
 /* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-'use strict';
+// Load modules
 
 var Utils = __webpack_require__(46);
 
-var arrayPrefixGenerators = {
-    brackets: function brackets(prefix) {
-        return prefix + '[]';
-    },
-    indices: function indices(prefix, key) {
-        return prefix + '[' + key + ']';
-    },
-    repeat: function repeat(prefix) {
-        return prefix;
-    }
-};
 
-var defaults = {
+// Declare internals
+
+var internals = {
     delimiter: '&',
-    strictNullHandling: false,
-    skipNulls: false,
-    encode: true,
-    encoder: Utils.encode
+    arrayPrefixGenerators: {
+        brackets: function (prefix, key) {
+
+            return prefix + '[]';
+        },
+        indices: function (prefix, key) {
+
+            return prefix + '[' + key + ']';
+        },
+        repeat: function (prefix, key) {
+
+            return prefix;
+        }
+    },
+    strictNullHandling: false
 };
 
-var stringify = function stringify(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots) {
-    var obj = object;
+
+internals.stringify = function (obj, prefix, generateArrayPrefix, strictNullHandling, filter) {
+
     if (typeof filter === 'function') {
         obj = filter(prefix, obj);
-    } else if (obj instanceof Date) {
+    }
+    else if (Utils.isBuffer(obj)) {
+        obj = obj.toString();
+    }
+    else if (obj instanceof Date) {
         obj = obj.toISOString();
-    } else if (obj === null) {
+    }
+    else if (obj === null) {
         if (strictNullHandling) {
-            return encoder ? encoder(prefix) : prefix;
+            return Utils.encode(prefix);
         }
 
         obj = '';
     }
 
-    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || Utils.isBuffer(obj)) {
-        if (encoder) {
-            return [encoder(prefix) + '=' + encoder(obj)];
-        }
-        return [prefix + '=' + String(obj)];
+    if (typeof obj === 'string' ||
+        typeof obj === 'number' ||
+        typeof obj === 'boolean') {
+
+        return [Utils.encode(prefix) + '=' + Utils.encode(obj)];
     }
 
     var values = [];
@@ -5058,88 +5138,64 @@ var stringify = function stringify(object, prefix, generateArrayPrefix, strictNu
         return values;
     }
 
-    var objKeys;
-    if (Array.isArray(filter)) {
-        objKeys = filter;
-    } else {
-        var keys = Object.keys(obj);
-        objKeys = sort ? keys.sort(sort) : keys;
-    }
-
-    for (var i = 0; i < objKeys.length; ++i) {
+    var objKeys = Array.isArray(filter) ? filter : Object.keys(obj);
+    for (var i = 0, il = objKeys.length; i < il; ++i) {
         var key = objKeys[i];
 
-        if (skipNulls && obj[key] === null) {
-            continue;
-        }
-
         if (Array.isArray(obj)) {
-            values = values.concat(stringify(obj[key], generateArrayPrefix(prefix, key), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
-        } else {
-            values = values.concat(stringify(obj[key], prefix + (allowDots ? '.' + key : '[' + key + ']'), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
+            values = values.concat(internals.stringify(obj[key], generateArrayPrefix(prefix, key), generateArrayPrefix, strictNullHandling, filter));
+        }
+        else {
+            values = values.concat(internals.stringify(obj[key], prefix + '[' + key + ']', generateArrayPrefix, strictNullHandling, filter));
         }
     }
 
     return values;
 };
 
-module.exports = function (object, opts) {
-    var obj = object;
-    var options = opts || {};
-    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
-    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
-    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
-    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
-    var encoder = encode ? (typeof options.encoder === 'function' ? options.encoder : defaults.encoder) : null;
-    var sort = typeof options.sort === 'function' ? options.sort : null;
-    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
+
+module.exports = function (obj, options) {
+
+    options = options || {};
+    var delimiter = typeof options.delimiter === 'undefined' ? internals.delimiter : options.delimiter;
+    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : internals.strictNullHandling;
     var objKeys;
     var filter;
-
-    if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
-        throw new TypeError('Encoder has to be a function.');
-    }
-
     if (typeof options.filter === 'function') {
         filter = options.filter;
         obj = filter('', obj);
-    } else if (Array.isArray(options.filter)) {
+    }
+    else if (Array.isArray(options.filter)) {
         objKeys = filter = options.filter;
     }
 
     var keys = [];
 
-    if (typeof obj !== 'object' || obj === null) {
+    if (typeof obj !== 'object' ||
+        obj === null) {
+
         return '';
     }
 
     var arrayFormat;
-    if (options.arrayFormat in arrayPrefixGenerators) {
+    if (options.arrayFormat in internals.arrayPrefixGenerators) {
         arrayFormat = options.arrayFormat;
-    } else if ('indices' in options) {
+    }
+    else if ('indices' in options) {
         arrayFormat = options.indices ? 'indices' : 'repeat';
-    } else {
+    }
+    else {
         arrayFormat = 'indices';
     }
 
-    var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
+    var generateArrayPrefix = internals.arrayPrefixGenerators[arrayFormat];
 
     if (!objKeys) {
         objKeys = Object.keys(obj);
     }
-
-    if (sort) {
-        objKeys.sort(sort);
-    }
-
-    for (var i = 0; i < objKeys.length; ++i) {
+    for (var i = 0, il = objKeys.length; i < il; ++i) {
         var key = objKeys[i];
-
-        if (skipNulls && obj[key] === null) {
-            continue;
-        }
-
-        keys = keys.concat(stringify(obj[key], key, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
+        keys = keys.concat(internals.stringify(obj[key], key, generateArrayPrefix, strictNullHandling, filter));
     }
 
     return keys.join(delimiter);

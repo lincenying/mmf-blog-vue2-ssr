@@ -1,19 +1,27 @@
-var md5 = require('md5')
-var md5Pre = require('../config').md5Pre
+var jwt = require('jsonwebtoken')
+var config = require('../config')
+var secret = config.secret
 
 module.exports = (req, res, next) => {
-    var user = req.cookies.user,
+    var token = req.cookies.user,
         userid = req.cookies.userid,
         username = req.cookies.username
-    if (user !== md5(userid + md5Pre + username)) {
-        res.clearCookie('user')
-        res.clearCookie('userid')
-        res.clearCookie('username')
-        res.json({
+    if (token) {
+        jwt.verify(token, secret, function(err, decoded) {
+            if (!err && decoded.id === userid && decoded.username === username) {
+                req.decoded = decoded
+                next()
+            } else {
+                return res.json({
+                    code: -400,
+                    message: '登录验证失败'
+                })
+            }
+        })
+    } else {
+        return res.json({
             code: -400,
             message: '请先登录'
         })
-    } else {
-        next()
     }
 }

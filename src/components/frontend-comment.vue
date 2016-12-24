@@ -48,7 +48,7 @@ export default {
     },
     methods: {
         loadcomment() {
-            this.$store.dispatch(`global/getCommentList`, {
+            this.$store.dispatch(`global/comment/getCommentList`, {
                 page: this.comments.page + 1,
                 limit: 10
             })
@@ -56,19 +56,19 @@ export default {
         async postComment() {
             const username = cookies.get('user')
             if (!username) {
-                this.$store.dispatch('showMsg', '请先登录!')
+                this.$store.dispatch('global/showMsg', '请先登录!')
                 this.$store.commit('global/showLoginModal', true)
             } else if (this.form.content === '') {
-                this.$store.dispatch('showMsg', '请输入评论内容!')
+                this.$store.dispatch('global/showMsg', '请输入评论内容!')
             } else {
                 const { data: { code, data }} = await api.post('frontend/comment/insert', this.form)
                 if (code === 200) {
                     this.form.content = ''
-                    this.$store.dispatch('showMsg', {
+                    this.$store.dispatch('global/showMsg', {
                         content: '评论发布成功!',
                         type: 'success'
                     })
-                    this.$store.commit('global/insertCommentItem', data)
+                    this.$store.commit('global/comment/insertCommentItem', data)
                 }
             }
         },

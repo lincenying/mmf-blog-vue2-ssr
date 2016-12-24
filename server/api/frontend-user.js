@@ -1,10 +1,13 @@
 var md5 = require('md5')
 var moment = require('moment')
+var jwt = require('jsonwebtoken')
 
 var mongoose = require('../mongoose')
 var User = mongoose.model('User')
 
-var md5Pre = require('../config').md5Pre
+var config = require('../config')
+var md5Pre = config.md5Pre
+var secret = config.secret
 var strlen = require('../utils').strlen
 const general = require('./general')
 
@@ -47,8 +50,13 @@ exports.login = (req, res) => {
     }).then(result => {
         if (result) {
             var id = result._id
-            var remember_me = req.body.remember_me ? 2592000000 : 86400000
-            var token = md5(id + md5Pre + username)
+            var remember_me = 2592000000
+            var token = jwt.sign({
+                id,
+                username
+            }, secret, {
+                expiresIn: 60*60*24*30
+            })
             res.cookie('user', token, { maxAge: remember_me })
             res.cookie('userid', id, { maxAge: remember_me })
             res.cookie('username', username, { maxAge: remember_me })
@@ -192,7 +200,7 @@ exports.modify = (req, res) => {
 exports.account = (req, res) => {
     var _id = req.body.id,
         email = req.body.email,
-        user_id = req.cookies.user_id,
+        user_id = req.cookies.userid,
         username = req.body.username
     if (user_id === _id) {
         User.updateAsync({ _id }, { '$set': { email, username } }).then(() => {
@@ -226,7 +234,7 @@ exports.password = (req, res) => {
     var _id = req.body.id,
         old_password = req.body.old_password,
         password = req.body.password,
-        user_id = req.cookies.user_id
+        user_id = req.cookies.userid
     if (user_id === _id) {
         User.findOneAsync({
             _id,

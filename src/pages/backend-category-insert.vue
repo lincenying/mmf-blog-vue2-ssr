@@ -35,16 +35,16 @@ export default {
     methods: {
         async insert() {
             if (!this.form.cate_name || !this.form.cate_order) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             const { data: { message, code, data} } = await api.post('backend/category/insert', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/insertCategoryItem', {
+                this.$store.commit('backend/category/insertCategoryItem', {
                     ...this.form,
                     _id: data
                 })

@@ -21,7 +21,7 @@ import api from '~api'
 import { mapGetters } from 'vuex'
 import aInput from '../components/_input.vue'
 const fetchInitialData = async store => {
-    await store.dispatch('backend/getCategoryItem')
+    await store.dispatch('backend/category/getCategoryItem')
 }
 export default {
     name: 'backend-category-modify',
@@ -39,22 +39,22 @@ export default {
     },
     computed: {
         ...mapGetters({
-            item: 'backend/getCategoryItem'
+            item: 'backend/category/getCategoryItem'
         })
     },
     methods: {
         async modify() {
             if (!this.form.cate_name || !this.form.cate_order) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             const { data: { message, code, data} } = await api.post('backend/category/modify', this.form)
             if (code === 200 && data) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/updateCategoryItem', this.form)
+                this.$store.commit('backend/category/updateCategoryItem', this.form)
                 this.$router.push('/backend/category/list')
             }
         }

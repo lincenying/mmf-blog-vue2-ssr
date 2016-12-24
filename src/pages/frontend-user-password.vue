@@ -47,15 +47,15 @@ export default {
     methods: {
         async modify() {
             if (!this.form.password || !this.form.old_password || !this.form.re_password) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             } else if (this.form.password !== this.form.re_password) {
-                this.$store.dispatch('showMsg', '两次密码输入不一致!')
+                this.$store.dispatch('global/showMsg', '两次密码输入不一致!')
                 return
             }
             const { data: { code, data} } = await api.post('frontend/user/password', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: data
                 })
@@ -66,7 +66,7 @@ export default {
         }
     },
     mounted() {
-        this.$store.dispatch('gProgress', 100)
+        this.$store.dispatch('global/gProgress', 100)
     },
     metaInfo () {
         return {

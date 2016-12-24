@@ -31,7 +31,7 @@ import api from '~api'
 import { mapGetters } from 'vuex'
 import aInput from '../components/_input.vue'
 const fetchInitialData = async (store, config = { limit: 99}) => {
-    await store.dispatch('backend/getCategoryList', config)
+    await store.dispatch('global/category/getCategoryList', config)
 }
 export default {
     name: 'backend-article-insert',
@@ -49,24 +49,24 @@ export default {
     },
     computed: {
         ...mapGetters({
-            category: 'backend/getCategoryList'
+            category: 'global/category/getCategoryList'
         })
     },
     methods: {
         async insert() {
             const content = postEditor.getMarkdown()
             if (!this.form.title || !this.form.category || !content) {
-                this.$store.dispatch('showMsg', '请将表单填写完整!')
+                this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
             this.form.content = content
             const { data: { message, code, data} } = await api.post('backend/article/insert', this.form)
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('backend/insertArticleItem', data)
+                this.$store.commit('backend/article/insertArticleItem', data)
                 this.$router.push('/backend/article/list')
             }
         }

@@ -10,10 +10,10 @@ const state = {
 }
 
 const actions = {
-    async ['global/getCommentList']({commit, rootState: {route: { path, params: { id } }}}, config) {
+    async ['getCommentList']({commit, rootState: {route: { path, params: { id } }}}, config) {
         const { data: { data, code} } = await api.get('frontend/comment/list', { id, ...config })
         if (data && code === 200) {
-            commit('global/recevieCommentList', {
+            commit('recevieCommentList', {
                 ...config,
                 ...data,
                 path
@@ -23,7 +23,7 @@ const actions = {
 }
 
 const mutations = {
-    ['global/recevieCommentList'](state, {list, hasNext, hasPrev, page, path}) {
+    ['recevieCommentList'](state, {list, hasNext, hasPrev, page, path}) {
         if (page === 1) {
             list = [].concat(list)
         } else {
@@ -33,26 +33,27 @@ const mutations = {
             data: list, hasNext, hasPrev, page, path
         }
     },
-    ['global/insertCommentItem'](state, data) {
+    ['insertCommentItem'](state, data) {
         state.lists.data = [data].concat(state.lists.data)
     },
-    ['global/deleteComment'](state, id) {
+    ['deleteComment'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         obj.is_delete = 1
     },
-    ['global/recoverComment'](state, id) {
+    ['recoverComment'](state, id) {
         const obj = state.lists.data.find(ii => ii._id === id)
         obj.is_delete = 0
     }
 }
 
 const getters = {
-    ['global/getCommentList'](state) {
+    ['getCommentList'](state) {
         return state.lists
     }
 }
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

@@ -12,7 +12,7 @@ const state = {
 
 const actions = {
     ['gProgress']({commit}, payload) {
-        commit('global/progress', payload)
+        commit('progress', payload)
     },
     ['showMsg']({commit}, config) {
         let content, type
@@ -31,19 +31,19 @@ const actions = {
 }
 
 const mutations = {
-    ['global/progress'](state, payload) {
+    ['progress'](state, payload) {
         state.progress = payload
     },
-    ['global/showLoginModal'](state, payload) {
+    ['showLoginModal'](state, payload) {
         state.showLoginModal = payload
     },
-    ['global/showRegisterModal'](state, payload) {
+    ['showRegisterModal'](state, payload) {
         state.showRegisterModal = payload
     }
 }
 
 const getters = {
-    ['global/getGlobal'](state) {
+    ['getGlobal'](state) {
         return state
     }
 }

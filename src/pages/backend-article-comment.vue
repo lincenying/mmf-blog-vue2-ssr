@@ -31,13 +31,13 @@ import api from '~api'
 import { mapGetters } from 'vuex'
 const fetchInitialData = async (store, config = { page: 1 }) => {
     config.all = 1
-    await store.dispatch('global/getCommentList', config)
+    await store.dispatch('global/comment/getCommentList', config)
 }
 export default {
     name: 'backend-article-comment',
     computed: {
         ...mapGetters({
-            comments: 'global/getCommentList'
+            comments: 'global/comment/getCommentList'
         })
     },
     methods: {
@@ -47,21 +47,21 @@ export default {
         async recover(id) {
             const { data: { code, message} } = await api.get('frontend/comment/recover', { id })
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('global/recoverComment', id)
+                this.$store.commit('global/comment/recoverComment', id)
             }
         },
         async deletes(id) {
             const { data: { code, message} } = await api.get('frontend/comment/delete', { id })
             if (code === 200) {
-                this.$store.dispatch('showMsg', {
+                this.$store.dispatch('global/showMsg', {
                     type: 'success',
                     content: message
                 })
-                this.$store.commit('global/deleteComment', id)
+                this.$store.commit('global/comment/deleteComment', id)
             }
         }
     },
