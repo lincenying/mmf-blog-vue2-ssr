@@ -5,6 +5,9 @@ const projectRoot = path.resolve(__dirname, '../')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
+    performance: {
+        hints: false
+    },
     entry: {
         app: './src/client-entry.js',
         admin: './src/admin.js',
