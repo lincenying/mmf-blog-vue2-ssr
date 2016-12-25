@@ -49,7 +49,7 @@ npm run start
 http://localhost:8080
 
 登录
-http://localhost:8080/login
+http://localhost:8080/backend
 
 添加管理员
 http://localhost:8080/api/backend
