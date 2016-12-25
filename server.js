@@ -80,7 +80,7 @@ app.set('view engine', 'ejs')
 app.use(favicon('./favicon.ico'))
 app.use(compression({threshold: 0}))
 // 日志
-app.use(logger('[:date[clf]] ":method :url" :status :res[content-length] ":referrer" ":user-agent"'))
+app.use(logger('":method :url" :status :res[content-length] ":referrer" ":user-agent"'))
 // body 解析中间件
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

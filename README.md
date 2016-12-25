@@ -2,6 +2,70 @@
 
 demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 
+## 目录结构
+
+```
+├─build // webpack 相关配置文件
+│
+├─dist  // webpack 生成文档存放目录
+│  │
+│  ├─server
+│  │
+│  └─static
+│      ├─css
+│      │
+│      ├─images
+│      │
+│      ├─img
+│      │
+│      └─js
+│
+├─server    // 服务端目录
+│  │
+│  ├─api    // api 相关处理文件
+│  │
+│  ├─config // api 配置文件
+│  │
+│  ├─models // mongoose 的相关 model
+│  │
+│  ├─routes // 路由文件
+│  │
+│  └─utils  // 实用工具
+│
+├─src           // 客户端程序目录
+│  │
+│  ├─api        // api 配置文件
+│  │
+│  ├─assets     // 静态文件文件夹
+│  │  ├─css
+│  │  │
+│  │  └─images
+│  │
+│  ├─components // 组件文件夹
+│  │
+│  ├─filters    // 过滤器
+│  │
+│  ├─pages      // 路由组件
+│  │
+│  ├─polyfill   // ├─polyfill
+│  │
+│  ├─router     // 路由配置文件夹
+│  │
+│  ├─store      // vuex 相关文件夹
+│  │  │
+│  │  └─modules // vuex 模块文件夹
+│  │
+│  ├─template   // 初始模版
+│  │
+│  └─utils      // 实用工具
+│
+└─static
+    ├─editor.md
+    │
+    ├─images
+
+```
+
 ---
 
 #### 其他版本
