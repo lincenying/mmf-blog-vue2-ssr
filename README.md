@@ -1,4 +1,4 @@
-# mmf-blog vuejs 2.0 服务端渲染版
+# mmf-blog vuejs 2.0 服务端渲染 v2版
 
 demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 
@@ -52,6 +52,6 @@ http://localhost:8080
 http://localhost:8080/login
 
 添加管理员
-http://localhost:8080/api/admin
+http://localhost:8080/api/backend
 
 管理员添加成功后, 会自动生成 admin.lock 文件锁定, 如果需要继续添加, 请把该文件删除
