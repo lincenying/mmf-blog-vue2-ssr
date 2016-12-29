@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
+import md5 from 'md5'
 import store from '../store'
 import { inBrowser } from '../utils'
 import config from 'api-config'
@@ -47,6 +48,10 @@ function checkCode(res) {
 
 export default {
     post(url, data) {
+        const key = md5(url + JSON.stringify(data))
+        if (config.cached && config.cached.has(key)) {
+            return Promise.resolve(config.cached.get(key))
+        }
         return axios({
             method: 'post',
             url: config.api + url,
@@ -56,9 +61,16 @@ export default {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             }
-        }).then(checkStatus).then(checkCode)
+        }).then(checkStatus).then(checkCode).then(res => {
+            if (config.cached) config.cached.set(key, res)
+            return res
+        })
     },
     get(url, params) {
+        const key = md5(url + JSON.stringify(params))
+        if (config.cached && config.cached.has(key)) {
+            return Promise.resolve(config.cached.get(key))
+        }
         return axios({
             method: 'get',
             url: config.api + url,
@@ -67,6 +79,9 @@ export default {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        }).then(checkStatus).then(checkCode)
+        }).then(checkStatus).then(checkCode).then(res => {
+            if (config.cached) config.cached.set(key, res)
+            return res
+        })
     }
 }
