@@ -1,6 +1,6 @@
 import { app, router, store } from './app'
 
-const isDev = process.env.NODE_ENV !== 'production'
+//const isDev = process.env.NODE_ENV !== 'production'
 const meta = app.$meta()
 
 export default context => {
@@ -8,7 +8,7 @@ export default context => {
     router.push(context.url)
     context.meta = meta
     // 查找路由匹配的组件, 调用 prefetch 钩子
-    const ss = isDev && Date.now()
+    const ss = Date.now()
     return Promise.all(router.getMatchedComponents().map(component => {
         if (component.prefetch) {
             return component.prefetch(store)

@@ -7390,14 +7390,13 @@ var _app = __webpack_require__(52);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var isDev = "production" !== 'production';
 var meta = _app.app.$meta();
 
 exports.default = function (context) {
     _app.router.push(context.url);
     context.meta = meta;
 
-    var ss = isDev && Date.now();
+    var ss = Date.now();
     return _promise2.default.all(_app.router.getMatchedComponents().map(function (component) {
         if (component.prefetch) {
             return component.prefetch(_app.store);
