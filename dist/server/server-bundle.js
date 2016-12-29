@@ -2207,7 +2207,8 @@ var state = {
     },
     item: {
         data: {},
-        path: ''
+        path: '',
+        isLoad: false
     },
     trending: []
 };
@@ -2336,7 +2337,7 @@ var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, 'rec
         path = _ref8.path;
 
     state.item = {
-        data: data, path: path
+        data: data, path: path, isLoad: true
     };
 }), (0, _defineProperty3.default)(_mutations, 'receiveTrending', function receiveTrending(state, data) {
     state.trending = data.list;
@@ -7659,7 +7660,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "main wrap clearfix"
   }, [_c('div', {
     staticClass: "main-left"
-  }, [(_vm.article.data._id) ? [_c('div', {
+  }, [(!_vm.article.isLoad) ? [_vm._m(0)] : (_vm.article.data._id) ? [_c('div', {
     staticClass: "card card-question-head"
   }, [_c('div', {
     staticClass: "question-content"
@@ -7713,7 +7714,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "trending": _vm.trending
     }
   })], 1)])
-},staticRenderFns: []}
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+  return _c('div', {
+    staticClass: "card card-answer"
+  }, [_c('div', {
+    staticClass: "answer-content"
+  }, [_vm._v("加载中, 请稍等...")])])
+}]}
 
 /***/ },
 /* 155 */

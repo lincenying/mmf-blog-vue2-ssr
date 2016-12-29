@@ -1,7 +1,12 @@
 <template>
     <div class="main wrap clearfix">
         <div class="main-left">
-            <template v-if="article.data._id">
+            <template v-if="!article.isLoad">
+                <div class="card card-answer">
+                    <div class="answer-content">加载中, 请稍等...</div>
+                </div>
+            </template>
+            <template v-else-if="article.data._id">
                 <div class="card card-question-head">
                     <div class="question-content">
                         <router-link :to="'/category/' + article.data.category" v-text="article.data.category_name" class="topic-link-item"></router-link>

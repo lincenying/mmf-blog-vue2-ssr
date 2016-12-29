@@ -58,14 +58,14 @@ export default {
             fetchInitialData(this.$store, {page: 1})
         }
     },
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
         const scrollTop = document.body.scrollTop
         const path = from.path
         if (scrollTop) ls.set(path, scrollTop)
         else ls.remove(path)
         next()
     },
-    metaInfo () {
+    metaInfo() {
         var title = 'M.M.F 小屋'
         const {id, key, by} = this.$route.params
         if (id) {
