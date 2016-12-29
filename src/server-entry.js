@@ -14,8 +14,7 @@ export default context => {
             return component.prefetch(store)
         }
     })).then(() => {
-        if (isDev)
-            console.log(`data pre-fetch: ${Date.now() - ss}ms`)
+        console.log(`===== data pre-fetch: ${Date.now() - ss}ms =====`)
         // 设置初始 store
         context.initialState = store.state
         return app

@@ -22,8 +22,8 @@ import { ssp } from '../utils'
 const fetchInitialData = async (store, config = { page: 1}) => {
     const {params: {id, key, by}, path} = store.state.route
     const base = { ...config, limit: 10, id, key, by }
-    store.dispatch('global/category/getCategoryList')
-    store.dispatch('frontend/article/getTrending')
+    if (store.state.global.category.lists.length === 0) store.dispatch('global/category/getCategoryList')
+    if (store.state.frontend.article.trending.length === 0) store.dispatch('frontend/article/getTrending')
     await store.dispatch('frontend/article/getArticleList', base)
     if (config.page === 1) ssp(path)
 }

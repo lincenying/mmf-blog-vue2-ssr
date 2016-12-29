@@ -36,8 +36,8 @@ import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
 import comment from '../components/frontend-comment.vue'
 const fetchInitialData = async store => {
-    store.dispatch('global/category/getCategoryList')
-    store.dispatch('frontend/article/getTrending')
+    if (store.state.global.category.lists.length === 0) store.dispatch('global/category/getCategoryList')
+    if (store.state.frontend.article.trending.length === 0) store.dispatch('frontend/article/getTrending')
     store.dispatch(`global/comment/getCommentList`, { page: 1, limit: 5})
     await store.dispatch(`frontend/article/getArticleItem`)
 }
