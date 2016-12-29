@@ -6639,7 +6639,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon icon-nav-features"
   }), _c('span', {
     staticClass: "text"
-  }, [_vm._v("关于")])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("关于")])])], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "right-part"
   }, [_c('span', {
     staticClass: "nav-search"
@@ -6668,7 +6668,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
-  })])]) : _c('span', {
+  })])], 1) : _c('span', {
     staticClass: "nav-me"
   }, [_c('a', {
     staticClass: "nav-me-link",
@@ -6683,7 +6683,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
-  })])]), _vm._v(" ")])]), _vm._v(" ")])
+  })])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
   return _c('div', {
     staticClass: "left-part"
@@ -6751,7 +6751,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('router-view', {
     key: _vm.key,
     staticClass: "router"
-  })]), _vm._v(" "), (!_vm.backend) ? _c('sign-up', {
+  })], 1), _vm._v(" "), (!_vm.backend) ? _c('sign-up', {
     attrs: {
       "show": _vm.global.showRegisterModal
     }
@@ -6759,7 +6759,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "show": _vm.global.showLoginModal
     }
-  }) : _vm._e()])
+  }) : _vm._e()], 1)
 },staticRenderFns: []}
 
 /***/ },
@@ -6789,7 +6789,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon icon-arrow-right"
   }), _c('i', {
     staticClass: "icon icon-articles"
-  }), _vm._v("密码")])])
+  }), _vm._v("密码")])], 1)
 },staticRenderFns: []}
 
 /***/ },
@@ -6808,7 +6808,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.classes
   }, [_c('div', {
     staticClass: "settings-input-wrap"
-  }, [_vm._t("default")], true)])])])
+  }, [_vm._t("default")], 2)])])])
 },staticRenderFns: []}
 
 /***/ },
@@ -6886,7 +6886,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     domProps: {
       "textContent": _vm._s(_vm.item.category_name)
     }
-  })]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "feed-main-link-wrap"
   }, [_c('router-link', {
     staticClass: "feed-main-link",
@@ -6896,7 +6896,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     domProps: {
       "textContent": _vm._s(_vm.item.title)
     }
-  })]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "feed-desc-wrap"
   }, [_c('div', {
     staticClass: "feed-article-content markdown-body",
@@ -6907,7 +6907,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "item": _vm.item
     }
-  })])
+  })], 1)
 },staticRenderFns: []}
 
 /***/ },
@@ -6941,7 +6941,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("更多"), _c('i', {
     staticClass: "icon icon-circle-loading"
-  })]) : _vm._e()])], true)]), _vm._v(" "), _c('div', {
+  })]) : _vm._e()])], 2)]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
   }, [_c('category', {
     attrs: {
@@ -6951,7 +6951,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "trending": _vm.trending
     }
-  })])])
+  })], 1)])
 },staticRenderFns: []}
 
 /***/ },
@@ -6985,7 +6985,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "trending-meta-item"
     }, [_c('i', {
       staticClass: "icon icon-action-comment"
-    }), _vm._v(_vm._s(item.comment_count))])])])
+    }), _vm._v(_vm._s(item.comment_count))])])], 1)
   }))])
 },staticRenderFns: []}
 
@@ -7020,7 +7020,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     domProps: {
       "textContent": _vm._s(_vm.article.data.title)
     }
-  })])])]), _vm._v(" "), _c('div', {
+  })], 1)], 1)]), _vm._v(" "), _c('div', {
     staticClass: "card card-answer"
   }, [_c('div', {
     staticClass: "answer-content"
@@ -7033,7 +7033,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "item": _vm.article.data
     }
-  })]), _vm._v(" "), _c('comment', {
+  })], 1), _vm._v(" "), _c('comment', {
     attrs: {
       "comments": _vm.comments
     }
@@ -7041,7 +7041,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card card-answer"
   }, [_c('div', {
     staticClass: "answer-content"
-  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])], _vm._v(" ")], true), _vm._v(" "), _c('div', {
+  }, [_vm._v("该文章不存在, 或者该文章已经被删除")])])]], 2), _vm._v(" "), _c('div', {
     staticClass: "main-right"
   }, [_c('category', {
     attrs: {
@@ -7051,7 +7051,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "trending": _vm.trending
     }
-  })])])
+  })], 1)])
 },staticRenderFns: []}
 
 /***/ },
@@ -7081,7 +7081,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(item.cate_num || 0) + " 篇文章")]), _c('i', {
       staticClass: "icon icon-arrow-right"
     })])]
-  })], true)
+  })], 2)
 },staticRenderFns: []}
 
 /***/ },
@@ -7097,7 +7097,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "trending": _vm.trending
     }
-  })])])
+  })], 1)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
   return _c('div', {
     staticClass: "main-left"
@@ -7244,7 +7244,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.form.re_password = $event.target.value
       }
     }
-  })])]), _vm._v(" "), _c('div', {
+  })])], 1), _vm._v(" "), _c('div', {
     staticClass: "settings-footer clearfix"
   }, [_c('a', {
     staticClass: "btn btn-yellow",
@@ -7256,7 +7256,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("保存设置")])])])])]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_c('account')])])
+  }, [_c('account')], 1)])
 },staticRenderFns: []}
 
 /***/ },
@@ -7330,9 +7330,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', {
     staticClass: "input-info error"
-  }, [_vm._v("请输入邮箱")])])]), _vm._v(" ")])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("请输入邮箱")])])], 1)])])]), _vm._v(" "), _c('div', {
     staticClass: "main-right"
-  }, [_c('account')])])
+  }, [_c('account')], 1)])
 },staticRenderFns: []}
 
 /***/ },
