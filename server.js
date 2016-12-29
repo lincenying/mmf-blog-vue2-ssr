@@ -100,6 +100,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
         return res.end('waiting for compilation... refresh in a moment.')
     }
     res.setHeader("Content-Type", "text/html")
+    var s = Date.now()
     const context = {
         url: req.url
     }
@@ -119,6 +120,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
             res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
         }
         res.end(indexHTML.tail)
+        console.log(`===== whole request: ${Date.now() - s}ms =====`)
     })
     renderStream.on('error', err => {
         if (err && err.code === '404') {
