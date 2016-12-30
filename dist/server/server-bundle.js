@@ -6788,7 +6788,7 @@ module.exports = __vue_exports__
 /* 143 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "modal-wrap modal-signin-wrap",
     class: _vm.show ? 'active' : ''
@@ -6885,7 +6885,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 144 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "modal-wrap modal-signup-wrap",
     class: _vm.show ? 'active' : ''
@@ -7032,7 +7032,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 145 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card"
   }, [_c('div', {
@@ -7129,7 +7129,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("加载更多")])]) : _vm._e()])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('a', {
     staticClass: "comment-author-avatar-link",
     attrs: {
@@ -7148,7 +7148,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 146 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('nav', {
     staticClass: "global-nav"
   }, [(_vm.backend) ? _c('div', {
@@ -7246,7 +7246,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
   })])])])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "left-part"
   }, [_c('a', {
@@ -7295,7 +7295,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 147 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "g-doc",
     attrs: {
@@ -7328,7 +7328,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 148 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card card-me"
   }, [_c('router-link', {
@@ -7358,7 +7358,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 149 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "settings-section"
   }, [_c('div', {
@@ -7377,7 +7377,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 150 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "actions-wrap"
   }, [_c('a', {
@@ -7431,7 +7431,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 151 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card feed"
   }, [_c('div', {
@@ -7476,7 +7476,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 152 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main wrap clearfix"
   }, [_c('div', {
@@ -7520,7 +7520,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 153 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card card-trending"
   }, [_c('h2', {
@@ -7555,7 +7555,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 154 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main wrap clearfix"
   }, [_c('div', {
@@ -7614,7 +7614,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "trending": _vm.trending
     }
   })], 1)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card card-answer"
   }, [_c('div', {
@@ -7626,7 +7626,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 155 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "card card-topics"
   }, [_vm._l((_vm.category), function(item) {
@@ -7656,7 +7656,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 156 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main wrap clearfix"
   }, [_vm._m(0), _vm._v(" "), _c('div', {
@@ -7666,7 +7666,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "trending": _vm.trending
     }
   })], 1)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main-left"
   }, [_c('div', {
@@ -7723,7 +7723,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 157 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main wrap clearfix"
   }, [_c('div', {
@@ -7831,7 +7831,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /* 158 */
 /***/ function(module, exports) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._c;
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "main wrap clearfix"
   }, [_c('div', {
