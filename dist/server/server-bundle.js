@@ -3261,12 +3261,6 @@ exports.default = {
 
     components: {
         actions: _itemActions2.default
-    },
-    methods: {
-        cutStr: function cutStr(content) {
-            if (!content) return '';
-            return content.substring(0, 500) + '...';
-        }
     }
 };
 
@@ -7463,7 +7457,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "feed-article-content markdown-body",
     domProps: {
-      "textContent": _vm._s(_vm.cutStr(_vm.item.content))
+      "textContent": _vm._s(_vm.item.content)
     }
   })])]), _vm._v(" "), _c('actions', {
     attrs: {

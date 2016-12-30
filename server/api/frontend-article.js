@@ -45,7 +45,7 @@ exports.getList = (req, res) => {
     }
 
     Promise.all([
-        Article.find(data).sort(sort).skip(skip).limit(limit).exec(),
+        Article.find(data, ['title', 'content', 'category', 'category_name', 'visit', 'like', 'comment_count', 'creat_date', 'is_delete', 'timestamp']).sort(sort).skip(skip).limit(limit).exec(),
         Article.countAsync(data)
     ]).then(result => {
         var arr = [],
@@ -53,6 +53,10 @@ exports.getList = (req, res) => {
             total = result[1],
             totalPage = Math.ceil(total / limit),
             user_id = req.cookies.userid
+        data = data.map(item => {
+            item.content = item.content.substring(0, 500) + '...'
+            return item
+        })
         var json = {
             code: 200,
             data: {
