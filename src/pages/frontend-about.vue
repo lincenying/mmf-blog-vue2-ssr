@@ -77,12 +77,12 @@ export default {
             this.$store.dispatch('global/gProgress', 100)
         }
     },
-    metaInfo () {
-        return {
-            title: '关于 - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
-        }
-    }
+    // metaInfo () {
+    //     return {
+    //         title: '关于 - M.M.F 小屋',
+    //         meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+    //     }
+    // }
 }
 </script>
 <style media="screen">
