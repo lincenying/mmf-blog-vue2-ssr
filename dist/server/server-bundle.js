@@ -2918,6 +2918,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     name: 'item-actions',
+    serverCacheKey: function serverCacheKey(props) {
+        return 'frontend::topics::item::actions::' + props.item._id;
+    },
     props: ['item'],
     methods: {
         like: function like() {
@@ -3252,6 +3255,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     name: 'index-item',
+    serverCacheKey: function serverCacheKey(props) {
+        return 'frontend::topics::item::' + props.item._id;
+    },
     props: ['item'],
     data: function data() {
         return {
