@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import cookies from 'js-cookie'
 
-import inBrowser from '../utils'
+import {inBrowser} from '../utils'
 
 import login from '../pages/backend-login.vue'
 import articleList from '../pages/backend-article-list.vue'

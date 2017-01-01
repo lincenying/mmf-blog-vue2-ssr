@@ -1388,8 +1388,6 @@ var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
 var _utils = __webpack_require__(15);
 
-var _utils2 = _interopRequireDefault(_utils);
-
 var _frontendIndex = __webpack_require__(140);
 
 var _frontendIndex2 = _interopRequireDefault(_frontendIndex);
@@ -1430,7 +1428,7 @@ var scrollBehavior = function scrollBehavior(to) {
 };
 
 var guardRoute = function guardRoute(to, from, next) {
-    var token = _jsCookie2.default.get('user') || !_utils2.default;
+    var token = _jsCookie2.default.get('user') || !_utils.inBrowser;
     if (!token) {
         next('/');
     } else {
