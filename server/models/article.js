@@ -12,6 +12,7 @@ var ArticleSchema = new Schema({
     like: Number,
     comment_count: Number,
     creat_date: String,
+    update_date: String,
     is_delete: Number,
     timestamp: Number
 })

@@ -63,6 +63,7 @@ exports.insert = (req, res) => {
         like: 0,
         comment_count: 0,
         creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+        update_date: moment().format('YYYY-MM-DD HH:MM:SS'),
         is_delete: 0,
         timestamp: moment().format('X')
     }
@@ -146,8 +147,9 @@ exports.modify = (req, res) => {
         content = req.body.content,
         html = marked(content),
         id = req.body.id,
-        title = req.body.title
-    Article.updateAsync({ _id: id }, { '$set': { category, category_name, content, html, title } }).then(() => {
+        title = req.body.title,
+        update_date = moment().format('YYYY-MM-DD HH:MM:SS')
+    Article.updateAsync({ _id: id }, { '$set': { category, category_name, content, html, title, update_date } }).then(() => {
         if (category !== category_old) {
             Promise.all([
                 Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }),

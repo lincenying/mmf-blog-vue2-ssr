@@ -50,6 +50,7 @@ exports.insert = (req, res) => {
             cate_name,
             cate_order,
             creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+            update_date: moment().format('YYYY-MM-DD HH:MM:SS'),
             is_delete: 0,
             timestamp: moment().format('X')
         }).then(result => {
@@ -76,6 +77,6 @@ exports.modify = (req, res) => {
         cate_order = req.body.cate_order
 
     modify(res, Category, _id, {
-        cate_name, cate_order
+        cate_name, cate_order, update_date: moment().format('YYYY-MM-DD HH:MM:SS')
     })
 }

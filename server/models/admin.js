@@ -7,6 +7,7 @@ var AdminSchema = new Schema({
     email: String,
     password: String,
     creat_date: String,
+    update_date: String,
     is_delete: Number,
     timestamp: Number
 })

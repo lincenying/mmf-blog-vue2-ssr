@@ -35,7 +35,7 @@ const scrollBehavior = to => {
 }
 
 const guardRoute = (to, from, next) => {
-    var token = cookies.get('_user') || !inBrowser
+    var token = cookies.get('b_user') || !inBrowser
     if (!token) {
         next('/')
     } else {
@@ -65,6 +65,7 @@ const router = new VueRouter({
         { name:'user_list', path: '/backend/user/list', component: userList, meta: { scrollToTop: true }, beforeEnter: guardRoute },
         { name:'user_modify', path: '/backend/user/modify/:id', component: userModify, meta: { scrollToTop: true }, beforeEnter: guardRoute },
 
+        { path: '*', redirect: { name: 'login' }}
     ]
 })
 

@@ -7,6 +7,7 @@ var CategorySchema = new Schema({
     cate_order: String,
     cate_num: Number,
     creat_date: String,
+    update_date: String,
     is_delete: Number,
     timestamp: Number
 })
