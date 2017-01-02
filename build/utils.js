@@ -5,6 +5,7 @@ exports.cssLoaders = function (options) {
     options = options || {}
     // 使用插件中提取文本字符串, 生成loader
     function generateLoaders(loaders) {
+        loaders = ['css', 'postcss'].concat(loaders)
         var sourceLoader = loaders.map(function (loader) {
             var extraParamChar
             if (/\?/.test(loader)) {
@@ -29,13 +30,13 @@ exports.cssLoaders = function (options) {
 
     // http://vuejs.github.io/vue-loader/en/configurations/extract-css.html
     return {
-        css: generateLoaders(['css']),
-        postcss: generateLoaders(['css']),
-        less: generateLoaders(['css', 'less',]),
-        sass: generateLoaders(['css', 'sass?indentedSyntax',]),
-        scss: generateLoaders(['css', 'sass',]),
-        stylus: generateLoaders(['css', 'stylus',]),
-        styl: generateLoaders(['css', 'stylus',]),
+        css: generateLoaders([]),
+        postcss: generateLoaders([]),
+        less: generateLoaders(['less',]),
+        sass: generateLoaders(['sass?indentedSyntax',]),
+        scss: generateLoaders(['sass',]),
+        stylus: generateLoaders(['stylus',]),
+        styl: generateLoaders(['stylus',]),
     }
 }
 

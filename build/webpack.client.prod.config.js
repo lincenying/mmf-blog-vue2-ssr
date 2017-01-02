@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+//const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 module.exports = {
     devtool: false,
@@ -35,12 +35,12 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),
-        new SWPrecachePlugin({
-            cacheId: 'vue-hn',
-            filename: 'server/service-worker.js',
-            dontCacheBustUrlsMatching: /./,
-            staticFileGlobsIgnorePatterns: [/server\.html$/, /\.map$/]
-        }),
+        // new SWPrecachePlugin({
+        //     cacheId: 'vue-hn',
+        //     filename: 'server/service-worker.js',
+        //     dontCacheBustUrlsMatching: /./,
+        //     staticFileGlobsIgnorePatterns: [/server\.html$/, /\.map$/]
+        // }),
         new HtmlWebpackPlugin({
             chunks: [
                 'manifest', 'vendor', 'app',

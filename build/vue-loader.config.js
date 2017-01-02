@@ -10,6 +10,5 @@ if (process.env.NODE_ENV === 'production') {
     }
 }
 module.exports = {
-    loaders: utils.cssLoaders(options),
-    postcss: [require('autoprefixer')({browsers: ['last 3 versions']})],
+    loaders: utils.cssLoaders(options)
 }
