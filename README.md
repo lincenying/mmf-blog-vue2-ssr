@@ -94,19 +94,21 @@ api: api地址 (如果 api 服务器 和网站服务器在同一台主机, 可�
 port: 启动端口
 ```
 
-```
-// 安装依赖
-npm install      or      yarn
+```shell
+# 安装依赖
+$ npm install      
 
-// 生成静态文件
-npm run build
+# 或者
+$ yarn
 
-// 开发模式
-npm run dev
+# 生成静态文件
+$ npm run build
 
-或者
+# 开发模式
+$ npm run dev
 
-npm run start
+# 或者
+$ npm run start
 ```
 
 首页
