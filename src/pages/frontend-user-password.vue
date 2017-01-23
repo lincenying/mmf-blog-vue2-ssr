@@ -68,11 +68,11 @@ export default {
     mounted() {
         this.$store.dispatch('global/gProgress', 100)
     },
-    // metaInfo () {
-    //     return {
-    //         title: '密码 - M.M.F 小屋',
-    //         meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
-    //     }
-    // }
+    metaInfo () {
+        return {
+            title: '密码 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        }
+    }
 }
 </script>

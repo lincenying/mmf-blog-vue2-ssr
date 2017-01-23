@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 167);
+/******/ 	return __webpack_require__(__webpack_require__.s = 168);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1277,7 +1277,7 @@ var _router = __webpack_require__(54);
 
 var _router2 = _interopRequireDefault(_router);
 
-var _vuexRouterSync = __webpack_require__(166);
+var _vuexRouterSync = __webpack_require__(167);
 
 var _filters = __webpack_require__(53);
 
@@ -1378,9 +1378,13 @@ var _vue = __webpack_require__(22);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(165);
+var _vueRouter = __webpack_require__(166);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
+
+var _vueMeta = __webpack_require__(165);
+
+var _vueMeta2 = _interopRequireDefault(_vueMeta);
 
 var _jsCookie = __webpack_require__(21);
 
@@ -1411,7 +1415,7 @@ var _frontendUserPassword2 = _interopRequireDefault(_frontendUserPassword);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueRouter2.default);
-
+_vue2.default.use(_vueMeta2.default);
 
 var scrollBehavior = function scrollBehavior(to) {
     var position = {};
@@ -3336,6 +3340,12 @@ exports.default = {
         } else {
             this.$store.dispatch('global/gProgress', 100);
         }
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '关于 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -3439,6 +3449,13 @@ exports.default = {
         '$route': function $route() {
             fetchInitialData(this.$store);
         }
+    },
+    metaInfo: function metaInfo() {
+        var title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋';
+        return {
+            title: title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
+        };
     }
 };
 
@@ -3557,6 +3574,30 @@ exports.default = {
         var path = from.path;
         if (scrollTop) _store2.default.set(path, scrollTop);else _store2.default.remove(path);
         next();
+    },
+    metaInfo: function metaInfo() {
+        var title = 'M.M.F 小屋';
+        var _$route$params = this.$route.params,
+            id = _$route$params.id,
+            key = _$route$params.key,
+            by = _$route$params.by;
+
+        if (id) {
+            var obj = this.category.find(function (item) {
+                return item._id === id;
+            });
+            if (obj) {
+                title = obj.cate_name + ' - ' + title;
+            }
+        } else if (key) {
+            title = '搜索: ' + key + ' - ' + title;
+        } else if (by) {
+            title = '热门 - ' + title;
+        }
+        return {
+            title: title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
+        };
     }
 };
 
@@ -3643,6 +3684,12 @@ exports.default = {
     },
     mounted: function mounted() {
         this.getUser();
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '帐号 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -3753,6 +3800,12 @@ exports.default = {
     },
     mounted: function mounted() {
         this.$store.dispatch('global/gProgress', 100);
+    },
+    metaInfo: function metaInfo() {
+        return {
+            title: '密码 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        };
     }
 };
 
@@ -8301,16 +8354,22 @@ module.exports = require("util");
 /* 165 */
 /***/ (function(module, exports) {
 
-module.exports = require("vue-router");
+module.exports = require("vue-meta");
 
 /***/ }),
 /* 166 */
 /***/ (function(module, exports) {
 
-module.exports = require("vuex-router-sync");
+module.exports = require("vue-router");
 
 /***/ }),
 /* 167 */
+/***/ (function(module, exports) {
+
+module.exports = require("vuex-router-sync");
+
+/***/ }),
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8328,8 +8387,11 @@ var _app = __webpack_require__(51);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var meta = _app.app.$meta();
+
 exports.default = function (context) {
     _app.router.push(context.url);
+    context.meta = meta;
 
     var ss = Date.now();
     return _promise2.default.all(_app.router.getMatchedComponents().map(function (component) {

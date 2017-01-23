@@ -35,12 +35,7 @@ function createRenderer(bundle) {
 }
 
 function parseIndex(template) {
-    const contentMarker = '<!-- APP -->'
-    const i = template.indexOf(contentMarker)
-    return {
-        head: template.slice(0, i),
-        tail: template.slice(i + contentMarker.length),
-    }
+    return template.split('<!-- APP -->')
 }
 
 const app = express()
@@ -106,10 +101,8 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
     }
     const renderStream = renderer.renderToStream(context)
     renderStream.once('data', () => {
-        // const { title, meta } = context.meta.inject()
-        // indexHTML.head = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-        // indexHTML.head = indexHTML.head.replace(/<meta.*?name="description".*?\/>/g, meta.text())
-        res.write(indexHTML.head)
+        const { title, meta } = context.meta.inject()
+        res.write(indexHTML[0] + title.text() + meta.text() + indexHTML[1])
     })
     renderStream.on('data', chunk => {
         res.write(chunk)
@@ -119,7 +112,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
         if (context.initialState) {
             res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
         }
-        res.end(indexHTML.tail)
+        res.end(indexHTML[2])
         console.log(`===== whole request: ${Date.now() - s}ms =====`)
     })
     renderStream.on('error', err => {
