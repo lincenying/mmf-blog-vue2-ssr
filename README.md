@@ -108,13 +108,13 @@ $ npm install
 # 或者
 $ yarn
 
-# 生成静态文件
-$ npm run build
-
 # 开发模式
 $ npm run dev
 
-# 或者
+# 生产模式
+$ npm run build
+
+# 启动(需先生成静态文件)
 $ npm run start
 ```
 
