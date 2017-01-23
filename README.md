@@ -47,7 +47,7 @@ demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 │  │
 │  ├─pages      // 路由组件
 │  │
-│  ├─polyfill   // ├─polyfill
+│  ├─polyfill   // polyfill
 │  │
 │  ├─router     // 路由配置文件夹
 │  │
@@ -94,9 +94,16 @@ api: api地址 (如果 api 服务器 和网站服务器在同一台主机, 可�
 port: 启动端口
 ```
 
+## 准备工作:
+安装 NodeJS:
+https://nodejs.org/zh-cn/
+
+安装 Mongodb:
+https://www.mongodb.com/download-center#community
+
 ```shell
 # 安装依赖
-$ npm install      
+$ npm install
 
 # 或者
 $ yarn
