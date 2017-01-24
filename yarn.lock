@@ -5192,9 +5192,9 @@ vue-meta@^0.5.3:
     lodash.isplainobject "^4.0.6"
     object-assign "^4.1.0"
 
-vue-router@2.1.1:
-  version "2.1.1"
-  resolved "http://registry.npm.taobao.org/vue-router/download/vue-router-2.1.1.tgz#10c31bbdcb6da92bd3e0223fa12345e73018625a"
+vue-router@2.1.0:
+  version "2.1.0"
+  resolved "http://registry.npm.taobao.org/vue-router/download/vue-router-2.1.0.tgz#c04d5ed79517571d4d668e00a85c8ea0d92c4f87"
 
 vue-server-renderer@^2.1.10:
   version "2.1.10"
