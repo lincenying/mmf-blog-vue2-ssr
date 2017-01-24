@@ -2980,7 +2980,7 @@ exports.default = {
             var top = window.screen.height / 2 - 250;
             var left = window.screen.width / 2 - 300;
             var title = this.item.title + ' - M.M.F 小屋';
-            var url = 'http://www.mmxiaowu.com/article/' + this.item._id;
+            var url = 'https://www.mmxiaowu.com/article/' + this.item._id;
             window.open("http://service.weibo.com/share/share.php?title=" + encodeURIComponent(title.replace(/&nbsp;/g, " ").replace(/<br \/>/g, " ")) + "&url=" + encodeURIComponent(url), "分享至新浪微博", "height=500, width=600, top=" + top + ", left=" + left + ", toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
     }
@@ -7093,7 +7093,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "avatar-img",
     attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
+      "src": "//ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
       "alt": ""
     }
   }), _vm._v(" "), _c('div', {
@@ -7189,7 +7189,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "avatar-img",
     attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
+      "src": "//ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg",
       "alt": ""
     }
   })])
@@ -7279,7 +7279,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "nav-avatar-img",
     attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
+      "src": "//ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
   })])], 1) : _c('span', {
     staticClass: "nav-me"
@@ -7294,7 +7294,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "nav-avatar-img",
     attrs: {
-      "src": "http://ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
+      "src": "//ww2.sinaimg.cn/large/005uQRNCgw1f4ij3d8m05j301s01smwx.jpg"
     }
   })])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;

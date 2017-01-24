@@ -69,7 +69,7 @@ export default {
 .beian i {
     width: 14px;
     height: 14px;
-    background: url(http://ww4.sinaimg.cn/large/005uQRNCgw1f9xoio7mdej300k00k3y9.jpg);
+    background: url(//ww4.sinaimg.cn/large/005uQRNCgw1f9xoio7mdej300k00k3y9.jpg);
     background-size: cover;
     display: inline-block;
     vertical-align: top;
