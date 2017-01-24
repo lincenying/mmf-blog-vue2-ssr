@@ -26,6 +26,9 @@ var config = merge(baseConfig, {
             from: 'static/images/**/*',
             to: path.join(__dirname, '../dist')
         }, {
+            from: 'static/editor.md/**/*',
+            to: path.join(__dirname, '../dist')
+        }, {
             from: 'src/template/admin-add.html',
             to: path.join(__dirname, '../dist')
         }]),
