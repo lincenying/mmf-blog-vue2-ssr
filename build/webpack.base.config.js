@@ -1,7 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const vueConfig = require('./vue-loader.config')
-const projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
     performance: {
@@ -41,22 +39,6 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.vue$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.js$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: vueConfig
-        }, {
             test: /\.js$/,
             loader: 'babel-loader',
             exclude: /node_modules/

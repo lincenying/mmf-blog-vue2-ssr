@@ -4,6 +4,14 @@ const merge = require('webpack-merge')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const base = require('./webpack.base.config')
 
+var query = {}
+if (process.env.NODE_ENV === 'production') {
+    query = {
+        limit: 10000,
+        name: 'static/img/[name].[hash:7].[ext]'
+    }
+}
+
 var config = merge(base, {
     target: 'node',
     devtool: false,
@@ -11,6 +19,16 @@ var config = merge(base, {
     output: {
         filename: 'server/server-bundle.js',
         libraryTarget: 'commonjs2'
+    },
+    module: {
+        rules: [{
+            test: /\.vue$/,
+            loader: 'vue-loader'
+        }, {
+            test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+            loader: 'file-loader',
+            query
+        }]
     },
     resolve: {
         alias: {
