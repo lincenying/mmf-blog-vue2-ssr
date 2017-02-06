@@ -35,7 +35,7 @@ const scrollBehavior = to => {
 }
 
 const guardRoute = (to, from, next) => {
-    var token = cookies.get('b_user') || !inBrowser
+    const token = cookies.get('b_user') || !inBrowser
     if (!token) {
         next('/')
     } else {
