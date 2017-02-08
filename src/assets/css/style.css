@@ -1304,6 +1304,9 @@ a:hover .icon-arrow-right {
         margin-left: -20px;
         margin-right: -20px;
     }
+    .main .main-left .card:last-child {
+        margin-bottom: 10px; 
+    }
 }
 
 .comments {
