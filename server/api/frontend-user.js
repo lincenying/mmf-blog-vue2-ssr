@@ -7,7 +7,7 @@ var User = mongoose.model('User')
 
 var config = require('../config')
 var md5Pre = config.md5Pre
-var secret = config.secret
+var secret = config.secretClient
 var strlen = require('../utils').strlen
 const general = require('./general')
 

@@ -8,7 +8,7 @@ var Admin = mongoose.model('Admin')
 var fsExistsSync = require('../utils').fsExistsSync
 var config = require('../config')
 var md5Pre = config.md5Pre
-var secret = config.secret
+var secret = config.secretServer
 const general = require('./general')
 
 const list = general.list

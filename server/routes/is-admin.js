@@ -1,6 +1,6 @@
 var jwt = require('jsonwebtoken')
 var config = require('../config')
-var secret = config.secret
+var secret = config.secretServer
 
 module.exports = (req, res, next) => {
     var token = req.cookies.b_user,
