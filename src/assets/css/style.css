@@ -1262,6 +1262,9 @@ a:hover .icon-arrow-right {
         float: none;
         margin: 0 auto;
     }
+    .main .main-left .card:last-child {
+        margin-bottom: 10px; 
+    }
     .global-nav .main-nav {
         margin-left: 25px;
     }
