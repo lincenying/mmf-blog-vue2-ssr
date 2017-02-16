@@ -107,6 +107,7 @@ $ npm install
 
 # 或者
 $ yarn
+# 注意: 不要试用 cnpm 安装依赖
 
 # 开发模式
 $ npm run dev
