@@ -129,3 +129,16 @@ http://localhost:8080/backend
 http://localhost:8080/api/backend
 
 管理员添加成功后, 会自动生成 admin.lock 文件锁定, 如果需要继续添加, 请把该文件删除
+
+# 注意:
+由于`babelrc`配置了
+```
+"presets": [
+    ["env", {
+        "targets": {
+            "chrome": 52
+        }
+    }]
+]
+```
+所以, 在开发环境下, 请用 chrome52+ 打开, 如果需要其他低版本浏览器, 请自行修改根目录的`.babelrc`文件
