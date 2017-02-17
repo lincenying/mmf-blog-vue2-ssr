@@ -18,8 +18,14 @@ fieldset, button, input, textarea, th, td {
 /* 设置默认字体 */
 
 body, button, input, select, textarea {
-    color: #999;
+    color: #333;
     outline: none;
+	font-family: -apple-system-font, "Helvetica Neue", Tahoma, "PingFang SC", "lantinghei sc", "Microsoft Yahei", sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
+	-moz-font-feature-settings: 'kern' 1;
+	-o-font-feature-settings: 'kern' 1;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1 {
@@ -130,17 +136,6 @@ article, aside, canvas, figure, figure img, figcaption, hgroup, footer, header, 
 
 nav ul, nav ol {
     list-style: none;
-}
-
-html, textarea, input, select {
-    color: #3e4545;
-    font-weight: 300;
-    font-size: 16px;
-    font-family: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif';
-
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    outline: none;
 }
 
 html {
@@ -1106,7 +1101,7 @@ a {
 
 .topic-item .topic-meta {
     font-size: 14px;
-    color: #bac1c2;
+    color: #666;
     margin-top: 2px;
 }
 
@@ -1264,7 +1259,7 @@ a:hover .icon-arrow-right {
         margin: 0 auto;
     }
     .main .main-left .card:last-child {
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
     .global-nav .main-nav {
         margin-left: 25px;
@@ -1309,7 +1304,7 @@ a:hover .icon-arrow-right {
         margin-right: -20px;
     }
     .main .main-left .card:last-child {
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
 }
 
