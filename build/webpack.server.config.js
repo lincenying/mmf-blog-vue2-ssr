@@ -26,7 +26,7 @@ var config = merge(base, {
             loader: 'vue-loader'
         }, {
             test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-            loader: 'file-loader',
+            loader: 'url-loader',
             query
         }]
     },
