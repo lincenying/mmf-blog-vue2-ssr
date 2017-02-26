@@ -147,7 +147,7 @@ exports.insert = (req, res) => {
 }
 
 exports.getItem = (req, res) => {
-    var json, userid = req.cookies.userid
+    var json, userid = req.query.id || req.cookies.userid
     User.findOneAsync({
         _id: userid,
         is_delete: 0

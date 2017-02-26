@@ -18,11 +18,11 @@ exports.insert = (req, res) => {
         timestamp = moment().format('X'),
         userid = req.cookies.userid,
         username = req.cookies.username
-    if (!content) {
-        res.json({
-            code: -200,
-            message: '请输入评论内容'
-        })
+    if (!id) {
+        res.json({ code: -200, message: '参数错误' })
+        return
+    } else if (!content) {
+        res.json({ code: -200, message: '请输入评论内容' })
         return
     }
     var data = {
