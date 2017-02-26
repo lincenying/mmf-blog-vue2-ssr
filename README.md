@@ -2,6 +2,13 @@
 
 demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 
+## 说明
+
+本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建
+网站分成前台和后台, 前台采用 SSR 模式渲染, 后台采用 SPA 模式
+主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞
+主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint
+
 ## 目录结构
 
 ```
@@ -70,19 +77,11 @@ demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 
 #### 其他版本
 
-react版本: [https://github.com/lincenying/mmf-blog-react](https://github.com/lincenying/mmf-blog-react)
+react spa版本: [https://github.com/lincenying/mmf-blog-react-v2](https://github.com/lincenying/mmf-blog-react-v2)
 
-react(dva)版本: [https://github.com/lincenying/mmf-blog-dva](https://github.com/lincenying/mmf-blog-dva)
+vue2 spa版本: [https://github.com/lincenying/mmf-blog-vue2](https://github.com/lincenying/mmf-blog-vue2)
 
-vue1版本: [https://github.com/lincenying/mmf-blog-vue](https://github.com/lincenying/mmf-blog-vue)
-
-vue2版本: [https://github.com/lincenying/mmf-blog-vue2](https://github.com/lincenying/mmf-blog-vue2)
-
-vue2(jsx语法)版本: [https://github.com/lincenying/mmf-blog-vue2-jsx](https://github.com/lincenying/mmf-blog-vue2-jsx)
-
-vue2(jsx语法,leancloud)版本: [https://github.com/lincenying/mmf-blog-vue2-jsx-lc](https://github.com/lincenying/mmf-blog-vue2-jsx-lc)
-
-vue2 服务端渲染版本: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr)
+vue2 ssr版本: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr)
 
 ---
 
