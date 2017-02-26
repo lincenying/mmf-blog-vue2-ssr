@@ -14,14 +14,16 @@ module.exports = (req, res, next) => {
             } else {
                 return res.json({
                     code: -400,
-                    message: '登录验证失败'
+                    message: '登录验证失败',
+                    data: ''
                 })
             }
         })
     } else {
         return res.json({
             code: -400,
-            message: '请先登录'
+            message: '请先登录',
+            data: ''
         })
     }
 }
