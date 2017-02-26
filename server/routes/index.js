@@ -26,7 +26,6 @@ router.post('/backend', (req, res) => {
 // ------- 文章 -------
 // 管理时, 获取文章列表
 router.get('/backend/article/list', isAdmin, backendArticle.getList)
-router.get('/backend/article/resetlist', isAdmin, backendArticle.resetList)
 // 管理时, 获取单篇文章
 router.get('/backend/article/item', isAdmin, backendArticle.getItem)
 // 管理时, 发布文章

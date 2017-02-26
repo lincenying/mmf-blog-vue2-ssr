@@ -16,34 +16,6 @@ marked.setOptions({
     breaks: true
 })
 
-exports.resetList = (req, res) => {
-    Article.findAsync().then(result => {
-        if (result) {
-            result = result.map(item => {
-                const _id = item._id
-                let date = item.creat_date
-                const arr_date = date.split(":")
-                date = arr_date[0]+":"+arr_date[1]+":00"
-                Article.updateAsync({ _id }, { '$set': { update_date: date } }).then(() => {
-                    console.log(_id + ': ' + date)
-                }).catch(err => {
-                    console.log(_id + ': ' + err)
-                })
-                return item
-            })
-            res.json({
-                code: 200,
-                message: ''
-            })
-        } else {
-            res.json({
-                code: -200,
-                message: '原始密码错误'
-            })
-        }
-    })
-}
-
 /**
  * 管理时, 获取文章列表
  * @method
