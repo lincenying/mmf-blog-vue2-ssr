@@ -13,7 +13,7 @@ var Article = mongoose.model('Article')
  */
 exports.insert = (req, res) => {
     var content = req.body.content,
-        creat_date = moment().format('YYYY-MM-DD HH:MM:SS'),
+        creat_date = moment().format('YYYY-MM-DD HH:mm:ss'),
         id = req.body.id,
         timestamp = moment().format('X'),
         userid = req.cookies.userid,

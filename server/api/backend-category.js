@@ -49,8 +49,8 @@ exports.insert = (req, res) => {
         return Category.createAsync({
             cate_name,
             cate_order,
-            creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
-            update_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+            creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+            update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             is_delete: 0,
             timestamp: moment().format('X')
         }).then(result => {
@@ -77,6 +77,6 @@ exports.modify = (req, res) => {
         cate_order = req.body.cate_order
 
     modify(res, Category, _id, {
-        cate_name, cate_order, update_date: moment().format('YYYY-MM-DD HH:MM:SS')
+        cate_name, cate_order, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     })
 }

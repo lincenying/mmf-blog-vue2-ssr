@@ -16,6 +16,34 @@ marked.setOptions({
     breaks: true
 })
 
+exports.resetList = (req, res) => {
+    Article.findAsync().then(result => {
+        if (result) {
+            result = result.map(item => {
+                const _id = item._id
+                let date = item.creat_date
+                const arr_date = date.split(":")
+                date = arr_date[0]+":"+arr_date[1]+":00"
+                Article.updateAsync({ _id }, { '$set': { update_date: date } }).then(() => {
+                    console.log(_id + ': ' + date)
+                }).catch(err => {
+                    console.log(_id + ': ' + err)
+                })
+                return item
+            })
+            res.json({
+                code: 200,
+                message: ''
+            })
+        } else {
+            res.json({
+                code: -200,
+                message: '原始密码错误'
+            })
+        }
+    })
+}
+
 /**
  * 管理时, 获取文章列表
  * @method
@@ -62,8 +90,8 @@ exports.insert = (req, res) => {
         visit: 0,
         like: 0,
         comment_count: 0,
-        creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
-        update_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+        creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         is_delete: 0,
         timestamp: moment().format('X')
     }
@@ -142,14 +170,20 @@ exports.recover = (req, res) => {
  */
 exports.modify = (req, res) => {
     var category = req.body.category,
-        category_name = req.body.category_name,
         category_old = req.body.category_old,
         content = req.body.content,
         html = marked(content),
-        id = req.body.id,
-        title = req.body.title,
-        update_date = moment().format('YYYY-MM-DD HH:MM:SS')
-    Article.updateAsync({ _id: id }, { '$set': { category, category_name, content, html, title, update_date } }).then(() => {
+        id = req.body.id
+
+    var data = {
+        title: req.body.title,
+        category: req.body.category,
+        category_name: req.body.category_name,
+        content,
+        html,
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
+    }
+    Article.updateAsync({ _id: id }, { '$set': data }).then(() => {
         if (category !== category_old) {
             Promise.all([
                 Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }),

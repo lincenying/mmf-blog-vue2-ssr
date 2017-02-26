@@ -12,17 +12,12 @@ var strlen = require('../utils').strlen
 const general = require('./general')
 
 const list = general.list
-const item = general.item
 const modify = general.modify
 const deletes = general.deletes
 const recover = general.recover
 
 exports.getList = (req, res) => {
     list(req, res, User)
-}
-
-exports.getItem = (req, res) => {
-    item(req, res, User)
 }
 
 /**
@@ -120,8 +115,8 @@ exports.insert = (req, res) => {
                     username,
                     password: md5(md5Pre + password),
                     email,
-                    creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
-                    update_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+                    creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                     is_delete: 0,
                     timestamp: moment().format('X')
                 }).then(() => {
@@ -186,7 +181,7 @@ exports.modify = (req, res) => {
         username = req.body.username
 
     modify(res, User, _id, {
-        email, password, username, update_date: moment().format('YYYY-MM-DD HH:MM:SS')
+        email, password, username, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     })
 }
 

@@ -9,7 +9,7 @@ exports.like = (req, res) => {
     var data = {
         article_id,
         user_id,
-        creat_date: moment().format('YYYY-MM-DD HH:MM:SS'),
+        creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         timestamp: moment().format('X')
     }
     Like.findOneAsync({ article_id, user_id }).then(result => {
