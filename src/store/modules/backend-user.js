@@ -49,7 +49,7 @@ const mutations = {
         }
     },
     ['receiveUserItem'](state, payload) {
-        state.item.data = payload
+        state.item = payload
     },
     ['updateUserItem'](state, payload) {
         state.item.data = payload
