@@ -101,11 +101,11 @@ exports.deletes = (req, res, mongoDB) => {
  * @return {[type]}         [description]
  */
 exports.modify = (res, mongoDB, id, data) => {
-    mongoDB.updateAsync({ _id: id }, { '$set': data }).then(() => {
+    mongoDB.findOneAndUpdateAsync({ _id: id }, data, { new: true }).then(result => {
         res.json({
             code: 200,
             message: '更新成功',
-            data: 'success'
+            data: result
         })
     }).catch(err => {
         res.json({

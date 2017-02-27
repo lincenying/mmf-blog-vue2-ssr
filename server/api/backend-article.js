@@ -93,11 +93,11 @@ exports.insert = (req, res) => {
 exports.deletes = (req, res) => {
     var id = req.query.id
     Article.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
-        return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': -1 } }).then(() => {
+        return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': -1 } }).then(result => {
             res.json({
                 code: 200,
                 message: '更新成功',
-                data: 'success'
+                data: result
             })
         })
     }).catch(err => {
@@ -155,7 +155,7 @@ exports.modify = (req, res) => {
         html,
         update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
-    Article.updateAsync({ _id: id }, { '$set': data }).then(() => {
+    Article.findOneAndUpdateAsync({ _id: id }, data, { new: true }).then(result => {
         if (category !== category_old) {
             Promise.all([
                 Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }),
@@ -164,14 +164,14 @@ exports.modify = (req, res) => {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: 'success'
+                    data: result
                 })
             })
         } else {
             res.json({
                 code: 200,
                 message: '更新成功',
-                data: 'success'
+                data: result
             })
         }
     }).catch(err => {
