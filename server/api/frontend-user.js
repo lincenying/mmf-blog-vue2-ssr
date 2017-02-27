@@ -179,10 +179,11 @@ exports.modify = (req, res) => {
         email = req.body.email,
         password = req.body.password,
         username = req.body.username
-
-    modify(res, User, _id, {
-        email, password, username, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
-    })
+    var data = {
+        email, username, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
+    }
+    if (password) data.password = md5(md5Pre + password)
+    modify(res, User, _id, data)
 }
 
 
