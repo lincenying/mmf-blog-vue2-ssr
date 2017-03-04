@@ -6,8 +6,8 @@ const serverConfig = require('./webpack.server.config')
 
 module.exports = function setupDevServer(app, opts) {
     // modify client config to work with hot middleware
-    clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
-    clientConfig.entry.admin = ['webpack-hot-middleware/client', clientConfig.entry.admin]
+    clientConfig.entry.app = ['./build/dev-client', clientConfig.entry.app]
+    clientConfig.entry.admin = ['./build/dev-client', clientConfig.entry.admin]
     clientConfig.output.filename = '[name].js'
     clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin(), new webpack.NoEmitOnErrorsPlugin())
 

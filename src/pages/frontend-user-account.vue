@@ -26,10 +26,17 @@
 </template>
 
 <script lang="babel">
+import cookies from 'js-cookie'
 import api from '~api'
-import account from '../components/aside-account.vue'
-import aInput from '../components/_input.vue'
+import account from '~components/aside-account.vue'
+import aInput from '~components/_input.vue'
 export default {
+    beforeRouteEnter (to, from, next) {
+        if (cookies.get('user'))
+            next()
+        else
+            next('/')
+    },
     data() {
         return {
             form: {

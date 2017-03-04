@@ -696,9 +696,9 @@ babel-plugin-transform-strict-mode@^6.22.0:
     babel-runtime "^6.22.0"
     babel-types "^6.22.0"
 
-babel-preset-env@^1.1.11:
-  version "1.1.11"
-  resolved "http://registry.npm.taobao.org/babel-preset-env/download/babel-preset-env-1.1.11.tgz#6aac8fc470ed2b38872f0b45b558e41125ea48a9"
+babel-preset-env@^1.2.0:
+  version "1.2.0"
+  resolved "http://registry.npm.taobao.org/babel-preset-env/download/babel-preset-env-1.2.0.tgz#c33f12ddd9c5b822ee47f6316de539ae8dc98e08"
   dependencies:
     babel-plugin-check-es2015-constants "^6.3.13"
     babel-plugin-syntax-trailing-function-commas "^6.13.0"
@@ -1003,19 +1003,12 @@ browserify-zlib@^0.1.4:
   dependencies:
     pako "~0.2.0"
 
-browserslist@^1.0.1, browserslist@^1.4.0, browserslist@^1.5.2, browserslist@^1.7.6:
+browserslist@^1.0.1, browserslist@^1.4.0, browserslist@^1.5.2, browserslist@^1.7.5, browserslist@^1.7.6:
   version "1.7.6"
   resolved "http://registry.npm.taobao.org/browserslist/download/browserslist-1.7.6.tgz#af98589ce6e7ab09618d29451faacb81220bd3ba"
   dependencies:
     caniuse-db "^1.0.30000631"
     electron-to-chromium "^1.2.5"
-
-browserslist@^1.7.5:
-  version "1.7.5"
-  resolved "http://registry.npm.taobao.org/browserslist/download/browserslist-1.7.5.tgz#eca4713897b51e444283241facf3985de49a9e2b"
-  dependencies:
-    caniuse-db "^1.0.30000624"
-    electron-to-chromium "^1.2.3"
 
 bson@~1.0.4:
   version "1.0.4"
@@ -1102,13 +1095,13 @@ caniuse-api@^1.5.2:
     lodash.memoize "^4.1.0"
     lodash.uniq "^4.3.0"
 
-caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000624, caniuse-db@^1.0.30000628:
-  version "1.0.30000628"
-  resolved "http://registry.npm.taobao.org/caniuse-db/download/caniuse-db-1.0.30000628.tgz#3d010e2a8e2537a8d135792e90e4f2ce0eb838cc"
-
-caniuse-db@^1.0.30000631:
+caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000631:
   version "1.0.30000631"
   resolved "http://registry.npm.taobao.org/caniuse-db/download/caniuse-db-1.0.30000631.tgz#8aa6f65cff452c4aba1c2aaa1e724102fbb9114f"
+
+caniuse-db@^1.0.30000628:
+  version "1.0.30000628"
+  resolved "http://registry.npm.taobao.org/caniuse-db/download/caniuse-db-1.0.30000628.tgz#3d010e2a8e2537a8d135792e90e4f2ce0eb838cc"
 
 caseless@~0.11.0:
   version "0.11.0"
@@ -1762,11 +1755,7 @@ ejs@^2.5.6:
   version "2.5.6"
   resolved "http://registry.npm.taobao.org/ejs/download/ejs-2.5.6.tgz#479636bfa3fe3b1debd52087f0acb204b4f19c88"
 
-electron-to-chromium@^1.1.0, electron-to-chromium@^1.2.3:
-  version "1.2.4"
-  resolved "http://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.2.4.tgz#9751cbea89fa120bf88c226ba41eb8d0b6f1b597"
-
-electron-to-chromium@^1.2.5:
+electron-to-chromium@^1.1.0, electron-to-chromium@^1.2.5:
   version "1.2.5"
   resolved "http://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.2.5.tgz#d373727228843dfd8466c276089f13b40927a952"
 
@@ -2030,9 +2019,48 @@ eslint-plugin-vue@^2.0.1:
     eslint-plugin-html "^2.0.0"
     eslint-plugin-react "^6.9.0"
 
-eslint@^3.14.1, eslint@^3.16.1:
+eslint@^3.14.1:
   version "3.16.1"
   resolved "http://registry.npm.taobao.org/eslint/download/eslint-3.16.1.tgz#9bc31fc7341692cf772e80607508f67d711c5609"
+  dependencies:
+    babel-code-frame "^6.16.0"
+    chalk "^1.1.3"
+    concat-stream "^1.4.6"
+    debug "^2.1.1"
+    doctrine "^1.2.2"
+    escope "^3.6.0"
+    espree "^3.4.0"
+    estraverse "^4.2.0"
+    esutils "^2.0.2"
+    file-entry-cache "^2.0.0"
+    glob "^7.0.3"
+    globals "^9.14.0"
+    ignore "^3.2.0"
+    imurmurhash "^0.1.4"
+    inquirer "^0.12.0"
+    is-my-json-valid "^2.10.0"
+    is-resolvable "^1.0.0"
+    js-yaml "^3.5.1"
+    json-stable-stringify "^1.0.0"
+    levn "^0.3.0"
+    lodash "^4.0.0"
+    mkdirp "^0.5.0"
+    natural-compare "^1.4.0"
+    optionator "^0.8.2"
+    path-is-inside "^1.0.1"
+    pluralize "^1.2.1"
+    progress "^1.1.8"
+    require-uncached "^1.0.2"
+    shelljs "^0.7.5"
+    strip-bom "^3.0.0"
+    strip-json-comments "~2.0.1"
+    table "^3.7.8"
+    text-table "~0.2.0"
+    user-home "^2.0.0"
+
+eslint@^3.17.0:
+  version "3.17.0"
+  resolved "http://registry.npm.taobao.org/eslint/download/eslint-3.17.0.tgz#e2704b09c5bae9fb49ee8bafeea3832c7257d498"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -2121,6 +2149,10 @@ eventemitter3@1.x.x:
 events@^1.0.0:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/events/download/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
+
+eventsource-polyfill@^0.9.6:
+  version "0.9.6"
+  resolved "http://registry.npm.taobao.org/eventsource-polyfill/download/eventsource-polyfill-0.9.6.tgz#10e0d187f111b167f28fdab918843ce7d818f13c"
 
 evp_bytestokey@^1.0.0:
   version "1.0.0"
