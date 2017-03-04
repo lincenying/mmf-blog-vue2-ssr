@@ -6,7 +6,7 @@ import config from './config-server'
 const parseCookie = cookies => {
     let cookie = ''
     Object.keys(cookies).forEach(item => {
-        cookie+= item + '=' + cookies[item] + '; '
+        cookie+= item + '=' + encodeURI(cookies[item]) + '; '
     })
     return cookie
 }
