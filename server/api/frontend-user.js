@@ -46,10 +46,11 @@ exports.login = (req, res) => {
         if (result) {
             var id = result._id
             var remember_me = 2592000000
+            username = encodeURI(username)
             var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
             res.cookie('user', token, { maxAge: remember_me })
             res.cookie('userid', id, { maxAge: remember_me })
-            res.cookie('username', encodeURI(username), { maxAge: remember_me })
+            res.cookie('username', username, { maxAge: remember_me })
             json = {
                 code: 200,
                 message: '登录成功',
