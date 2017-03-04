@@ -91,13 +91,17 @@ app.use('/api', routes)
 
 // 前台路由, ssr 渲染
 app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'], (req, res) => {
+    if ((req.originalUrl === '/user/account' || req.originalUrl === '/user/password') && !req.cookies.user) {
+        return res.redirect('/')
+    }
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
     res.setHeader("Content-Type", "text/html")
     var s = Date.now()
     const context = {
-        url: req.url
+        url: req.url,
+        cookies: req.cookies
     }
     const renderStream = renderer.renderToStream(context)
     renderStream.once('data', () => {
@@ -129,6 +133,9 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
 
 // 后台渲染
 app.get(['/backend', '/backend/*'], (req, res) => {
+    if (req.originalUrl !== '/backend' && req.originalUrl !== '/backend/' && !req.cookies.b_user) {
+        return res.redirect('/backend')
+    }
     if (isProd) {
         res.render('admin.html', { title: '登录' })
     } else {

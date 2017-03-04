@@ -16,6 +16,7 @@ import signUp from './components/signup.vue'
 import signIn from './components/signin.vue'
 
 export default {
+    name: 'app',
     computed: {
         ...mapGetters({
             global: 'global/getGlobal'

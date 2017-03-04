@@ -20,6 +20,7 @@ import Navigation from './components/navigation.vue'
 import backendMenu from './components/backend-menu.vue'
 
 export default {
+    name: 'backend',
     computed: {
         ...mapGetters({
             global: 'global/getGlobal'

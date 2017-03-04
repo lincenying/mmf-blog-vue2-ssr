@@ -3,9 +3,18 @@ import qs from 'qs'
 import md5 from 'md5'
 import config from './config-server'
 
+const parseCookie = cookies => {
+    let cookie = ''
+    Object.keys(cookies).forEach(item => {
+        cookie+= item + '=' + cookies[item] + '; '
+    })
+    return cookie
+}
+
 export default {
-    post(url, data) {
-        const key = md5(url + JSON.stringify(data))
+    post(url, data, cookies = {}) {
+        const cookie = parseCookie(cookies)
+        const key = md5(url + JSON.stringify(data) + cookies.username)
         if (config.cached && config.cached.has(key)) {
             return Promise.resolve(config.cached.get(key))
         }
@@ -16,15 +25,17 @@ export default {
             timeout: config.timeout,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                cookie
             }
         }).then(res => {
             if (config.cached) config.cached.set(key, res)
             return res
         })
     },
-    get(url, params) {
-        const key = md5(url + JSON.stringify(params))
+    get(url, params, cookies = {}) {
+        const cookie = parseCookie(cookies)
+        const key = md5(url + JSON.stringify(params) + cookies.username)
         if (config.cached && config.cached.has(key)) {
             return Promise.resolve(config.cached.get(key))
         }
@@ -34,7 +45,8 @@ export default {
             params,
             timeout: config.timeout,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                cookie
             }
         }).then(res => {
             if (config.cached) config.cached.set(key, res)
