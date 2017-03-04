@@ -74,7 +74,7 @@ exports.login = (req, res) => {
             })
             res.cookie('b_user', token, { maxAge: remember_me })
             res.cookie('b_userid', id, { maxAge: remember_me })
-            res.cookie('b_username', username, { maxAge: remember_me })
+            res.cookie('b_username', encodeURI(username), { maxAge: remember_me })
             return res.json({
                 code: 200,
                 message: '登录成功',
