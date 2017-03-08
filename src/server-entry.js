@@ -9,9 +9,6 @@ export default context => {
     context.meta = meta
     // 查找路由匹配的组件, 调用 prefetch 钩子
     const ss = Date.now()
-    if (context.cookies) {
-        store.state.cookies = context.cookies
-    }
     return Promise.all(router.getMatchedComponents().map(component => {
         if (component.prefetch) {
             return component.prefetch(store)
