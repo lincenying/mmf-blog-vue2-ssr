@@ -96,6 +96,8 @@ router.get('/frontend/comment/list', frontendComment.getList)
 router.post('/frontend/user/insert', multipartMiddleware, frontendUser.insert)
 // 前台登录
 router.post('/frontend/user/login', multipartMiddleware, frontendUser.login)
+// 前台退出
+router.post('/frontend/user/logout', isUser, frontendUser.logout)
 // 前台账号读取
 router.get('/frontend/user/account', isUser, frontendUser.getItem)
 // 前台账号修改
