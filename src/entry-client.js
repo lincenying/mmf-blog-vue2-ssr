@@ -1,13 +1,23 @@
 import { app, store, router } from './app'
 
+import "./assets/css/hljs/googlecode.css"
+import "./assets/css/style.css"
+import "./assets/less/frontend.less"
+import "toastr/build/toastr.css"
+import "nprogress/nprogress.css"
+
 router.beforeEach((route, redirect, next) => {
     store.dispatch('global/gProgress', 0)
     next()
 })
 
-store.replaceState(window.__INITIAL_STATE__)
+if (window.__INITIAL_STATE__) {
+    store.replaceState(window.__INITIAL_STATE__)
+}
 
-app.$mount('#app')
+router.onReady(() => {
+    app.$mount('#app')
+})
 
 // only https
 //if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {

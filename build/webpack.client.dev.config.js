@@ -5,6 +5,12 @@ module.exports = {
     devtool: '#source-map',
     module: {
         rules: [{
+            test: /\.css$/,
+            loader: 'style-loader!css-loader!postcss-loader'
+        }, {
+            test: /\.less$/,
+            loader: 'style-loader!css-loader!postcss-loader!less-loader'
+        }, {
             test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
             loader: 'url-loader',
             query: {

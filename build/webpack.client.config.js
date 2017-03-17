@@ -6,7 +6,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const baseConfig = require('./webpack.base.config')
 const devConfig = require('./webpack.client.dev.config')
 const prodConfig = require('./webpack.client.prod.config')
-const utils = require('./utils')
 const vueConfig = require('./vue-loader.config')
 const projectRoot = path.resolve(__dirname, '../')
 
@@ -15,7 +14,23 @@ var config = merge(baseConfig, {
         'jquery': 'jQuery'
     },
     module: {
-        rules: utils.styleLoaders()
+        rules: [{
+            test: /\.vue$/,
+            loader: 'eslint-loader',
+            enforce: "pre",
+            include: projectRoot,
+            exclude: /node_modules/
+        }, {
+            test: /\.js$/,
+            loader: 'eslint-loader',
+            enforce: "pre",
+            include: projectRoot,
+            exclude: /node_modules/
+        }, {
+            test: /\.vue$/,
+            loader: 'vue-loader',
+            options: vueConfig
+        }]
     },
     plugins: [
         new CopyWebpackPlugin([{
@@ -40,28 +55,6 @@ var config = merge(baseConfig, {
             'window.jQuery': 'jquery'
         })
     ]
-})
-
-config = merge(config, {
-    module: {
-        rules: [{
-            test: /\.vue$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.js$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: vueConfig
-        }]
-    },
 })
 
 if (process.env.NODE_ENV === 'production') {
