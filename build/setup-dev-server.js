@@ -41,7 +41,6 @@ module.exports = function setupDevServer(app, opts) {
     // watch and update server renderer
     const serverCompiler = webpack(serverConfig)
     const mfs = new MFS()
-    const outputPath = path.join(serverConfig.output.path, serverConfig.output.filename)
     serverCompiler.outputFileSystem = mfs
     serverCompiler.watch({}, (err, stats) => {
         if (err)
@@ -49,6 +48,7 @@ module.exports = function setupDevServer(app, opts) {
         stats = stats.toJson()
         stats.errors.forEach(err => console.error(err))
         stats.warnings.forEach(err => console.warn(err))
-        opts.bundleUpdated(mfs.readFileSync(outputPath, 'utf-8'))
+        const bundlePath = path.join(serverConfig.output.path, 'vue-ssr-bundle.json')
+        opts.bundleUpdated(JSON.parse(mfs.readFileSync(bundlePath, 'utf-8')))
     })
 }

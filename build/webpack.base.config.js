@@ -6,7 +6,7 @@ module.exports = {
         hints: false
     },
     entry: {
-        app: './src/client-entry.js',
+        app: './src/entry-client.js',
         admin: './src/admin.js',
         vendor: ['vue', 'vue-router', 'vuex', 'vuex-router-sync', 'axios']
     },

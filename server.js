@@ -6,12 +6,16 @@ const path = require('path')
 const favicon = require('serve-favicon')
 const express = require('express')
 const compression = require('compression')
-const serialize = require('serialize-javascript')
+const HTMLStream = require('vue-ssr-html-stream')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
+
+const serverInfo =
+  `express/${require('express/package.json').version} ` +
+  `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 // 引入 mongoose 相关模型
 require('./server/models/admin')
@@ -34,10 +38,6 @@ function createRenderer(bundle) {
     })
 }
 
-function parseIndex(template) {
-    return template.split('<!-- APP -->')
-}
-
 const app = express()
 
 // 由 html-webpack-plugin 生成
@@ -47,8 +47,8 @@ let adminHTML
 let renderer
 if (isProd) {
     // 生产模式: 从 fs 创建服务器 HTML 渲染器和索引
-    renderer = createRenderer(fs.readFileSync(resolve('./dist/server/server-bundle.js'), 'utf-8'))
-    indexHTML = parseIndex(fs.readFileSync(resolve('./dist/server.html'), 'utf-8'))
+    renderer = createRenderer(require('./dist/vue-ssr-bundle.json'), 'utf-8')
+    indexHTML = fs.readFileSync(resolve('./dist/server.html'), 'utf-8')
 } else {
     // 开发模式: 设置带有热重新加载的 dev 服务器，并在文件更改时更新渲染器和索引 HTML
     require('./build/setup-dev-server')(app, {
@@ -56,7 +56,7 @@ if (isProd) {
             renderer = createRenderer(bundle)
         },
         indexUpdated: index => {
-            indexHTML = parseIndex(index)
+            indexHTML = index
         },
         adminUpdated: index => {
             adminHTML = index
@@ -86,6 +86,7 @@ app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use('/server', serve('./dist/server'))
 app.use('/static', serve('./dist/static'))
+app.use('/manifest.json', serve('./manifest.json'))
 // api 路由
 app.use('/api', routes)
 
@@ -97,38 +98,37 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
+    const s = Date.now()
+
     res.setHeader("Content-Type", "text/html")
-    var s = Date.now()
+    res.setHeader("Server", serverInfo)
+
+    const errorHandler = err => {
+        if (err && err.code === 404) {
+            res.status(404).end('404 | Page Not Found')
+        } else {
+            // Render Error Page or Redirect
+            res.status(500).end('Internal Error 500')
+            console.error(`error during render : ${req.url}`)
+            console.error(err)
+        }
+    }
+
     const context = {
         url: req.url,
         cookies: req.cookies
     }
-    const renderStream = renderer.renderToStream(context)
-    renderStream.once('data', () => {
-        const { title, meta } = context.meta.inject()
-        res.write(indexHTML[0] + title.text() + meta.text() + indexHTML[1])
+
+    const htmlStream = new HTMLStream({ template: indexHTML, context })
+    htmlStream.on('beforeStart', () => {
+        const meta = context.meta.inject()
+        context.head = (context.head || '') + meta.title.text()
     })
-    renderStream.on('data', chunk => {
-        res.write(chunk)
-    })
-    renderStream.on('end', () => {
-        // 嵌入初始 store 状态
-        if (context.initialState) {
-            res.write('<script>window.__INITIAL_STATE__=' + serialize(context.initialState, {isJSON: true}) + '</script>')
-        }
-        res.end(indexHTML[2])
-        console.log(`===== whole request: ${Date.now() - s}ms =====`)
-    })
-    renderStream.on('error', err => {
-        if (err && err.code === '404') {
-            res.status(404).end('404 | Page Not Found')
-            return
-        }
-        // 渲染错误页面或重定向
-        res.status(500).end('Internal Error 500')
-        console.error(`error during render : ${req.url}`)
-        console.error(err)
-    })
+    renderer.renderToStream(context)
+        .on('error', errorHandler)
+        .pipe(htmlStream)
+        .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
+        .pipe(res)
 })
 
 // 后台渲染
@@ -160,10 +160,6 @@ app.use(function(err, req, res) {
 })
 
 const port = process.env.PORT || config.port || 8080
-app.listen(port, err => {
-    if (err) {
-        console.log(err)
-        return
-    }
+app.listen(port, () => {
     console.log(`server started at localhost:${port}`)
 })

@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const VueSSRPlugin = require('vue-ssr-webpack-plugin')
 const base = require('./webpack.base.config')
 
 var query = {}
@@ -14,8 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 
 var config = merge(base, {
     target: 'node',
-    devtool: false,
-    entry: './src/server-entry.js',
+    entry: './src/entry-server.js',
     output: {
         filename: 'server/server-bundle.js',
         libraryTarget: 'commonjs2'
@@ -45,7 +44,8 @@ var config = merge(base, {
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
             'process.env.VUE_ENV': '"server"',
             'global.GENTLY': false
-        })
+        }),
+        new VueSSRPlugin(),
     ]
 })
 module.exports = config

@@ -49,10 +49,6 @@ export default {
 }
 </script>
 <style media="screen">
-@import "./assets/css/hljs/googlecode.css";
-@import "./assets/css/style.css";
-@import "../node_modules/toastr/build/toastr.css";
-@import "../node_modules/nprogress/nprogress.css";
 .fade-enter-active, .fade-leave-active {
     transition: all 0.3s ease;
 }

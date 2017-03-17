@@ -15,7 +15,23 @@ var config = merge(baseConfig, {
         'jquery': 'jQuery'
     },
     module: {
-        rules: utils.styleLoaders()
+        rules: [{
+            test: /\.vue$/,
+            loader: 'eslint-loader',
+            enforce: "pre",
+            include: projectRoot,
+            exclude: /node_modules/
+        }, {
+            test: /\.js$/,
+            loader: 'eslint-loader',
+            enforce: "pre",
+            include: projectRoot,
+            exclude: /node_modules/
+        }, {
+            test: /\.vue$/,
+            loader: 'vue-loader',
+            options: vueConfig
+        }]
     },
     plugins: [
         new CopyWebpackPlugin([{
@@ -40,28 +56,6 @@ var config = merge(baseConfig, {
             'window.jQuery': 'jquery'
         })
     ]
-})
-
-config = merge(config, {
-    module: {
-        rules: [{
-            test: /\.vue$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.js$/,
-            loader: 'eslint-loader',
-            enforce: "pre",
-            include: projectRoot,
-            exclude: /node_modules/
-        }, {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: vueConfig
-        }]
-    },
 })
 
 if (process.env.NODE_ENV === 'production') {
