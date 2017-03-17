@@ -1,14 +1,17 @@
-var utils = require('./utils')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-var options = {
-    sourceMap: true
-}
+var loaders = {}
 if (process.env.NODE_ENV === 'production') {
-    options = {
-        sourceMap: false,
-        extract: true,
+    loaders = {
+        css: 'vue-style-loader!css-loader!postcss-loader',
+        less: 'vue-style-loader!css-loader!postcss-loader!less-loader'
+    }
+} else {
+    loaders = {
+        css: ExtractTextPlugin.extract({fallback: 'vue-style-loader', use: 'css-loader!postcss-loader'}),
+        less: ExtractTextPlugin.extract({fallback: 'vue-style-loader', use: 'css-loader!postcss-loader!less-loader'})
     }
 }
 module.exports = {
-    loaders: utils.cssLoaders(options)
+    loaders: loaders
 }

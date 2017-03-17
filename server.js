@@ -28,12 +28,12 @@ require('./server/models/user')
 // 引入 api 路由
 const routes = require('./server/routes/index')
 
-function createRenderer(bundle) {
-    // https://github.com/vuejs/vue/blob/next/packages/vue-server-renderer/README.md#why-use-bundlerenderer
+function createRenderer (bundle) {
+  // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
     return require('vue-server-renderer').createBundleRenderer(bundle, {
         cache: require('lru-cache')({
             max: 1000,
-            maxAge: 1000 * 60 * 15,
+            maxAge: 1000 * 60 * 15
         })
     })
 }
@@ -41,26 +41,21 @@ function createRenderer(bundle) {
 const app = express()
 
 // 由 html-webpack-plugin 生成
-let indexHTML
-let adminHTML
+let frontend
+let backend
 // 创建来自 webpack 生成的服务端包
 let renderer
 if (isProd) {
     // 生产模式: 从 fs 创建服务器 HTML 渲染器和索引
-    renderer = createRenderer(require('./dist/vue-ssr-bundle.json'), 'utf-8')
-    indexHTML = fs.readFileSync(resolve('./dist/server.html'), 'utf-8')
+    const bundle = require('./dist/vue-ssr-bundle.json')
+    frontend = fs.readFileSync(resolve('./dist/server.html'), 'utf-8')
+    renderer = createRenderer(bundle)
 } else {
     // 开发模式: 设置带有热重新加载的 dev 服务器，并在文件更改时更新渲染器和索引 HTML
-    require('./build/setup-dev-server')(app, {
-        bundleUpdated: bundle => {
-            renderer = createRenderer(bundle)
-        },
-        indexUpdated: index => {
-            indexHTML = index
-        },
-        adminUpdated: index => {
-            adminHTML = index
-        },
+    require('./build/setup-dev-server')(app, (bundle, _template) => {
+        frontend = _template.frontend
+        backend = _template.backend
+        renderer = createRenderer(bundle)
     })
 }
 
@@ -84,8 +79,8 @@ app.use(cookieParser())
 // 设置 express 根目录
 app.use(express.static(path.join(__dirname, 'dist')))
 
-app.use('/server', serve('./dist/server'))
-app.use('/static', serve('./dist/static'))
+app.use('/server', serve('./dist/server', true))
+app.use('/static', serve('./dist/static', true))
 app.use('/manifest.json', serve('./manifest.json'))
 // api 路由
 app.use('/api', routes)
@@ -119,7 +114,7 @@ app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trendi
         cookies: req.cookies
     }
 
-    const htmlStream = new HTMLStream({ template: indexHTML, context })
+    const htmlStream = new HTMLStream({ template: frontend, context })
     htmlStream.on('beforeStart', () => {
         const meta = context.meta.inject()
         context.head = (context.head || '') + meta.title.text()
@@ -139,7 +134,7 @@ app.get(['/backend', '/backend/*'], (req, res) => {
     if (isProd) {
         res.render('admin.html', { title: '登录' })
     } else {
-        res.send(adminHTML)
+        res.send(backend)
     }
 })
 

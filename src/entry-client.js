@@ -2,6 +2,7 @@ import { app, store, router } from './app'
 
 import "./assets/css/hljs/googlecode.css"
 import "./assets/css/style.css"
+import "./assets/less/frontend.less"
 import "toastr/build/toastr.css"
 import "nprogress/nprogress.css"
 
@@ -10,10 +11,11 @@ router.beforeEach((route, redirect, next) => {
     next()
 })
 
-store.replaceState(window.__INITIAL_STATE__)
+if (window.__INITIAL_STATE__) {
+    store.replaceState(window.__INITIAL_STATE__)
+}
 
 router.onReady(() => {
-    // actually mount to DOM
     app.$mount('#app')
 })
 

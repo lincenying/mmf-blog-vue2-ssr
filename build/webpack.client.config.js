@@ -6,7 +6,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const baseConfig = require('./webpack.base.config')
 const devConfig = require('./webpack.client.dev.config')
 const prodConfig = require('./webpack.client.prod.config')
-const utils = require('./utils')
 const vueConfig = require('./vue-loader.config')
 const projectRoot = path.resolve(__dirname, '../')
 
