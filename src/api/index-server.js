@@ -32,7 +32,7 @@ export default {
                 cookie
             }
         }).then(res => {
-            if (config.cached) config.cached.set(key, res)
+            if (config.cached && data.cache) config.cached.set(key, res)
             return res
         })
     },
@@ -52,7 +52,7 @@ export default {
                 cookie
             }
         }).then(res => {
-            if (config.cached) config.cached.set(key, res)
+            if (config.cached && params.cache) config.cached.set(key, res)
             return res
         })
     }
