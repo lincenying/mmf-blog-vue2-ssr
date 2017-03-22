@@ -8,7 +8,7 @@ module.exports = {
     entry: {
         app: './src/entry-client.js',
         admin: './src/admin.js',
-        vendor: ['vue', 'vue-router', 'vuex', 'vuex-router-sync', 'axios']
+        vendor: ['./src/polyfill']
     },
     output: {
         path: path.resolve(__dirname, '../dist'),

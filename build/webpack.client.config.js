@@ -33,22 +33,6 @@ var config = merge(baseConfig, {
         }]
     },
     plugins: [
-        new CopyWebpackPlugin([{
-            from: 'robots.txt',
-            to: path.join(__dirname, '../dist')
-        }, {
-            from: 'favicon.ico',
-            to: path.join(__dirname, '../dist')
-        }, {
-            from: 'static/images/**/*',
-            to: path.join(__dirname, '../dist')
-        }, {
-            from: 'static/editor.md/**/*',
-            to: path.join(__dirname, '../dist')
-        }, {
-            from: 'src/template/admin-add.html',
-            to: path.join(__dirname, '../dist')
-        }]),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',

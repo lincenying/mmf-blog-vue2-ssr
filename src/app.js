@@ -14,7 +14,7 @@ Object.keys(filters).forEach(key => {
 const app = new Vue({
     router,
     store,
-    ...App
+    render: h => h(App)
 })
 
 export { app, router, store }
