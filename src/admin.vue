@@ -13,7 +13,7 @@
     </div>
 </div>
 </template>
-<script lang="babel">
+<script>
 import { mapGetters } from 'vuex'
 import NProgress from 'nprogress'
 import Navigation from './components/navigation.vue'

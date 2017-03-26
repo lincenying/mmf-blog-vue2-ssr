@@ -1,7 +1,12 @@
+const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-//const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+
+const srcDir = path.resolve(__dirname, '../dist/').replace(/\\/g, "\/")
+const prefixMulti = {}
+prefixMulti[srcDir] = ''
 
 module.exports = {
     devtool: false,
@@ -41,12 +46,13 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),
-        // new SWPrecachePlugin({
-        //     cacheId: 'vue-hn',
-        //     filename: 'server/service-worker.js',
-        //     dontCacheBustUrlsMatching: /./,
-        //     staticFileGlobsIgnorePatterns: [/server\.html$/, /\.map$/]
-        // }),
+        new SWPrecachePlugin({
+            cacheId: 'mmf-blog-vue2-ssr',
+            filename: 'service-worker.js',
+            dontCacheBustUrlsMatching: /./,
+            staticFileGlobsIgnorePatterns: [/server\.html$/, /admin\.html$/, /\.map$/],
+            stripPrefixMulti: prefixMulti
+        }),
         new HtmlWebpackPlugin({
             chunks: [
                 'manifest', 'vendor', 'app',

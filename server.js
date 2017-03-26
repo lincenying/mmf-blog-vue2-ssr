@@ -82,6 +82,7 @@ app.use(express.static(path.join(__dirname, 'dist')))
 app.use('/server', serve('./dist/server', true))
 app.use('/static', serve('./dist/static', true))
 app.use('/manifest.json', serve('./manifest.json'))
+app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // api 路由
 app.use('/api', routes)
 
