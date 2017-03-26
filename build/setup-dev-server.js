@@ -18,10 +18,7 @@ module.exports = function setupDevServer (app, callback) {
     const clientCompiler = webpack(clientConfig)
     const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
         publicPath: clientConfig.output.publicPath,
-        stats: {
-            colors: true,
-            chunks: false
-        }
+        noInfo: true
     })
     app.use(devMiddleware)
     clientCompiler.plugin('done', () => {

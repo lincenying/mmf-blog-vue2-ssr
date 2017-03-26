@@ -1,9 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const isProd = process.env.NODE_ENV === 'production'
 
-module.exports = {
+const config = {
     performance: {
-        hints: false
+        maxEntrypointSize: 300000,
+        hints: isProd ? 'warning' : false
     },
     entry: {
         app: './src/entry-client.js',
@@ -53,3 +56,5 @@ module.exports = {
         })
     ]
 }
+!isProd && config.plugins.push(new FriendlyErrorsPlugin())
+module.exports = config
