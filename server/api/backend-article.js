@@ -24,7 +24,7 @@ marked.setOptions({
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    list(req, res, Article)
+    list(req, res, Article, '-update_date')
 }
 
 /**
