@@ -18,6 +18,7 @@ exports.insert = (req, res) => {
         timestamp = moment().format('X'),
         userid = req.cookies.userid,
         username = req.cookies.username
+    username = decodeURI(username)
     if (!id) {
         res.json({ code: -200, message: '参数错误' })
         return
