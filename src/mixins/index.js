@@ -10,7 +10,7 @@ const serverTitleMixin = {
         const meta = getTitle(this)
         if (meta) {
             this.$ssrContext.title = meta.title || meta
-            this.$ssrContext.description = meta.title || meta
+            this.$ssrContext.description = meta.desc || meta
         }
     }
 }
