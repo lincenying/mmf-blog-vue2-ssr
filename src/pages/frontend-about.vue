@@ -53,6 +53,7 @@
 </template>
 <script lang="babel">
 import { mapGetters } from 'vuex'
+import metaMixin from '~mixins'
 import trending from '../components/aside-trending.vue'
 
 const fetchInitialData = async store => {
@@ -62,6 +63,7 @@ const fetchInitialData = async store => {
 export default {
     name: 'frontend-index',
     prefetch: fetchInitialData,
+    mixins: [metaMixin],
     components: {
         trending
     },
@@ -77,11 +79,8 @@ export default {
             this.$store.dispatch('global/gProgress', 100)
         }
     },
-    metaInfo () {
-        return {
-            title: '关于 - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
-        }
+    title() {
+        return '关于 - M.M.F 小屋'
     }
 }
 </script>

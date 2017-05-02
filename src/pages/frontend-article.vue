@@ -36,6 +36,7 @@
 
 <script lang="babel">
 import { mapGetters } from 'vuex'
+import metaMixin from '~mixins'
 import actions from '../components/item-actions.vue'
 import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
@@ -49,6 +50,7 @@ const fetchInitialData = async store => {
 export default {
     name: 'frontend-article',
     prefetch: fetchInitialData,
+    mixins: [metaMixin],
     computed: {
         ...mapGetters({
             article: 'frontend/article/getArticleItem',
@@ -77,12 +79,8 @@ export default {
             fetchInitialData(this.$store)
         }
     },
-    metaInfo () {
-        const title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
-        return {
-            title,
-            meta: [{ vmid: 'description', name: 'description', content: title }]
-        }
-    }
+    title() {
+        return this.article && this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
+    },
 }
 </script>
