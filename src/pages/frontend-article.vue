@@ -51,6 +51,11 @@ export default {
     name: 'frontend-article',
     prefetch: fetchInitialData,
     mixins: [metaMixin],
+    beforeRouteUpdate(to, from, next) {
+        if (to.path !== from.path) fetchInitialData(this.$store)
+        else this.$store.dispatch('global/gProgress', 100)
+        next()
+    },
     computed: {
         ...mapGetters({
             article: 'frontend/article/getArticleItem',
@@ -73,11 +78,6 @@ export default {
     },
     mounted() {
         fetchInitialData(this.$store)
-    },
-    watch: {
-        '$route'() {
-            fetchInitialData(this.$store)
-        }
     },
     title() {
         return this.article && this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
