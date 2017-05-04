@@ -68,7 +68,7 @@ export default {
     methods: {
         addTarget(content) {
             if (!content) return ''
-            return content.replace(/<a(.*?)href=/g, '<a$1target="_blank" href=')
+            return content.replace(/<a(.*?)href="http/g, '<a$1target="_blank" href="http')
         }
     },
     mounted() {
