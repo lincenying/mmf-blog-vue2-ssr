@@ -1,5 +1,5 @@
 <template>
-    <div v-if="scrollTop > 1000" class="back-top">
+    <div v-show="scrollTop > 500" class="back-top">
         <a @click="handleBackTop" href="javascript:;"></a>
     </div>
 </template>
