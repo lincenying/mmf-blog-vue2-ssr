@@ -183,6 +183,10 @@ async-each@^1.0.0:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/async-each/download/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
 
+async-validator@^1.6.7:
+  version "1.6.9"
+  resolved "http://registry.npm.taobao.org/async-validator/download/async-validator-1.6.9.tgz#a8309daa8b83421cdbd4628e026d6abb25192d34"
+
 async@2.1.4:
   version "2.1.4"
   resolved "http://registry.npm.taobao.org/async/download/async-2.1.4.tgz#2d2160c7788032e4dd6cbe2502f1f9a2c8f6cde4"
@@ -1284,7 +1288,7 @@ copy-webpack-plugin@^4.0.0:
     minimatch "^3.0.0"
     node-dir "^0.1.10"
 
-core-js@^2.4.0:
+core-js@^2.4.0, core-js@^2.4.1:
   version "2.4.1"
   resolved "http://registry.npm.taobao.org/core-js/download/core-js-2.4.1.tgz#4de911e667b0eae9124e34254b53aea6fc618d3e"
 
@@ -1532,7 +1536,7 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "http://registry.npm.taobao.org/deep-is/download/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-deepmerge@^1.2.0:
+deepmerge@^1.2.0, deepmerge@^1.3.1:
   version "1.3.2"
   resolved "http://registry.npm.taobao.org/deepmerge/download/deepmerge-1.3.2.tgz#1663691629d4dbfe364fa12a2a4f0aa86aa3a050"
 
@@ -2918,6 +2922,15 @@ isstream@0.1.x, isstream@~0.1.2:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/isstream/download/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
+iview@^2.0.0-rc.12:
+  version "2.0.0-rc.12"
+  resolved "http://registry.npm.taobao.org/iview/download/iview-2.0.0-rc.12.tgz#f82bae94c08a992221da28a4a7c3febda854d0cb"
+  dependencies:
+    async-validator "^1.6.7"
+    core-js "^2.4.1"
+    deepmerge "^1.3.1"
+    popper.js "^0.6.4"
+
 jodid25519@^1.0.0:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/jodid25519/download/jodid25519-1.0.2.tgz#06d4912255093419477d425633606e0e90782967"
@@ -3829,6 +3842,10 @@ pkg-up@^1.0.0:
 pluralize@^1.2.1:
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/pluralize/download/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
+
+popper.js@^0.6.4:
+  version "0.6.4"
+  resolved "http://registry.npm.taobao.org/popper.js/download/popper.js-0.6.4.tgz#1837c4760af54d2bb20b66f9c09b92993d84c629"
 
 postcss-calc@^5.2.0:
   version "5.3.1"

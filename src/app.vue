@@ -6,6 +6,7 @@
     </transition>
     <sign-up v-if="!backend" :show="global.showRegisterModal"></sign-up>
     <sign-in v-if="!backend" :show="global.showLoginModal"></sign-in>
+    <back-top></back-top>
 </div>
 </template>
 <script lang="babel">
@@ -14,6 +15,7 @@ import NProgress from 'nprogress'
 import Navigation from './components/navigation.vue'
 import signUp from './components/signup.vue'
 import signIn from './components/signin.vue'
+import backTop from './components/backtop.vue'
 
 export default {
     name: 'app',
@@ -31,7 +33,8 @@ export default {
     components: {
         Navigation,
         signUp,
-        signIn
+        signIn,
+        backTop,
     },
     watch: {
         'global.progress'(val) {

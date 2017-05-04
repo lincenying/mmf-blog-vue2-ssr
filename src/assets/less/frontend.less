@@ -30,3 +30,30 @@
 .flex-item .flex-label {
     width: 70px;
 }
+
+.back-top {
+    position: fixed;
+    left: 50%;
+    bottom: 10%;
+    width: 35px;
+    height: 35px;
+    margin-left: 520px;
+    a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-image: url(../images/back-top-1.png);
+        background-size: cover;
+        &:hover {
+            background-image: url(../images/back-top-2.png);
+        }
+    }
+}
+
+.card + .card-affix {
+    margin-top: 10px;
+}
+
+.ivu-affix {
+    position: fixed;
+}
