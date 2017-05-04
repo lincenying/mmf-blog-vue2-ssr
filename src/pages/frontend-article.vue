@@ -79,8 +79,12 @@ export default {
     mounted() {
         fetchInitialData(this.$store)
     },
-    title() {
-        return this.article && this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
-    },
+    metaInfo () {
+        const title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'
+        return {
+            title,
+            meta: [{ vmid: 'description', name: 'description', content: title }]
+        }
+    }
 }
 </script>

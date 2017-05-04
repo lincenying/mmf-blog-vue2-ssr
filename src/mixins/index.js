@@ -1,7 +1,7 @@
 function getTitle (vm) {
-    const { title } = vm.$options
-    if (title) {
-        return typeof title === 'function' ? title.call(vm) : title
+    const { metaInfo } = vm.$options
+    if (metaInfo) {
+        return typeof metaInfo === 'function' ? metaInfo.call(vm) : metaInfo
     }
 }
 
@@ -17,10 +17,7 @@ const serverTitleMixin = {
 
 const clientTitleMixin = {
     mounted () {
-        const meta = getTitle(this)
-        if (meta) {
-            document.title = meta.title || meta
-        }
+
     }
 }
 
