@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 
 var config = merge(base, {
     target: 'node',
-    devtool: '#source-map',
+    devtool: false,
     entry: './src/entry-server.js',
     output: {
         filename: 'server/server-bundle.js',

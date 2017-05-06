@@ -16,7 +16,8 @@ const config = {
     output: {
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/',
-        filename: 'static/js/[name].[chunkhash:7].js'
+        filename: 'static/js/[name].[chunkhash:7].js',
+        chunkFilename: 'static/js/[name].[chunkhash:7].js',
     },
     resolve: {
         extensions: [
