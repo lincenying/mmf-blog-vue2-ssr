@@ -20,6 +20,6 @@ router.onReady(() => {
 })
 
 // only https
-if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator && window.location.hostname !== 'localhost') {
     navigator.serviceWorker.register('/service-worker.js')
 }
