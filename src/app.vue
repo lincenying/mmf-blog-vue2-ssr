@@ -1,12 +1,14 @@
 <template>
 <div id="app" class="g-doc">
-    <Navigation :backend="backend"></Navigation>
+    <Navigation :backend="backend" />
     <transition name="fade" mode="out-in">
         <router-view :key="key" class="router"></router-view>
     </transition>
-    <sign-up v-if="!backend" :show="global.showRegisterModal"></sign-up>
-    <sign-in v-if="!backend" :show="global.showLoginModal"></sign-in>
-    <back-top></back-top>
+    <template v-if="!backend">
+        <sign-up :show="global.showRegisterModal"></sign-up>
+        <sign-in :show="global.showLoginModal"></sign-in>
+    </template>
+    <back-top />
 </div>
 </template>
 <script lang="babel">
