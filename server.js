@@ -30,7 +30,7 @@ require('./server/models/user')
 const routes = require('./server/routes/index')
 
 function createRenderer (bundle, template) {
-  // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
+    // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
     return createBundleRenderer(bundle, {
         template,
         cache: require('lru-cache')({

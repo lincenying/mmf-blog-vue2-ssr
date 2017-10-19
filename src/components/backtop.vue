@@ -15,7 +15,7 @@ export default {
         scrolling() {
             if (window.scrollTime) window.clearTimeout(window.scrollTime)
             window.scrollTime = window.setTimeout(() => {
-                this.scrollTop = document.body.scrollTop
+                this.scrollTop = document.body.scrollTop || window.scrollY
             }, 100)
         },
         handleBackTop() {

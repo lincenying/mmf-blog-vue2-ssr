@@ -62,7 +62,7 @@ export default {
         }
     },
     beforeRouteLeave(to, from, next) {
-        const scrollTop = document.body.scrollTop
+        const scrollTop = document.body.scrollTop || window.scrollY
         const path = from.path
         if (scrollTop) ls.set(path, scrollTop)
         else ls.remove(path)
