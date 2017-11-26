@@ -32,7 +32,7 @@ export default {
             return this.$route.path.indexOf('backend') >= 0
         },
         isLogin() {
-            return this.$route.path === '/backend'
+            return ['/backend', '/backend/'].includes(this.$route.path)
         }
     },
     components: {
