@@ -37,6 +37,7 @@
 import cookies from 'js-cookie'
 import api from '~api'
 export default {
+    name: 'frontend-comment',
     props: ['comments'],
     data () {
         return {

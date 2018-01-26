@@ -20,12 +20,18 @@
 <script lang="babel">
 import api from '~api'
 import { mapGetters } from 'vuex'
+import checkAdmin from '~mixins/check-admin'
 import aInput from '../components/_input.vue'
-const fetchInitialData = async store => {
-    await store.dispatch('global/category/getCategoryItem')
-}
+
 export default {
     name: 'backend-category-modify',
+    mixins: [checkAdmin],
+    async asyncData({store, route}) {
+        await store.dispatch('global/category/getCategoryItem', {
+            path: route.path,
+            id: route.params.id
+        })
+    },
     data() {
         return {
             form: {
@@ -61,17 +67,19 @@ export default {
         }
     },
     mounted() {
-        if (!this.item._id || this.item.path !== this.$route.path) {
-            fetchInitialData(this.$store)
-        } else {
-            this.form.cate_name = this.item.cate_name
-            this.form.cate_order = this.item.cate_order
-        }
+        this.form.cate_name = this.item.data.cate_name
+        this.form.cate_order = this.item.data.cate_order
     },
     watch: {
         item(val) {
-            this.form.cate_name = val.cate_name
-            this.form.cate_order = val.cate_order
+            this.form.cate_name = val.data.cate_name
+            this.form.cate_order = val.data.cate_order
+        }
+    },
+    metaInfo () {
+        return {
+            title: '编辑分类 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

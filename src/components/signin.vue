@@ -23,6 +23,7 @@
 <script lang="babel">
 import api from '~api'
 export default {
+    name: 'sign-in',
     props: ['show'],
     data() {
         return {

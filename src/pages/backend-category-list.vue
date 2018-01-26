@@ -19,19 +19,30 @@
 
 <script lang="babel">
 import { mapGetters } from 'vuex'
-const fetchInitialData = async (store, config = { limit: 99}) => {
-    await store.dispatch('global/category/getCategoryList', config)
-}
+import checkAdmin from '~mixins/check-admin'
+
 export default {
     name: 'backend-category-list',
+    mixins: [checkAdmin],
+    async asyncData({store, route}, config = { limit: 99 }) {
+        config.all = 1
+        await store.dispatch('global/category/getCategoryList', {
+            ...config,
+            path: route.path
+        })
+    },
     computed: {
         ...mapGetters({
             category: 'global/category/getCategoryList'
         })
     },
     mounted() {
-        if (this.category.length <= 0) {
-            fetchInitialData(this.$store)
+
+    },
+    metaInfo () {
+        return {
+            title: '分类列表 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

@@ -26,13 +26,19 @@
 </template>
 
 <script lang="babel">
-import api from '~api'
 import { mapGetters } from 'vuex'
-const fetchInitialData = async (store, config = { page: 1}) => {
-    await store.dispatch('backend/article/getArticleList', config)
-}
+import api from '~api'
+import checkAdmin from '~mixins/check-admin'
+
 export default {
     name: 'backend-article-list',
+    mixins: [checkAdmin],
+    async asyncData({store, route}, config = { page: 1 }) {
+        await store.dispatch('backend/article/getArticleList', {
+            ...config,
+            path: route.path
+        })
+    },
     computed: {
         ...mapGetters({
             topics: 'backend/article/getArticleList'
@@ -40,7 +46,7 @@ export default {
     },
     methods: {
         loadMore(page = this.topics.page + 1) {
-            fetchInitialData(this.$store, {page})
+            this.$options.asyncData({store: this.$store, route: this.$route}, {page})
         },
         async recover(id) {
             const { data: { code, message} } = await api.get('backend/article/recover', { id })
@@ -64,8 +70,12 @@ export default {
         }
     },
     mounted() {
-        if (this.topics.data.length <= 0) {
-            fetchInitialData(this.$store)
+
+    },
+    metaInfo () {
+        return {
+            title: '文章列表 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

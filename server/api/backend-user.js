@@ -61,8 +61,7 @@ exports.login = (req, res) => {
         username,
         password: md5(md5Pre + password),
         is_delete: 0
-    })
-    .then(result => {
+    }).then(result => {
         if (result) {
             var id = result._id
             var remember_me = 2592000000

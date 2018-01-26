@@ -1,6 +1,6 @@
 import api from '~api'
 
-const state = {
+const state = () => ({
     lists: {
         data: [],
         path: '',
@@ -8,21 +8,21 @@ const state = {
         hasPrev: 0,
         page: 1
     }
-}
+})
 
 const actions = {
-    async ['getArticleList'] ({commit, rootState: {route: { path }}}, config) {
+    async ['getArticleList'] ({commit, state}, config) {
+        if (state.lists.data.length > 0 && config.path === state.lists.path && config.page === 1) return
         const { data: { data, code} } = await api.get('backend/article/list', config)
         if (data && code === 200) {
             commit('receiveArticleList', {
                 ...data,
-                path,
-                page: config.page
+                ...config,
             })
         }
     },
-    async ['getArticleItem'] ({ rootState: {route: { params: { id }}} }) {
-        const { data: { data, code} } = await api.get('backend/article/item', { id })
+    async ['getArticleItem'] (store, config) {
+        const { data: { data, code} } = await api.get('backend/article/item', config)
         if (data && code === 200) {
             return data
         }

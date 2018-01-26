@@ -12,10 +12,7 @@
 <script lang="babel">
 import actions from './item-actions.vue'
 export default {
-    name: 'index-item',
-    serverCacheKey: props => {
-        return `frontend::topics::item::${props.item._id}`
-    },
+    name: 'topics-item',
     props: ['item'],
     data () {
         return {

@@ -1,11 +1,16 @@
 <template>
-<div id="app" class="g-doc">
+<div id="app" :class="backend ? 'backend' : 'frontend'">
     <Navigation :backend="backend"></Navigation>
     <div class="main wrap clearfix">
         <div class="main-left">
             <div class="home-feeds cards-wrap">
-                <transition name="fade" mode="out-in">
-                    <router-view :key="key" class="router"></router-view>
+                <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+                    <keep-alive>
+                        <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
+                    </keep-alive>
+                </transition>
+                <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+                    <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
                 </transition>
             </div>
         </div>
@@ -14,7 +19,7 @@
 </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import NProgress from 'nprogress'
 import Navigation from './components/navigation.vue'
 import backendMenu from './components/backend-menu.vue'
@@ -25,6 +30,9 @@ export default {
         ...mapGetters({
             global: 'global/getGlobal'
         }),
+        ...mapState('appShell', [
+            'pageTransitionName'
+        ]),
         key() {
             return this.$route.path.replace(/\//g, '_')
         },
@@ -38,6 +46,17 @@ export default {
     components: {
         backendMenu,
         Navigation
+    },
+    methods: {
+        handleBeforeEnter() {
+            this.$store.dispatch('appShell/setPageSwitching', true)
+        },
+        handleAfterEnter() {
+            this.$store.dispatch('appShell/setPageSwitching', false)
+        },
+        handleClickHeaderBack() {
+            this.$router.go(-1)
+        },
     },
     watch: {
         'global.progress'(val) {

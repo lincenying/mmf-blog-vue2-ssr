@@ -6,6 +6,7 @@
 
 <script lang="babel">
 export default {
+    name: 'back-top',
     data() {
         return {
             scrollTop: 0
@@ -15,7 +16,7 @@ export default {
         scrolling() {
             if (window.scrollTime) window.clearTimeout(window.scrollTime)
             window.scrollTime = window.setTimeout(() => {
-                this.scrollTop = document.body.scrollTop || window.scrollY
+                this.scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop)
             }, 100)
         },
         handleBackTop() {
@@ -26,7 +27,8 @@ export default {
                     top = 0
                     clearInterval(timer)
                 }
-                document.body.scrollTop = top
+                window.scrollTo(0, top)
+                // document.body.scrollTop = top
             }, 20)
         }
     },

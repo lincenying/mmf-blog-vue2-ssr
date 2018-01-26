@@ -33,6 +33,7 @@ import api from '~api'
 import { strlen } from '~utils'
 
 export default {
+    name: 'sign-up',
     props: ['show'],
     data() {
         return {

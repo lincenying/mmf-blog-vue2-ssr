@@ -18,9 +18,12 @@
 
 <script lang="babel">
 import api from '~api'
+import checkAdmin from '~mixins/check-admin'
 import aInput from '../components/_input.vue'
+
 export default {
     name: 'backend-category-insert',
+    mixins: [checkAdmin],
     data() {
         return {
             form: {
@@ -50,6 +53,12 @@ export default {
                 })
                 this.$router.push('/backend/category/list')
             }
+        }
+    },
+    metaInfo () {
+        return {
+            title: '添加分类 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

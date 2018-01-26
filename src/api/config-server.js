@@ -1,6 +1,8 @@
-var LRU = require('lru-cache')
+var lruCache = require('lru-cache')
 
 let api
+const cached = false
+
 if (process.__API__) {
     api = process.__API__
 } else {
@@ -8,7 +10,7 @@ if (process.__API__) {
         api: 'http://localhost:8080/api/',
         port: 8080,
         timeout: 30000,
-        cached: LRU({
+        cached: cached && lruCache({
             max: 1000,
             maxAge: 1000 * 60 * 15
         }),

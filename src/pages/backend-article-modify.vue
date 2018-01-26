@@ -28,14 +28,21 @@
 
 <script lang="babel">
 /* global modifyEditor */
-import api from '~api'
 import { mapGetters } from 'vuex'
+import api from '~api'
+import checkAdmin from '~mixins/check-admin'
 import aInput from '../components/_input.vue'
-const fetchInitialData = async (store, config = { limit: 99}) => {
-    await store.dispatch('global/category/getCategoryList', config)
-}
+
 export default {
     name: 'backend-article-modify',
+    mixins: [checkAdmin],
+    async asyncData({store, route}, config = { limit: 99 }) {
+        config.all = 1
+        await store.dispatch('global/category/getCategoryList', {
+            ...config,
+            path: route.path
+        })
+    },
     data() {
         return {
             form: {
@@ -75,39 +82,41 @@ export default {
             }
         }
     },
-    mounted() {
-        if (this.category.length <= 0) {
-            fetchInitialData(this.$store)
-        }
-        this.$store.dispatch('backend/article/getArticleItem').then(data => {
-            this.form.title = data.title
-            this.form.category_old = data.category
-            this.form.category = data.category
-            this.form.content = data.content
-            // eslint-disable-next-line
-            window.modifyEditor = editormd("modify-content", {
-                width: "100%",
-                height: 500,
-                markdown: data.content,
-                placeholder: '请输入内容...',
-                path: '/static/editor.md/lib/',
-                toolbarIcons() {
-                    return [
-                        "bold", "italic", "quote", "|",
-                        "list-ul", "list-ol", "hr", "|",
-                        "link", "reference-link", "image", "code", "table", "|",
-                        "watch", "preview", "fullscreen"
-                    ]
-                },
-                watch : false,
-                saveHTMLToTextarea : true
-            })
+    async mounted() {
+        const data = await this.$store.dispatch('backend/article/getArticleItem', {id: this.$route.params.id})
+        this.form.title = data.title
+        this.form.category_old = data.category
+        this.form.category = data.category
+        this.form.content = data.content
+        // eslint-disable-next-line
+        window.modifyEditor = editormd("modify-content", {
+            width: "100%",
+            height: 500,
+            markdown: data.content,
+            placeholder: '请输入内容...',
+            path: '/static/editor.md/lib/',
+            toolbarIcons() {
+                return [
+                    "bold", "italic", "quote", "|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "reference-link", "image", "code", "table", "|",
+                    "watch", "preview", "fullscreen"
+                ]
+            },
+            watch : false,
+            saveHTMLToTextarea : true
         })
     },
     watch: {
         'form.category'(val) {
             const obj = this.category.find(item => item._id === val)
             this.form.category_name = obj.cate_name
+        }
+    },
+    metaInfo () {
+        return {
+            title: '编辑文章 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

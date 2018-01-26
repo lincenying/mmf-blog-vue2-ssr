@@ -25,12 +25,12 @@ import cookies from 'js-cookie'
 import api from '~api'
 import aInput from '~components/_input.vue'
 export default {
-    name: 'login',
+    name: 'backend-login',
     beforeRouteEnter (to, from, next) {
-        if (cookies.get('b_user'))
-            next('/backend/article/list')
-        else
-            next()
+        if (cookies.get('b_user')) {
+            window.location.href = '/backend/article/list'
+        }
+        next()
     },
     data() {
         return {
@@ -51,8 +51,14 @@ export default {
             }
             const { data: { data, code} } = await api.post('backend/admin/login', this.form)
             if (data && code === 200) {
-                this.$router.replace('/backend/article/list')
+                window.location.href = '/backend/article/list'
             }
+        }
+    },
+    metaInfo () {
+        return {
+            title: '管理员登录 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

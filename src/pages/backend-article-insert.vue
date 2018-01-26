@@ -27,14 +27,21 @@
 
 <script lang="babel">
 /* global postEditor */
-import api from '~api'
 import { mapGetters } from 'vuex'
+import api from '~api'
+import checkAdmin from '~mixins/check-admin'
 import aInput from '../components/_input.vue'
-const fetchInitialData = async (store, config = { limit: 99}) => {
-    await store.dispatch('global/category/getCategoryList', config)
-}
+
 export default {
     name: 'backend-article-insert',
+    mixins: [checkAdmin],
+    async asyncData({store, route}, config = { limit: 99 }) {
+        config.all = 1
+        await store.dispatch('global/category/getCategoryList', {
+            ...config,
+            path: route.path
+        })
+    },
     data() {
         return {
             form: {
@@ -72,9 +79,6 @@ export default {
         }
     },
     mounted() {
-        if (this.category.length <= 0) {
-            fetchInitialData(this.$store)
-        }
         // eslint-disable-next-line
         window.postEditor = editormd("post-content", {
             width: "100%",
@@ -93,6 +97,12 @@ export default {
             watch : false,
             saveHTMLToTextarea : true
         })
+    },
+    metaInfo () {
+        return {
+            title: '发布文章 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+        }
     }
 }
 </script>

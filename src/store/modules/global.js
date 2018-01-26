@@ -3,17 +3,14 @@ import {inBrowser} from '~utils'
 
 toastr.options.positionClass = 'toast-top-center'
 
-const state = {
+const state = () => ({
     loading: false,
-    progress: 0,
+    cookies: {},
     showLoginModal: false,
     showRegisterModal: false
-}
+})
 
 const actions = {
-    ['gProgress']({commit}, payload) {
-        commit('progress', payload)
-    },
     ['showMsg'](store, config) {
         let content, type
         if (typeof config === 'string') {
@@ -31,9 +28,6 @@ const actions = {
 }
 
 const mutations = {
-    ['progress'](state, payload) {
-        state.progress = payload
-    },
     ['showLoginModal'](state, payload) {
         state.showLoginModal = payload
     },

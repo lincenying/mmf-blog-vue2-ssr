@@ -41,19 +41,21 @@ import actions from '../components/item-actions.vue'
 import category from '../components/aside-category.vue'
 import trending from '../components/aside-trending.vue'
 import comment from '../components/frontend-comment.vue'
-const fetchInitialData = async store => {
-    store.dispatch('global/category/getCategoryList')
-    store.dispatch('frontend/article/getTrending')
-    store.dispatch(`global/comment/getCommentList`, { page: 1, limit: 5})
-    await store.dispatch(`frontend/article/getArticleItem`)
-}
+
 export default {
     name: 'frontend-article',
-    prefetch: fetchInitialData,
+    async asyncData({store, route}) {
+        const { path, params: { id }} = route
+        await Promise.all([
+            store.dispatch('global/category/getCategoryList'),
+            store.dispatch('frontend/article/getTrending'),
+            store.dispatch(`global/comment/getCommentList`, { id, path, page: 1, limit: 10}),
+            store.dispatch(`frontend/article/getArticleItem`, { id, path })
+        ])
+    },
     mixins: [metaMixin],
     beforeRouteUpdate(to, from, next) {
-        if (to.path !== from.path) fetchInitialData(this.$store)
-        else this.$store.dispatch('global/gProgress', 100)
+        if (to.path !== from.path) this.$options.asyncData({store: this.$store, route: to})
         next()
     },
     computed: {
@@ -77,7 +79,7 @@ export default {
         }
     },
     mounted() {
-        fetchInitialData(this.$store)
+        // this.$options.asyncData({store: this.$store})
     },
     metaInfo () {
         const title = this.article.data.title ? this.article.data.title + ' - M.M.F 小屋' : 'M.M.F 小屋'

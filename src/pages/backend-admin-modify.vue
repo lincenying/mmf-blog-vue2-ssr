@@ -24,12 +24,20 @@
 <script lang="babel">
 import { mapGetters } from 'vuex'
 import api from '~api'
+import checkAdmin from '~mixins/check-admin'
+
 import backendMenu from '~components/backend-menu.vue'
 import aInput from '~components/_input.vue'
-const fetchInitialData = async store => {
-    await store.dispatch('backend/admin/getAdminItem')
-}
+
 export default {
+    name: 'backend-admin-modify',
+    mixins: [checkAdmin],
+    async asyncData({store, route}) {
+        await store.dispatch('backend/admin/getAdminItem', {
+            id: route.params.id,
+            path: route.path
+        })
+    },
     data() {
         return {
             form: {
@@ -67,17 +75,19 @@ export default {
         }
     },
     mounted() {
-        if (this.item.path !== this.$route.path) {
-            fetchInitialData(this.$store)
-        } else {
-            this.form.username = this.item.data.username
-            this.form.email = this.item.data.email
-        }
+        this.form.username = this.item.data.username
+        this.form.email = this.item.data.email
     },
     watch: {
         item(val) {
             this.form.username = val.data.username
             this.form.email = val.data.email
+        }
+    },
+    metaInfo () {
+        return {
+            title: '编辑管理员 - M.M.F 小屋',
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
         }
     }
 }

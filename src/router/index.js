@@ -35,22 +35,20 @@ const guardRoute = (to, from, next) => {
     }
 }
 
-const router = new VueRouter({
-    mode: 'history',
-    //base: __dirname,
-    scrollBehavior,
-    routes: [
-        { name:'index', path: '/', component: index },
-        { name:'trending', path: '/trending/:by', component: index },
-        { name:'category', path: '/category/:id', component: index },
-        { name:'search', path: '/search/:key', component: index },
-        { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },
-        { name:'about', path: '/about', component: about, meta: { scrollToTop: true } },
-        { name:'account', path: '/user/account', component: account, meta: { scrollToTop: true }, beforeEnter: guardRoute },
-        { name:'password', path: '/user/password', component: password, meta: { scrollToTop: true }, beforeEnter: guardRoute }
-    ]
-})
-
-
-
-export default router
+export function createRouter() {
+    return new VueRouter({
+        mode: 'history',
+        //base: __dirname,
+        scrollBehavior,
+        routes: [
+            { name:'index', path: '/', component: index },
+            { name:'trending', path: '/trending/:by', component: index },
+            { name:'category', path: '/category/:id', component: index },
+            { name:'search', path: '/search/:key', component: index },
+            { name:'article', path: '/article/:id', component: article, meta: { scrollToTop: true } },
+            { name:'about', path: '/about', component: about, meta: { scrollToTop: true } },
+            { name:'account', path: '/user/account', component: account, meta: { scrollToTop: true }, beforeEnter: guardRoute },
+            { name:'password', path: '/user/password', component: password, meta: { scrollToTop: true }, beforeEnter: guardRoute }
+        ]
+    })
+}

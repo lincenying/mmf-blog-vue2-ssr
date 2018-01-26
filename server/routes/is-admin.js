@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
         username = req.cookies.b_username
     if (token) {
         jwt.verify(token, secret, function(err, decoded) {
-            if (!err && decoded.id === userid && decoded.username === username) {
+            if (!err && decoded.id === userid && (decoded.username === username || decoded.username === encodeURI(username))) {
                 req.decoded = decoded
                 next()
             } else {

@@ -13,10 +13,13 @@ const actions = {
             commit('receiveCategoryList', data.list)
         }
     },
-    async ['getCategoryItem'] ({commit, rootState: {route: { params: { id } }}}) {
-        const { data: { data, code} } = await api.get('backend/category/item', { id })
+    async ['getCategoryItem'] ({commit}, config) {
+        const { data: { data, code} } = await api.get('backend/category/item', config)
         if (data && code === 200) {
-            commit('receiveCategoryItem', data)
+            commit('receiveCategoryItem', {
+                data,
+                ...config
+            })
         }
     }
 }
