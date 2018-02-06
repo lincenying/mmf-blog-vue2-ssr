@@ -11,10 +11,7 @@ import {createApp} from './app'
 import ProgressBar from '@/components/ProgressBar.vue'
 
 import "./assets/css/hljs/googlecode.css"
-import "./assets/css/reset.css"
-import "./assets/css/style.css"
-import "./assets/less/frontend.less"
-import "./assets/less/backend.less"
+import "./assets/less/style.less"
 import "toastr/build/toastr.css"
 
 // 全局的进度条，在组件中可通过 $loading 访问
