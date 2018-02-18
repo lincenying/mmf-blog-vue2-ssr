@@ -3,9 +3,9 @@ var config = require('../config')
 var secret = config.secretClient
 
 module.exports = (req, res, next) => {
-    var token = req.cookies.user,
-        userid = req.cookies.userid,
-        username = req.cookies.username
+    var token = req.cookies.user || req.headers.user,
+        userid = req.cookies.userid || req.headers.userid,
+        username = req.cookies.username || req.headers.username
     if (token) {
         jwt.verify(token, secret, function(err, decoded) {
             if (!err && decoded.id === userid && (decoded.username === username || decoded.username === encodeURI(username))) {

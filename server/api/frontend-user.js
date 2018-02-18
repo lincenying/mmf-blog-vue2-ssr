@@ -72,6 +72,83 @@ exports.login = (req, res) => {
 }
 
 /**
+ * 微信登录
+ * @method login
+ * @param  {[type]}   req [description]
+ * @param  {[type]}   res [description]
+ * @return {[type]}       [description]
+ */
+exports.wxLogin = (req, res) => {
+    let json = {}
+    const { nickName, wxSignature, avatar } = req.body
+    if (!nickName || !wxSignature) {
+        json = {
+            code: -200,
+            message: '参数有误, 微信登录失败'
+        }
+        res.json(json)
+    } else {
+        User.findOneAsync({
+            username: nickName,
+            wx_signature: wxSignature,
+            is_delete: 0
+        }).then(result => {
+            if (result) {
+                var id = result._id
+                var username = encodeURI(nickName)
+                var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
+                json = {
+                    code: 200,
+                    message: '登录成功',
+                    data: {
+                        user: token,
+                        userid: id,
+                        username,
+                    }
+                }
+                res.json(json)
+            } else {
+                User.createAsync({
+                    username: nickName,
+                    password: '',
+                    email: '',
+                    creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    is_delete: 0,
+                    timestamp: moment().format('X'),
+                    wx_avatar: avatar,
+                    wx_signature: wxSignature,
+                }).then(_result => {
+                    var username = encodeURI(nickName)
+                    var id = _result._id
+                    var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
+                    res.json({
+                        code: 200,
+                        message: '注册成功!',
+                        data: {
+                            user: token,
+                            userid: id,
+                            username,
+                        }
+                    })
+                }).catch(err => {
+                    res.json({
+                        code: -200,
+                        message: err.toString()
+                    })
+                })
+            }
+        }).catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString()
+            })
+        })
+    }
+}
+
+
+/**
  * 用户退出
  * @method logout
  * @param  {[type]}   req [description]
@@ -156,7 +233,7 @@ exports.insert = (req, res) => {
 }
 
 exports.getItem = (req, res) => {
-    var json, userid = req.query.id || req.cookies.userid
+    var json, userid = req.query.id || req.cookies.userid || req.headers.userid
     User.findOneAsync({
         _id: userid,
         is_delete: 0
@@ -211,8 +288,8 @@ exports.modify = (req, res) => {
 exports.account = (req, res) => {
     var _id = req.body.id,
         email = req.body.email,
-        user_id = req.cookies.userid,
-        username = req.body.username
+        user_id = req.cookies.userid || req.headers.userid,
+        username = req.body.username || req.headers.username
     if (user_id === _id) {
         User.updateAsync({ _id }, { '$set': { email, username } }).then(() => {
             res.json({
@@ -245,7 +322,7 @@ exports.password = (req, res) => {
     var _id = req.body.id,
         old_password = req.body.old_password,
         password = req.body.password,
-        user_id = req.cookies.userid
+        user_id = req.cookies.userid || req.headers.userid
     if (user_id === _id) {
         User.findOneAsync({
             _id,

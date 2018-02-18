@@ -52,7 +52,7 @@ exports.getList = (req, res) => {
     ]).then(([data, total]) => {
         var arr = [],
             totalPage = Math.ceil(total / limit),
-            user_id = req.cookies.userid
+            user_id = req.cookies.userid || req.headers.userid
         data = data.map(item => {
             item.content = item.content.substring(0, 500) + '...'
             return item
@@ -109,7 +109,7 @@ exports.getList = (req, res) => {
 
 exports.getItem = (req, res) => {
     var _id = req.query.id,
-        user_id = req.cookies.userid
+        user_id = req.cookies.userid || req.headers.userid
     if (!_id) {
         res.json({
             code: -200,

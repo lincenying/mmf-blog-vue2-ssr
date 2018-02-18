@@ -5,7 +5,7 @@ var Like = mongoose.model('Like')
 
 exports.like = (req, res) => {
     var article_id = req.query.id
-    var user_id = req.cookies.userid
+    var user_id = req.cookies.userid || req.headers.userid
     var data = {
         article_id,
         user_id,
@@ -39,7 +39,7 @@ exports.like = (req, res) => {
 
 exports.unlike = (req, res) => {
     var article_id = req.query.id
-    var user_id = req.cookies.userid
+    var user_id = req.cookies.userid || req.headers.userid
     Like.removeAsync({ article_id, user_id }).then(() => {
         return Article.updateAsync({ _id: article_id }, { '$inc': { 'like': -1 } }).then(() => {
             return res.json({

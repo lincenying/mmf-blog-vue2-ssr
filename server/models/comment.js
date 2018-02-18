@@ -7,6 +7,7 @@ var CommentSchema = new Schema({
     userid: String,
     username: String,
     email: String,
+    avatar: String,
     content: String,
     creat_date: String,
     is_delete: Number,

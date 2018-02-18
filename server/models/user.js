@@ -9,7 +9,9 @@ var UserSchema = new Schema({
     creat_date: String,
     update_date: String,
     is_delete: Number,
-    timestamp: Number
+    timestamp: Number,
+    wx_avatar: String,
+    wx_signature: String,
 })
 
 var User = mongoose.model('User', UserSchema)
