@@ -8,10 +8,7 @@ import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 
 import "./assets/css/hljs/googlecode.css"
-import "./assets/css/reset.css"
-import "./assets/css/style.css"
-import "./assets/less/frontend.less"
-import "./assets/less/backend.less"
+import "./assets/less/style.less"
 import "toastr/build/toastr.css"
 
 const store = createStore()
