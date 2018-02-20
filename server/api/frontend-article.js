@@ -1,15 +1,5 @@
-var mongoose = require('../mongoose')
-var Article = mongoose.model('Article')
-var Like = mongoose.model('Like')
-
-// var marked = require('marked')
-// var hljs = require('highlight.js')
-// marked.setOptions({
-//     highlight(code) {
-//         return hljs.highlightAuto(code).value
-//     },
-//     breaks: true
-// })
+const mongoose = require('../mongoose')
+const Article = mongoose.model('Article')
 
 /**
  * 前台浏览时, 获取文章列表
@@ -19,16 +9,13 @@ var Like = mongoose.model('Like')
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    var by = req.query.by,
-        id = req.query.id,
-        key = req.query.key,
-        limit = req.query.limit,
-        page = req.query.page
+    const { by, id, key } = req.query
+    let { limit, page } = req.query
     page = parseInt(page, 10)
     limit = parseInt(limit, 10)
     if (!page) page = 1
     if (!limit) limit = 10
-    var data = {
+    const data = {
             is_delete: 0
         },
         skip = (page - 1) * limit
@@ -36,56 +23,44 @@ exports.getList = (req, res) => {
         data.category = id
     }
     if (key) {
-        var reg = new RegExp(key, 'i')
+        const reg = new RegExp(key, 'i')
         data.title = {$regex : reg}
     }
-    var sort = '-update_date'
+    let sort = '-update_date'
     if (by) {
         sort = '-' + by
     }
 
-    var filds = 'title content category category_name visit like comment_count creat_date update_date is_delete timestamp'
+    const filds = 'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
 
     Promise.all([
         Article.find(data, filds).sort(sort).skip(skip).limit(limit).exec(),
         Article.countAsync(data)
     ]).then(([data, total]) => {
-        var arr = [],
-            totalPage = Math.ceil(total / limit),
-            user_id = req.cookies.userid || req.headers.userid
-        data = data.map(item => {
-            item.content = item.content.substring(0, 500) + '...'
-            return item
-        })
-        var json = {
+        const totalPage = Math.ceil(total / limit)
+        const user_id = req.cookies.userid || req.headers.userid
+        const json = {
             code: 200,
             data: {
-                list: data,
                 total,
                 hasNext: totalPage > page ? 1 : 0,
                 hasPrev: page > 1
             }
         }
         if (user_id) {
-            data.forEach(item => {
-                arr.push(Like.findOneAsync({ article_id: item._id, user_id }))
+            data = data.map(item => {
+                item._doc.like_status = item.likes && item.likes.indexOf(user_id) > -1
+                item.content = item.content.substring(0, 500) + '...'
+                item.likes = []
+                return item
             })
-            Promise.all(arr).then(collection => {
-                data = data.map((item, index) => {
-                    item._doc.like_status = !!collection[index]
-                    return item
-                })
-                json.data.list = data
-                res.json(json)
-            }).catch(err => {
-                res.json({
-                    code: -200,
-                    message: err.toString()
-                })
-            })
+            json.data.list = data
+            res.json(json)
         } else {
             data = data.map(item => {
                 item._doc.like_status = false
+                item.content = item.content.substring(0, 500) + '...'
+                item.likes = []
                 return item
             })
             json.data.list = data
@@ -108,8 +83,8 @@ exports.getList = (req, res) => {
  */
 
 exports.getItem = (req, res) => {
-    var _id = req.query.id,
-        user_id = req.cookies.userid || req.headers.userid
+    const _id = req.query.id
+    const user_id = req.cookies.userid || req.headers.userid
     if (!_id) {
         res.json({
             code: -200,
@@ -118,18 +93,18 @@ exports.getItem = (req, res) => {
     }
     Promise.all([
         Article.findOneAsync({ _id, is_delete: 0 }),
-        Like.findOneAsync({ article_id: _id, user_id }),
         Article.updateAsync({ _id }, { '$inc':{ 'visit': 1 } })
     ]).then(value => {
-        var json
+        let json
         if (!value[0]) {
             json = {
                 code: -200,
                 message: '没有找到该文章'
             }
         } else {
-            if (user_id) value[0]._doc.like_status = !! value[1]
+            if (user_id) value[0]._doc.like_status = value[0].likes && value[0].likes.indexOf(user_id) > -1
             else value[0]._doc.like_status = false
+            value[0].likes = []
             json = {
                 code: 200,
                 data: value[0]
@@ -145,11 +120,11 @@ exports.getItem = (req, res) => {
 }
 
 exports.getTrending = (req, res) => {
-    var limit = 5
-    var data = { is_delete: 0 }
-    var filds = 'title visit like comment_count'
+    const limit = 5
+    const data = { is_delete: 0 }
+    const filds = 'title visit like comment_count'
     Article.find(data, filds).sort('-visit').limit(limit).exec().then(result => {
-        var json = {
+        const json = {
             code: 200,
             data: {
                 list: result

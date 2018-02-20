@@ -1,8 +1,8 @@
-var moment = require('moment')
+const moment = require('moment')
 
-var mongoose = require('../mongoose')
-var Comment = mongoose.model('Comment')
-var Article = mongoose.model('Article')
+const mongoose = require('../mongoose')
+const Comment = mongoose.model('Comment')
+const Article = mongoose.model('Article')
 
 /**
  * 发布评论
@@ -12,13 +12,12 @@ var Article = mongoose.model('Article')
  * @return {[type]}     [description]
  */
 exports.insert = (req, res) => {
-    var avatar = req.body.avatar || '',
-        content = req.body.content,
-        creat_date = moment().format('YYYY-MM-DD HH:mm:ss'),
-        id = req.body.id,
-        timestamp = moment().format('X'),
-        userid = req.cookies.userid || req.headers.userid,
-        username = req.cookies.username || req.headers.username
+    const { id, content } = req.body
+    const avatar = req.body.avatar || ''
+    const creat_date = moment().format('YYYY-MM-DD HH:mm:ss')
+    const timestamp = moment().format('X')
+    const userid = req.cookies.userid || req.headers.userid
+    let username = req.cookies.username || req.headers.username
     username = decodeURI(username)
     if (!id) {
         res.json({ code: -200, message: '参数错误' })
@@ -68,10 +67,8 @@ exports.insert = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    var all = req.query.all,
-        id = req.query.id,
-        limit = req.query.limit,
-        page = req.query.page
+    const { all, id } = req.query
+    let { limit, page } = req.query
     if (!id) {
         res.json({
             code: -200,
@@ -82,7 +79,7 @@ exports.getList = (req, res) => {
         limit = parseInt(limit, 10)
         if (!page) page = 1
         if (!limit) limit = 10
-        var data = {
+        const data = {
                 article_id: id
             },
             skip = (page - 1) * limit
@@ -93,9 +90,9 @@ exports.getList = (req, res) => {
             Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(),
             Comment.countAsync(data)
         ]).then(result => {
-            var total = result[1]
-            var totalPage = Math.ceil(total / limit)
-            var json = {
+            const total = result[1]
+            const totalPage = Math.ceil(total / limit)
+            const json = {
                 code: 200,
                 data: {
                     list: result[0],
@@ -121,9 +118,9 @@ exports.getList = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.deletes = (req, res) => {
-    var id = req.query.id
-    Comment.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
-        return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': -1 } }).then(() => {
+    const _id = req.query.id
+    Comment.updateAsync({ _id }, { is_delete: 1 }).then(() => {
+        return Article.updateAsync({ _id }, { '$inc': { 'comment_count': -1 } }).then(() => {
             res.json({
                 code: 200,
                 message: '删除成功',
@@ -146,9 +143,9 @@ exports.deletes = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.recover = (req, res) => {
-    var id = req.query.id
-    Comment.updateAsync({ _id: id }, { is_delete: 0 }).then(() => {
-        return Article.updateAsync({ _id: id }, { '$inc': { 'comment_count': 1 } }).then(() => {
+    const _id = req.query.id
+    Comment.updateAsync({ _id }, { is_delete: 0 }).then(() => {
+        return Article.updateAsync({ _id }, { '$inc': { 'comment_count': 1 } }).then(() => {
             res.json({
                 code: 200,
                 message: '恢复成功',

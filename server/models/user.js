@@ -1,8 +1,8 @@
-var mongoose = require('../mongoose')
-var Schema = mongoose.Schema
-var Promise = require('bluebird')
+const mongoose = require('../mongoose')
+const Schema = mongoose.Schema
+const Promise = require('bluebird')
 
-var UserSchema = new Schema({
+const UserSchema = new Schema({
     username: String,
     email: String,
     password: String,
@@ -14,7 +14,7 @@ var UserSchema = new Schema({
     wx_signature: String,
 })
 
-var User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema)
 Promise.promisifyAll(User)
 Promise.promisifyAll(User.prototype)
 

@@ -1,8 +1,8 @@
-var mongoose = require('../mongoose')
-var Schema = mongoose.Schema
-var Promise = require('bluebird')
+const mongoose = require('../mongoose')
+const Schema = mongoose.Schema
+const Promise = require('bluebird')
 
-var AdminSchema = new Schema({
+const AdminSchema = new Schema({
     username: String,
     email: String,
     password: String,
@@ -12,7 +12,7 @@ var AdminSchema = new Schema({
     timestamp: Number
 })
 
-var Admin = mongoose.model('Admin', AdminSchema)
+const Admin = mongoose.model('Admin', AdminSchema)
 Promise.promisifyAll(Admin)
 Promise.promisifyAll(Admin.prototype)
 

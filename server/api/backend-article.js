@@ -1,14 +1,14 @@
-var moment = require('moment')
-var mongoose = require('../mongoose')
-var Article = mongoose.model('Article')
-var Category = mongoose.model('Category')
+const moment = require('moment')
+const mongoose = require('../mongoose')
+const Article = mongoose.model('Article')
+const Category = mongoose.model('Category')
 const general = require('./general')
 
 const list = general.list
 const item = general.item
 
-var marked = require('marked')
-var hljs = require('highlight.js')
+const marked = require('marked')
+const hljs = require('highlight.js')
 marked.setOptions({
     highlight(code) {
         return hljs.highlightAuto(code).value
@@ -46,17 +46,13 @@ exports.getItem = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.insert = (req, res) => {
-    var categorys = req.body.category,
-        content = req.body.content,
-        html = marked(content),
-        title = req.body.title
-    var arr_category = categorys.split("|")
-    var category = arr_category[0]
-    var category_name = arr_category[1]
-    var data = {
+    const { category, content, title } = req.body
+    const html = marked(content)
+    const arr_category = category.split("|")
+    const data = {
         title,
-        category,
-        category_name,
+        category: arr_category[0],
+        category_name: arr_category[1],
         content,
         html,
         visit: 0,
@@ -91,9 +87,9 @@ exports.insert = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.deletes = (req, res) => {
-    var id = req.query.id
-    Article.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
-        return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': -1 } }).then(result => {
+    const _id = req.query.id
+    Article.updateAsync({ _id }, { is_delete: 1 }).then(() => {
+        return Category.updateAsync({ _id }, { '$inc': { 'cate_num': -1 } }).then(result => {
             res.json({
                 code: 200,
                 message: '更新成功',
@@ -116,9 +112,9 @@ exports.deletes = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.recover = (req, res) => {
-    var id = req.query.id
-    Article.updateAsync({ _id: id }, { is_delete: 0 }).then(() => {
-        return Category.updateAsync({ _id: id }, { '$inc': { 'cate_num': 1 } }).then(() => {
+    const _id = req.query.id
+    Article.updateAsync({ _id }, { is_delete: 0 }).then(() => {
+        return Category.updateAsync({ _id }, { '$inc': { 'cate_num': 1 } }).then(() => {
             res.json({
                 code: 200,
                 message: '更新成功',
@@ -141,13 +137,9 @@ exports.recover = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.modify = (req, res) => {
-    var category = req.body.category,
-        category_old = req.body.category_old,
-        content = req.body.content,
-        html = marked(content),
-        id = req.body.id
-
-    var data = {
+    const { id, category, category_old, content } = req.body
+    const html = marked(content)
+    const data = {
         title: req.body.title,
         category: req.body.category,
         category_name: req.body.category_name,

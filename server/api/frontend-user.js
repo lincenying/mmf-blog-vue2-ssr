@@ -1,20 +1,16 @@
-var md5 = require('md5')
-var moment = require('moment')
-var jwt = require('jsonwebtoken')
+const md5 = require('md5')
+const moment = require('moment')
+const jwt = require('jsonwebtoken')
 
-var mongoose = require('../mongoose')
-var User = mongoose.model('User')
+const mongoose = require('../mongoose')
+const User = mongoose.model('User')
 
-var config = require('../config')
-var md5Pre = config.md5Pre
-var secret = config.secretClient
-var strlen = require('../utils').strlen
+const config = require('../config')
+const md5Pre = config.md5Pre
+const secret = config.secretClient
+const strlen = require('../utils').strlen
 const general = require('./general')
-
-const list = general.list
-const modify = general.modify
-const deletes = general.deletes
-const recover = general.recover
+const { list, modify, deletes, recover } = general
 
 exports.getList = (req, res) => {
     list(req, res, User)
@@ -28,9 +24,9 @@ exports.getList = (req, res) => {
  * @return {[type]}       [description]
  */
 exports.login = (req, res) => {
-    var json = {},
-        password = req.body.password,
-        username = req.body.username
+    let json = {}
+    let { username } = req.body
+    const { password } = req.body
     if (username === '' || password === '') {
         json = {
             code: -200,
@@ -44,10 +40,10 @@ exports.login = (req, res) => {
         is_delete: 0
     }).then(result => {
         if (result) {
-            var id = result._id
-            var remember_me = 2592000000
             username = encodeURI(username)
-            var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
+            const id = result._id
+            const remember_me = 2592000000
+            const token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
             res.cookie('user', token, { maxAge: remember_me })
             res.cookie('userid', id, { maxAge: remember_me })
             res.cookie('username', username, { maxAge: remember_me })
@@ -80,6 +76,7 @@ exports.login = (req, res) => {
  */
 exports.wxLogin = (req, res) => {
     let json = {}
+    let id, token, username
     const { nickName, wxSignature, avatar } = req.body
     if (!nickName || !wxSignature) {
         json = {
@@ -94,9 +91,9 @@ exports.wxLogin = (req, res) => {
             is_delete: 0
         }).then(result => {
             if (result) {
-                var id = result._id
-                var username = encodeURI(nickName)
-                var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
+                id = result._id
+                username = encodeURI(nickName)
+                token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
                 json = {
                     code: 200,
                     message: '登录成功',
@@ -119,9 +116,9 @@ exports.wxLogin = (req, res) => {
                     wx_avatar: avatar,
                     wx_signature: wxSignature,
                 }).then(_result => {
-                    var username = encodeURI(nickName)
-                    var id = _result._id
-                    var token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
+                    id = _result._id
+                    username = encodeURI(nickName)
+                    token = jwt.sign({ id, username }, secret, { expiresIn: 60*60*24*30 })
                     res.json({
                         code: 200,
                         message: '注册成功!',
@@ -175,10 +172,7 @@ exports.logout = (req, res) => {
  * @return {json}         [description]
  */
 exports.insert = (req, res) => {
-    var email = req.body.email,
-        password = req.body.password,
-        username = req.body.username
-
+    const { email, password, username } = req.body
     if (!username || !password || !email) {
         res.json({
             code: -200,
@@ -233,7 +227,8 @@ exports.insert = (req, res) => {
 }
 
 exports.getItem = (req, res) => {
-    var json, userid = req.query.id || req.cookies.userid || req.headers.userid
+    let json
+    const userid = req.query.id || req.cookies.userid || req.headers.userid
     User.findOneAsync({
         _id: userid,
         is_delete: 0
@@ -266,15 +261,12 @@ exports.getItem = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.modify = (req, res) => {
-    var _id = req.body.id,
-        email = req.body.email,
-        password = req.body.password,
-        username = req.body.username
-    var data = {
+    const { id, email, password, username } = req.body
+    const data = {
         email, username, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     if (password) data.password = md5(md5Pre + password)
-    modify(res, User, _id, data)
+    modify(res, User, id, data)
 }
 
 
@@ -286,12 +278,11 @@ exports.modify = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.account = (req, res) => {
-    var _id = req.body.id,
-        email = req.body.email,
-        user_id = req.cookies.userid || req.headers.userid,
-        username = req.body.username || req.headers.username
-    if (user_id === _id) {
-        User.updateAsync({ _id }, { '$set': { email, username } }).then(() => {
+    const { id, email } = req.body
+    const user_id = req.cookies.userid || req.headers.userid
+    const username = req.body.username || req.headers.username
+    if (user_id === id) {
+        User.updateAsync({ _id: id }, { '$set': { email, username } }).then(() => {
             res.json({
                 code: 200,
                 message: '更新成功',
@@ -319,18 +310,16 @@ exports.account = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.password = (req, res) => {
-    var _id = req.body.id,
-        old_password = req.body.old_password,
-        password = req.body.password,
-        user_id = req.cookies.userid || req.headers.userid
-    if (user_id === _id) {
+    const { id, old_password, password } = req.body
+    const user_id = req.cookies.userid || req.headers.userid
+    if (user_id === id) {
         User.findOneAsync({
-            _id,
+            _id: id,
             password: md5(md5Pre + old_password),
             is_delete: 0
         }).then(result => {
             if (result) {
-                User.updateAsync({ _id }, { '$set': { password: md5(md5Pre + password) } }).then(() => {
+                User.updateAsync({ _id: id }, { '$set': { password: md5(md5Pre + password) } }).then(() => {
                     res.json({
                         code: 200,
                         message: '更新成功',

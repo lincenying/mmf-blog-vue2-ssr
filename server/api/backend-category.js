@@ -1,12 +1,9 @@
-var moment = require('moment')
-var mongoose = require('../mongoose')
-var Category = mongoose.model('Category')
+const moment = require('moment')
+const mongoose = require('../mongoose')
+const Category = mongoose.model('Category')
 const general = require('./general')
 
-const item = general.item
-const modify = general.modify
-const recover = general.recover
-const deletes = general.deletes
+const { item, modify, deletes, recover } = general
 
 /**
  * 管理时, 获取分类列表
@@ -17,7 +14,7 @@ const deletes = general.deletes
  */
 exports.getList = (req, res) => {
     Category.find().sort('-cate_order').exec().then(result => {
-        var json = {
+        const json = {
             code: 200,
             data: {
                 list: result
@@ -37,9 +34,7 @@ exports.getItem = (req, res) => {
 }
 
 exports.insert = (req, res) => {
-    var cate_name = req.body.cate_name,
-        cate_order = req.body.cate_order
-
+    const { cate_name, cate_order } = req.body
     if (!cate_name || !cate_order) {
         res.json({
             code: -200,
@@ -72,11 +67,8 @@ exports.recover = (req, res) => {
 }
 
 exports.modify = (req, res) => {
-    var _id = req.body.id,
-        cate_name = req.body.cate_name,
-        cate_order = req.body.cate_order
-
-    modify(res, Category, _id, {
+    const { id, cate_name, cate_order } = req.body
+    modify(res, Category, id, {
         cate_name, cate_order, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     })
 }

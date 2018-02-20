@@ -1,14 +1,12 @@
-var jwt = require('jsonwebtoken')
-var config = require('../config')
-var secret = config.secretServer
+const jwt = require('jsonwebtoken')
+const config = require('../config')
+const secret = config.secretServer
 
 module.exports = (req, res, next) => {
-    var token = req.cookies.b_user,
-        userid = req.cookies.b_userid,
-        username = req.cookies.b_username
-    if (token) {
-        jwt.verify(token, secret, function(err, decoded) {
-            if (!err && decoded.id === userid && (decoded.username === username || decoded.username === encodeURI(username))) {
+    const { b_user, b_userid, b_username } = req.cookies
+    if (b_user) {
+        jwt.verify(b_user, secret, function(err, decoded) {
+            if (!err && decoded.id === b_userid && (decoded.username === b_username || decoded.username === encodeURI(b_username))) {
                 req.decoded = decoded
                 next()
             } else {

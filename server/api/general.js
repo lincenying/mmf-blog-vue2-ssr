@@ -7,22 +7,21 @@
  * @param  {[type]} sort    排序
  * @return {[type]}         [description]
  */
-exports.list = (req, res, mongoDB, sort) => {
+exports.list = (req, res, mongoDB, sort = '-_id') => {
     sort = sort || '-_id'
-    var limit = req.query.limit,
-        page = req.query.page
+    let { limit, page } = req.query
     page = parseInt(page, 10)
     limit = parseInt(limit, 10)
     if (!page) page = 1
     if (!limit) limit = 10
-    var skip = (page - 1) * limit
+    const skip = (page - 1) * limit
     Promise.all([
         mongoDB.find().sort(sort).skip(skip).limit(limit).exec(),
         mongoDB.countAsync()
     ]).then(result => {
-        var total = result[1]
-        var totalPage = Math.ceil(total / limit)
-        var json = {
+        const total = result[1]
+        const totalPage = Math.ceil(total / limit)
+        const json = {
             code: 200,
             data: {
                 list: result[0],
@@ -49,14 +48,14 @@ exports.list = (req, res, mongoDB, sort) => {
  * @return {[type]}         [description]
  */
 exports.item = (req, res, mongoDB) => {
-    var id = req.query.id
-    if (!id) {
+    const _id = req.query.id
+    if (!_id) {
         res.json({
             code: -200,
             message: '参数错误'
         })
     }
-    mongoDB.findOneAsync({ _id: id }) .then(result => {
+    mongoDB.findOneAsync({ _id }) .then(result => {
         res.json({
             code: 200,
             data: result
@@ -78,8 +77,8 @@ exports.item = (req, res, mongoDB) => {
  * @return {[type]}           [description]
  */
 exports.deletes = (req, res, mongoDB) => {
-    var id = req.query.id
-    mongoDB.updateAsync({ _id: id }, { is_delete: 1 }).then(() => {
+    const _id = req.query.id
+    mongoDB.updateAsync({ _id }, { is_delete: 1 }).then(() => {
         res.json({
             code: 200,
             message: '更新成功',
@@ -98,12 +97,12 @@ exports.deletes = (req, res, mongoDB) => {
  * @method modify
  * @param  {[type]} res     [description]
  * @param  {[type]} mongoDB [description]
- * @param  {[type]} id      [description]
+ * @param  {[type]} _id     [description]
  * @param  {[type]} data    [description]
  * @return {[type]}         [description]
  */
-exports.modify = (res, mongoDB, id, data) => {
-    mongoDB.findOneAndUpdateAsync({ _id: id }, data, { new: true }).then(result => {
+exports.modify = (res, mongoDB, _id, data) => {
+    mongoDB.findOneAndUpdateAsync({ _id }, data, { new: true }).then(result => {
         res.json({
             code: 200,
             message: '更新成功',
@@ -126,8 +125,8 @@ exports.modify = (res, mongoDB, id, data) => {
  * @return {[type]}         [description]
  */
 exports.recover = (req, res, mongoDB) => {
-    var id = req.query.id
-    mongoDB.updateAsync({ _id: id }, { is_delete: 0 }).then(() => {
+    const _id = req.query.id
+    mongoDB.updateAsync({ _id }, { is_delete: 0 }).then(() => {
         res.json({
             code: 200,
             message: '更新成功',

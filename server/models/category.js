@@ -1,8 +1,8 @@
-var mongoose = require('../mongoose')
-var Schema = mongoose.Schema
-var Promise = require('bluebird')
+const mongoose = require('../mongoose')
+const Schema = mongoose.Schema
+const Promise = require('bluebird')
 
-var CategorySchema = new Schema({
+const CategorySchema = new Schema({
     cate_name: String,
     cate_order: String,
     cate_num: Number,
@@ -12,7 +12,7 @@ var CategorySchema = new Schema({
     timestamp: Number
 })
 
-var Category = mongoose.model('Category', CategorySchema)
+const Category = mongoose.model('Category', CategorySchema)
 Promise.promisifyAll(Category)
 Promise.promisifyAll(Category.prototype)
 

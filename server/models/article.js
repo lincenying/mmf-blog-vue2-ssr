@@ -1,8 +1,8 @@
-var mongoose = require('../mongoose')
-var Schema = mongoose.Schema
-var Promise = require('bluebird')
+const mongoose = require('../mongoose')
+const Schema = mongoose.Schema
+const Promise = require('bluebird')
 
-var ArticleSchema = new Schema({
+const ArticleSchema = new Schema({
     title: String,
     content: String,
     html: String,
@@ -14,10 +14,11 @@ var ArticleSchema = new Schema({
     creat_date: String,
     update_date: String,
     is_delete: Number,
-    timestamp: Number
+    timestamp: Number,
+    likes: [String]
 })
 
-var Article = mongoose.model('Article', ArticleSchema)
+const Article = mongoose.model('Article', ArticleSchema)
 Promise.promisifyAll(Article)
 Promise.promisifyAll(Article.prototype)
 
