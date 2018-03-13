@@ -20,8 +20,9 @@
     "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
     "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules",
     "static": "node ./build/copy",
-    "lint": "eslint --ext .jsx,.js,.vue src/ --fix",
-    "lint:server": "eslint --ext .js server/ --fix"
+    "lint:client": "eslint --ext .jsx,.js,.vue src/ --fix",
+    "lint:server": "eslint --ext .js server/ --fix",
+    "lint": "npm run lint:client && npm run lint:server"
   },
   "dependencies": {
     "axios": "^0.18.0",
