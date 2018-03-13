@@ -7,9 +7,7 @@
 import * as types from '../mutation-types'
 
 export function createAppShellState() {
-
     const state = {
-
         /**
          * 是否需要页面切换动画
          *
@@ -36,17 +34,16 @@ export function createAppShellState() {
          *
          * @type {Object}
          */
-        historyPageScrollTop: {}
+        historyPageScrollTop: {},
     }
 
     const actions = {
-
         /**
          * 开启页面切换动画
          *
          * @param {Function} commit commit
          */
-        enablePageTransition({commit}) {
+        enablePageTransition({ commit }) {
             commit(types.ENABLE_PAGE_TRANSITION, true)
         },
 
@@ -55,7 +52,7 @@ export function createAppShellState() {
          *
          * @param {Function} commit commit
          */
-        disablePageTransition({commit}) {
+        disablePageTransition({ commit }) {
             commit(types.DISABLE_PAGE_TRANSITION, false)
         },
 
@@ -65,7 +62,7 @@ export function createAppShellState() {
          * @param {Function} commit commit
          * @param {boolean} isPageSwitching isPageSwitching
          */
-        setPageSwitching({commit}, isPageSwitching) {
+        setPageSwitching({ commit }, isPageSwitching) {
             commit(types.SET_PAGE_SWITCHING, isPageSwitching)
         },
 
@@ -76,21 +73,21 @@ export function createAppShellState() {
          * @param {string} options.path path
          * @param {number} options.scrollTop scrollTop
          */
-        saveScrollTop({commit}, {path, scrollTop}) {
-            commit(types.SAVE_SCROLLTOP, {path, scrollTop})
-        }
+        saveScrollTop({ commit }, { path, scrollTop }) {
+            commit(types.SAVE_SCROLLTOP, { path, scrollTop })
+        },
     }
 
     const mutations = {
         [types.SET_PAGE_SWITCHING](state, isPageSwitching) {
             state.isPageSwitching = isPageSwitching
         },
-        [types.SET_PAGE_TRANSITION_NAME](state, {pageTransitionName}) {
+        [types.SET_PAGE_TRANSITION_NAME](state, { pageTransitionName }) {
             state.pageTransitionName = pageTransitionName
         },
-        [types.SAVE_SCROLLTOP](state, {path, scrollTop}) {
+        [types.SAVE_SCROLLTOP](state, { path, scrollTop }) {
             state.historyPageScrollTop[path] = scrollTop
-        }
+        },
     }
 
     return {

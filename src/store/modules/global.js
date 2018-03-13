@@ -1,5 +1,5 @@
 import toastr from 'toastr'
-import {inBrowser} from '~utils'
+import { inBrowser } from '~utils'
 
 toastr.options.positionClass = 'toast-top-center'
 
@@ -7,7 +7,7 @@ const state = () => ({
     loading: false,
     cookies: {},
     showLoginModal: false,
-    showRegisterModal: false
+    showRegisterModal: false,
 })
 
 const actions = {
@@ -24,7 +24,7 @@ const actions = {
     },
     ['hideMsg']() {
         toastr.clear()
-    }
+    },
 }
 
 const mutations = {
@@ -33,18 +33,18 @@ const mutations = {
     },
     ['showRegisterModal'](state, payload) {
         state.showRegisterModal = payload
-    }
+    },
 }
 
 const getters = {
     ['getGlobal'](state) {
         return state
-    }
+    },
 }
 
 export default {
     actions,
     state,
     mutations,
-    getters
+    getters,
 }

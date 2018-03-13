@@ -20,13 +20,13 @@
     </div>
 </template>
 
-<script lang="babel">
+<script>
 import cookies from 'js-cookie'
 import api from '~api'
 import aInput from '~components/_input.vue'
 export default {
     name: 'backend-login',
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
         if (cookies.get('b_user')) {
             window.location.href = '/backend/article/list'
         }
@@ -36,12 +36,12 @@ export default {
         return {
             form: {
                 username: '',
-                password: ''
-            }
+                password: '',
+            },
         }
     },
     components: {
-        aInput
+        aInput,
     },
     methods: {
         async login() {
@@ -49,17 +49,17 @@ export default {
                 this.$store.dispatch('global/showMsg', '请输入用户名和密码!')
                 return
             }
-            const { data: { data, code} } = await api.post('backend/admin/login', this.form)
+            const { data: { data, code } } = await api.post('backend/admin/login', this.form)
             if (data && code === 200) {
                 window.location.href = '/backend/article/list'
             }
-        }
+        },
     },
-    metaInfo () {
+    metaInfo() {
         return {
             title: '管理员登录 - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }],
         }
-    }
+    },
 }
 </script>

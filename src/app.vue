@@ -1,18 +1,18 @@
 <template>
-<div id="app" :class="backend ? 'backend' : 'frontend'">
-    <Navigation :backend="backend"></Navigation>
-    <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
-        <keep-alive>
-            <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
-        </keep-alive>
-    </transition>
-    <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
-        <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
-    </transition>
-    <sign-up :show="global.showRegisterModal"></sign-up>
-    <sign-in :show="global.showLoginModal"></sign-in>
-    <back-top></back-top>
-</div>
+    <div id="app" :class="backend ? 'backend' : 'frontend'">
+        <Navigation :backend="backend"></Navigation>
+        <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+            <keep-alive>
+                <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
+            </keep-alive>
+        </transition>
+        <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+            <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
+        </transition>
+        <sign-up :show="global.showRegisterModal"></sign-up>
+        <sign-in :show="global.showLoginModal"></sign-in>
+        <back-top></back-top>
+    </div>
 </template>
 
 <script>
@@ -37,11 +37,9 @@ export default {
     },
     computed: {
         ...mapGetters({
-            global: 'global/getGlobal'
+            global: 'global/getGlobal',
         }),
-        ...mapState('appShell', [
-            'pageTransitionName'
-        ]),
+        ...mapState('appShell', ['pageTransitionName']),
         key() {
             return this.$route.path.replace(/\//g, '_')
         },
@@ -50,7 +48,7 @@ export default {
         },
         isLogin() {
             return ['/backend', '/backend/'].includes(this.$route.path)
-        }
+        },
     },
     methods: {
         handleBeforeEnter() {
@@ -62,6 +60,6 @@ export default {
         handleClickHeaderBack() {
             this.$router.go(-1)
         },
-    }
+    },
 }
 </script>

@@ -9,7 +9,7 @@ import config from './config-server'
 const parseCookie = cookies => {
     let cookie = ''
     Object.keys(cookies).forEach(item => {
-        cookie+= item + '=' + cookies[item] + '; '
+        cookie += item + '=' + cookies[item] + '; '
     })
     return cookie
 }
@@ -24,7 +24,7 @@ export default {
             baseURL: config.api,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                cookie: parseCookie(value)
+                cookie: parseCookie(value),
             },
             timeout: config.timeout,
         })
@@ -43,7 +43,7 @@ export default {
             data: qs.stringify(data),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            }
+            },
         }).then(res => {
             if (config.cached && data.cache) config.cached.set(key, res)
             return res
@@ -65,5 +65,5 @@ export default {
             if (config.cached && params.cache) config.cached.set(key, res)
             return res
         })
-    }
+    },
 }

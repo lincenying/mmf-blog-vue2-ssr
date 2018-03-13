@@ -52,33 +52,31 @@
         </div>
     </div>
 </template>
-<script lang="babel">
+<script>
 import { mapGetters } from 'vuex'
 import metaMixin from '~mixins'
 import trending from '../components/aside-trending.vue'
 
 export default {
     name: 'frontend-about',
-    async asyncData({store}) {
+    async asyncData({ store }) {
         await store.dispatch('frontend/article/getTrending')
     },
     mixins: [metaMixin],
     components: {
-        trending
+        trending,
     },
     computed: {
         ...mapGetters({
-            trending: 'frontend/article/getTrending'
-        })
+            trending: 'frontend/article/getTrending',
+        }),
     },
-    mounted() {
-
-    },
-    metaInfo () {
+    mounted() {},
+    metaInfo() {
         return {
             title: '关于 - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }],
         }
-    }
+    },
 }
 </script>

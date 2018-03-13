@@ -3,7 +3,7 @@
  * @author lincenying(lincenying@qq.com)
  */
 
-import {createApp} from './app'
+import { createApp } from './app'
 import api from '~api'
 
 // const isDev = process.env.NODE_ENV !== 'production'
@@ -13,16 +13,16 @@ import api from '~api'
 // state of our application before actually rendering it.
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
-export default function (context) {
+export default function(context) {
     return new Promise((resolve, reject) => {
         const s = Date.now()
-        const {app, router, store} = createApp()
+        const { app, router, store } = createApp()
 
         const url = context.url
         const fullPath = router.resolve(url).route.fullPath
 
         if (fullPath !== url) {
-            reject({url: fullPath})
+            reject({ url: fullPath })
         }
 
         // set router's location
@@ -34,7 +34,7 @@ export default function (context) {
 
             // no matched routes
             if (!matchedComponents.length) {
-                reject({code: 404})
+                reject({ code: 404 })
             }
 
             // Call fetchData hooks on components matched by the route.
@@ -43,25 +43,33 @@ export default function (context) {
             // updated.
             // process.userCookies = context.cookies
             api.setCookies(context.cookies)
-            Promise.all(matchedComponents.map(({asyncData}) => asyncData && asyncData({
-                store,
-                route: router.currentRoute,
-                cookies: context.cookies,
-                isServer: true,
-                isClient: false
-            }))).then(() => {
-                console.log(`data pre-fetch: ${Date.now() - s}ms`)
+            Promise.all(
+                matchedComponents.map(
+                    ({ asyncData }) =>
+                        asyncData &&
+                        asyncData({
+                            store,
+                            route: router.currentRoute,
+                            cookies: context.cookies,
+                            isServer: true,
+                            isClient: false,
+                        })
+                )
+            )
+                .then(() => {
+                    console.log(`data pre-fetch: ${Date.now() - s}ms`)
 
-                // After all preFetch hooks are resolved, our store is now
-                // filled with the state needed to render the app.
-                // Expose the state on the render context, and let the request handler
-                // inline the state in the HTML response. This allows the client-side
-                // store to pick-up the server-side state without having to duplicate
-                // the initial data fetching on the client.
-                context.state = store.state
-                context.isProd = process.env.NODE_ENV === 'production'
-                resolve(app)
-            }).catch(reject)
+                    // After all preFetch hooks are resolved, our store is now
+                    // filled with the state needed to render the app.
+                    // Expose the state on the render context, and let the request handler
+                    // inline the state in the HTML response. This allows the client-side
+                    // store to pick-up the server-side state without having to duplicate
+                    // the initial data fetching on the client.
+                    context.state = store.state
+                    context.isProd = process.env.NODE_ENV === 'production'
+                    resolve(app)
+                })
+                .catch(reject)
         }, reject)
     })
 }

@@ -142,3 +142,16 @@ nav ul, nav ol {
 .hidden {
     display: none;
 }
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:before, .clearfix:after {
+    display: table;
+    content: "";
+}
+
+.clearfix:after {
+    clear: both;
+}

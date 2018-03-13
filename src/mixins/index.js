@@ -1,4 +1,4 @@
-function getTitle (vm) {
+function getTitle(vm) {
     const { metaInfo } = vm.$options
     if (metaInfo) {
         return typeof metaInfo === 'function' ? metaInfo.call(vm) : metaInfo
@@ -6,21 +6,17 @@ function getTitle (vm) {
 }
 
 const serverTitleMixin = {
-    created () {
+    created() {
         const meta = getTitle(this)
         if (meta) {
             this.$ssrContext.title = meta.title || meta
             this.$ssrContext.description = meta.desc || meta
         }
-    }
+    },
 }
 
 const clientTitleMixin = {
-    mounted () {
-
-    }
+    mounted() {},
 }
 
-export default process.env.VUE_ENV === 'server'
-    ? serverTitleMixin
-    : clientTitleMixin
+export default (process.env.VUE_ENV === 'server' ? serverTitleMixin : clientTitleMixin)

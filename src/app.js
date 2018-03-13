@@ -5,13 +5,12 @@
 
 import Vue from 'vue'
 
-import {createRouter} from './router'
-import {createStore} from './store'
+import { createRouter } from './router'
+import { createStore } from './store'
 import App from './app.vue'
 import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 import titleMixin from './mixins'
-
 
 Vue.mixin(titleMixin)
 
@@ -29,7 +28,7 @@ export function createApp() {
     const app = new Vue({
         router,
         store,
-        ...App
+        ...App,
     })
-    return {app, router, store}
+    return { app, router, store }
 }

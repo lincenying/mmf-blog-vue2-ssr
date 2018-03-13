@@ -15,28 +15,28 @@ const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
 
 const serverInfo =
-  `express/${require('express/package.json').version} ` +
-  `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
+    `express/${require('express/package.json').version} ` +
+    `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 // 引入 mongoose 相关模型
 require('./server/models/admin')
 require('./server/models/article')
 require('./server/models/category')
 require('./server/models/comment')
-require('./server/models/like')
+// require('./server/models/like')
 require('./server/models/user')
 
 // 引入 api 路由
 const routes = require('./server/routes/index')
 
-function createRenderer (bundle, template) {
+function createRenderer(bundle, template) {
     // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
     return createBundleRenderer(bundle, {
         template,
         cache: require('lru-cache')({
             max: 1000,
-            maxAge: 1000 * 60 * 15
-        })
+            maxAge: 1000 * 60 * 15,
+        }),
     })
 }
 
@@ -70,7 +70,7 @@ app.engine('.html', require('ejs').__express)
 app.set('view engine', 'ejs')
 
 app.use(favicon('./favicon.ico'))
-app.use(compression({threshold: 0}))
+app.use(compression({ threshold: 0 }))
 // 日志
 app.use(logger('":method :url" :status :res[content-length] ":referrer" ":user-agent"'))
 // body 解析中间件
@@ -89,53 +89,56 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 app.use('/api', routes)
 
 // 前台路由, ssr 渲染
-app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'], (req, res) => {
-    if ((req.originalUrl === '/user/account' || req.originalUrl === '/user/password') && !req.cookies.user) {
-        return res.redirect('/')
-    }
-    if (!renderer) {
-        return res.end('waiting for compilation... refresh in a moment.')
-    }
-    const s = Date.now()
-
-    res.setHeader("Content-Type", "text/html")
-    res.setHeader("Server", serverInfo)
-
-    const errorHandler = err => {
-        if (err && err.code === 404) {
-            res.status(404).end('404 | Page Not Found')
-        } else {
-            // Render Error Page or Redirect
-            res.status(500).end('Internal Error 500')
-            console.error(`error during render : ${req.url}`)
-            console.error(err)
+app.get(
+    ['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'],
+    (req, res) => {
+        if ((req.originalUrl === '/user/account' || req.originalUrl === '/user/password') && !req.cookies.user) {
+            return res.redirect('/')
         }
-    }
-
-    const context = {
-        title: 'M.M.F 小屋',
-        description: 'M.M.F 小屋',
-        url: req.url,
-        cookies: req.cookies
-    }
-    renderer.renderToString(context, (err, html) => {
-        if (err) {
-            return errorHandler(err)
+        if (!renderer) {
+            return res.end('waiting for compilation... refresh in a moment.')
         }
-        res.end(html)
-        console.log(`whole request: ${Date.now() - s}ms`)
-    })
-    // const htmlStream = new HTMLStream({ template: frontend, context })
-    // htmlStream.on('beforeStart', () => {
-    //     const meta = context.meta.inject()
-    //     context.head = (context.head || '') + meta.title.text()
-    // })
-    // renderer.renderToStream(context)
-    //     .on('error', errorHandler)
-    //     .pipe(htmlStream)
-    //     .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
-    //     .pipe(res)
-})
+        const s = Date.now()
+
+        res.setHeader('Content-Type', 'text/html')
+        res.setHeader('Server', serverInfo)
+
+        const errorHandler = err => {
+            if (err && err.code === 404) {
+                res.status(404).end('404 | Page Not Found')
+            } else {
+                // Render Error Page or Redirect
+                res.status(500).end('Internal Error 500')
+                console.error(`error during render : ${req.url}`)
+                console.error(err)
+            }
+        }
+
+        const context = {
+            title: 'M.M.F 小屋',
+            description: 'M.M.F 小屋',
+            url: req.url,
+            cookies: req.cookies,
+        }
+        renderer.renderToString(context, (err, html) => {
+            if (err) {
+                return errorHandler(err)
+            }
+            res.end(html)
+            console.log(`whole request: ${Date.now() - s}ms`)
+        })
+        // const htmlStream = new HTMLStream({ template: frontend, context })
+        // htmlStream.on('beforeStart', () => {
+        //     const meta = context.meta.inject()
+        //     context.head = (context.head || '') + meta.title.text()
+        // })
+        // renderer.renderToStream(context)
+        //     .on('error', errorHandler)
+        //     .pipe(htmlStream)
+        //     .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
+        //     .pipe(res)
+    }
+)
 
 // 后台渲染
 app.get(['/backend', '/backend/*'], (req, res) => {

@@ -1182,6 +1182,12 @@ a:hover .icon-arrow-right {
     }
 }
 
+@media (max-width: 375px) {
+    .global-nav .nav-link {
+        padding: 0 15px;
+    }
+}
+
 .comments {
     margin-left: 25px;
     padding-top: 20px;

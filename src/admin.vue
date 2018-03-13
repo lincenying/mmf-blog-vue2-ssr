@@ -1,22 +1,22 @@
 <template>
-<div id="app" :class="backend ? 'backend' : 'frontend'">
-    <Navigation :backend="backend"></Navigation>
-    <div class="main wrap clearfix">
-        <div class="main-left">
-            <div class="home-feeds cards-wrap">
-                <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
-                    <keep-alive>
-                        <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
-                    </keep-alive>
-                </transition>
-                <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
-                    <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
-                </transition>
+    <div id="app" :class="backend ? 'backend' : 'frontend'">
+        <Navigation :backend="backend"></Navigation>
+        <div class="main wrap clearfix">
+            <div class="main-left">
+                <div class="home-feeds cards-wrap">
+                    <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+                        <keep-alive>
+                            <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
+                        </keep-alive>
+                    </transition>
+                    <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
+                        <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
+                    </transition>
+                </div>
             </div>
+            <backend-menu v-if="!isLogin"></backend-menu>
         </div>
-        <backend-menu v-if="!isLogin"></backend-menu>
     </div>
-</div>
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex'
@@ -28,11 +28,9 @@ export default {
     name: 'backend',
     computed: {
         ...mapGetters({
-            global: 'global/getGlobal'
+            global: 'global/getGlobal',
         }),
-        ...mapState('appShell', [
-            'pageTransitionName'
-        ]),
+        ...mapState('appShell', ['pageTransitionName']),
         key() {
             return this.$route.path.replace(/\//g, '_')
         },
@@ -41,11 +39,11 @@ export default {
         },
         isLogin() {
             return ['/backend', '/backend/'].includes(this.$route.path)
-        }
+        },
     },
     components: {
         backendMenu,
-        Navigation
+        Navigation,
     },
     methods: {
         handleBeforeEnter() {
@@ -66,10 +64,10 @@ export default {
             } else if (val === 100) {
                 NProgress.done()
             } else {
-                NProgress.set(val/100)
+                NProgress.set(val / 100)
                 NProgress.start()
             }
-        }
-    }
+        },
+    },
 }
 </script>

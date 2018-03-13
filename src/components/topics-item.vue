@@ -9,18 +9,18 @@
         <actions :item="item"></actions>
     </div>
 </template>
-<script lang="babel">
+<script>
 import actions from './item-actions.vue'
 export default {
     name: 'topics-item',
     props: ['item'],
-    data () {
+    data() {
         return {
-            showMore: false
+            showMore: false,
         }
     },
     components: {
-        actions
-    }
+        actions,
+    },
 }
 </script>

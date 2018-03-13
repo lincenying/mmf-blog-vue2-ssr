@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<script lang="babel">
+<script>
 import api from '~api'
 import { mapGetters } from 'vuex'
 import checkAdmin from '~mixins/check-admin'
@@ -26,10 +26,10 @@ import aInput from '../components/_input.vue'
 export default {
     name: 'backend-category-modify',
     mixins: [checkAdmin],
-    async asyncData({store, route}) {
+    async asyncData({ store, route }) {
         await store.dispatch('global/category/getCategoryItem', {
             path: route.path,
-            id: route.params.id
+            id: route.params.id,
         })
     },
     data() {
@@ -37,17 +37,17 @@ export default {
             form: {
                 id: this.$route.params.id,
                 cate_name: '',
-                cate_order: ''
-            }
+                cate_order: '',
+            },
         }
     },
     components: {
-        aInput
+        aInput,
     },
     computed: {
         ...mapGetters({
-            item: 'global/category/getCategoryItem'
-        })
+            item: 'global/category/getCategoryItem',
+        }),
     },
     methods: {
         async modify() {
@@ -55,16 +55,16 @@ export default {
                 this.$store.dispatch('global/showMsg', '请将表单填写完整!')
                 return
             }
-            const { data: { message, code, data} } = await api.post('backend/category/modify', this.form)
+            const { data: { message, code, data } } = await api.post('backend/category/modify', this.form)
             if (code === 200 && data) {
                 this.$store.dispatch('global/showMsg', {
                     type: 'success',
-                    content: message
+                    content: message,
                 })
                 this.$store.commit('global/category/updateCategoryItem', data)
                 this.$router.push('/backend/category/list')
             }
-        }
+        },
     },
     mounted() {
         this.form.cate_name = this.item.data.cate_name
@@ -74,13 +74,13 @@ export default {
         item(val) {
             this.form.cate_name = val.data.cate_name
             this.form.cate_order = val.data.cate_order
-        }
+        },
     },
-    metaInfo () {
+    metaInfo() {
         return {
             title: '编辑分类 - M.M.F 小屋',
-            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }]
+            meta: [{ vmid: 'description', name: 'description', content: 'M.M.F 小屋' }],
         }
-    }
+    },
 }
 </script>
