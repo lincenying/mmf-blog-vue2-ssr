@@ -13,7 +13,7 @@ marked.setOptions({
     highlight(code) {
         return hljs.highlightAuto(code).value
     },
-    breaks: true
+    breaks: true,
 })
 
 /**
@@ -48,7 +48,7 @@ exports.getItem = (req, res) => {
 exports.insert = (req, res) => {
     const { category, content, title } = req.body
     const html = marked(content)
-    const arr_category = category.split("|")
+    const arr_category = category.split('|')
     const data = {
         title,
         category: arr_category[0],
@@ -61,22 +61,24 @@ exports.insert = (req, res) => {
         creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         is_delete: 0,
-        timestamp: moment().format('X')
+        timestamp: moment().format('X'),
     }
-    Article.createAsync(data).then(result => {
-        return Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }).then(() => {
-            return res.json({
-                code: 200,
-                message: '发布成功',
-                data: result
+    Article.createAsync(data)
+        .then(result => {
+            return Category.updateAsync({ _id: category }, { $inc: { cate_num: 1 } }).then(() => {
+                return res.json({
+                    code: 200,
+                    message: '发布成功',
+                    data: result,
+                })
             })
         })
-    }).catch(err => {
-        res.json({
-            code: -200,
-            message: err.toString()
+        .catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString(),
+            })
         })
-    })
 }
 
 /**
@@ -88,20 +90,22 @@ exports.insert = (req, res) => {
  */
 exports.deletes = (req, res) => {
     const _id = req.query.id
-    Article.updateAsync({ _id }, { is_delete: 1 }).then(() => {
-        return Category.updateAsync({ _id }, { '$inc': { 'cate_num': -1 } }).then(result => {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: result
+    Article.updateAsync({ _id }, { is_delete: 1 })
+        .then(() => {
+            return Category.updateAsync({ _id }, { $inc: { cate_num: -1 } }).then(result => {
+                res.json({
+                    code: 200,
+                    message: '更新成功',
+                    data: result,
+                })
             })
         })
-    }).catch(err => {
-        res.json({
-            code: -200,
-            message: err.toString()
+        .catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString(),
+            })
         })
-    })
 }
 
 /**
@@ -113,20 +117,22 @@ exports.deletes = (req, res) => {
  */
 exports.recover = (req, res) => {
     const _id = req.query.id
-    Article.updateAsync({ _id }, { is_delete: 0 }).then(() => {
-        return Category.updateAsync({ _id }, { '$inc': { 'cate_num': 1 } }).then(() => {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: 'success'
+    Article.updateAsync({ _id }, { is_delete: 0 })
+        .then(() => {
+            return Category.updateAsync({ _id }, { $inc: { cate_num: 1 } }).then(() => {
+                res.json({
+                    code: 200,
+                    message: '更新成功',
+                    data: 'success',
+                })
             })
         })
-    }).catch(err => {
-        res.json({
-            code: -200,
-            message: err.toString()
+        .catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString(),
+            })
         })
-    })
 }
 
 /**
@@ -145,31 +151,33 @@ exports.modify = (req, res) => {
         category_name: req.body.category_name,
         content,
         html,
-        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
-    Article.findOneAndUpdateAsync({ _id: id }, data, { new: true }).then(result => {
-        if (category !== category_old) {
-            Promise.all([
-                Category.updateAsync({ _id: category }, { '$inc': { 'cate_num': 1 } }),
-                Category.updateAsync({ _id: category_old }, { '$inc': { 'cate_num': -1 } })
-            ]).then(() => {
+    Article.findOneAndUpdateAsync({ _id: id }, data, { new: true })
+        .then(result => {
+            if (category !== category_old) {
+                Promise.all([
+                    Category.updateAsync({ _id: category }, { $inc: { cate_num: 1 } }),
+                    Category.updateAsync({ _id: category_old }, { $inc: { cate_num: -1 } }),
+                ]).then(() => {
+                    res.json({
+                        code: 200,
+                        message: '更新成功',
+                        data: result,
+                    })
+                })
+            } else {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: result
+                    data: result,
                 })
-            })
-        } else {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: result
-            })
-        }
-    }).catch(err => {
-        res.json({
-            code: -200,
-            message: err.toString()
+            }
         })
-    })
+        .catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString(),
+            })
+        })
 }

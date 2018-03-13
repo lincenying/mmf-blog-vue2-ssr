@@ -13,20 +13,24 @@ const { item, modify, deletes, recover } = general
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    Category.find().sort('-cate_order').exec().then(result => {
-        const json = {
-            code: 200,
-            data: {
-                list: result
+    Category.find()
+        .sort('-cate_order')
+        .exec()
+        .then(result => {
+            const json = {
+                code: 200,
+                data: {
+                    list: result,
+                },
             }
-        }
-        res.json(json)
-    }).catch(err => {
-        res.json({
-            code: -200,
-            message: err.toString()
+            res.json(json)
         })
-    })
+        .catch(err => {
+            res.json({
+                code: -200,
+                message: err.toString(),
+            })
+        })
 }
 
 exports.getItem = (req, res) => {
@@ -38,7 +42,7 @@ exports.insert = (req, res) => {
     if (!cate_name || !cate_order) {
         res.json({
             code: -200,
-            message: '请填写分类名称和排序'
+            message: '请填写分类名称和排序',
         })
     } else {
         return Category.createAsync({
@@ -47,12 +51,12 @@ exports.insert = (req, res) => {
             creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             is_delete: 0,
-            timestamp: moment().format('X')
+            timestamp: moment().format('X'),
         }).then(result => {
             res.json({
                 code: 200,
                 message: '添加成功',
-                data: result._id
+                data: result._id,
             })
         })
     }
@@ -69,6 +73,8 @@ exports.recover = (req, res) => {
 exports.modify = (req, res) => {
     const { id, cate_name, cate_order } = req.body
     modify(res, Category, id, {
-        cate_name, cate_order, update_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        cate_name,
+        cate_order,
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
     })
 }

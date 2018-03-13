@@ -11,7 +11,7 @@ const CommentSchema = new Schema({
     content: String,
     creat_date: String,
     is_delete: Number,
-    timestamp: Number
+    timestamp: Number,
 })
 
 const Comment = mongoose.model('Comment', CommentSchema)
