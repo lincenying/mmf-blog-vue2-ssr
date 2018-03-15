@@ -65,7 +65,7 @@ exports.insert = (req, res) => {
     }
     Article.createAsync(data)
         .then(result => {
-            return Category.updateAsync({ _id: category }, { $inc: { cate_num: 1 } }).then(() => {
+            return Category.updateAsync({ _id: arr_category[0] }, { $inc: { cate_num: 1 } }).then(() => {
                 return res.json({
                     code: 200,
                     message: '发布成功',
