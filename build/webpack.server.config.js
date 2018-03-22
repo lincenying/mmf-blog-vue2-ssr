@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 var config = merge(base, {
+    mode: process.env.NODE_ENV || 'development',
     target: 'node',
     devtool: false,
     entry: './src/entry-server.js',

@@ -1,9 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const config = require('../config')
 const isProd = process.env.NODE_ENV === 'production'
 
-const config = {
+const baseConfig = {
     performance: {
         maxEntrypointSize: 300000,
         hints: isProd ? 'warning' : false
@@ -11,13 +12,11 @@ const config = {
     entry: {
         app: './src/entry-client.js',
         admin: './src/admin.js',
-        vendor: ['./src/polyfill']
+        vendors: ['./src/polyfill']
     },
     output: {
-        path: path.resolve(__dirname, '../dist'),
-        publicPath: '/',
-        filename: 'static/js/[name].[chunkhash:7].js',
-        chunkFilename: 'static/js/[name].[chunkhash:7].js',
+        path: config.build.assetsRoot,
+        publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
     },
     resolve: {
         extensions: [
@@ -57,5 +56,5 @@ const config = {
         })
     ]
 }
-!isProd && config.plugins.push(new FriendlyErrorsPlugin())
-module.exports = config
+!isProd && baseConfig.plugins.push(new FriendlyErrorsPlugin())
+module.exports = baseConfig

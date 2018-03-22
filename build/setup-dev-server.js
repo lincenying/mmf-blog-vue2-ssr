@@ -13,7 +13,6 @@ module.exports = function setupDevServer (app, callback) {
     clientConfig.entry.admin = ['./build/dev-client', clientConfig.entry.admin]
     clientConfig.output.filename = '[name].js'
     clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin(), new webpack.NoEmitOnErrorsPlugin())
-
     // dev middleware
     const clientCompiler = webpack(clientConfig)
     const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
