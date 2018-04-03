@@ -6,3 +6,4 @@ npm-debug.log
 .idea/
 admin.lock
 server/config/secret.js
+server/config/mpapp.js

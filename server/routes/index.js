@@ -97,6 +97,7 @@ router.post('/frontend/user/insert', multipartMiddleware, frontendUser.insert)
 // 前台登录
 router.post('/frontend/user/login', multipartMiddleware, frontendUser.login)
 // 微信登录
+router.post('/frontend/user/jscode2session', multipartMiddleware, frontendUser.jscode2session)
 router.post('/frontend/user/wxLogin', multipartMiddleware, frontendUser.wxLogin)
 // 前台退出
 router.post('/frontend/user/logout', isUser, frontendUser.logout)
