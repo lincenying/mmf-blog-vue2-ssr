@@ -12,11 +12,11 @@ const serverTitleMixin = {
             this.$ssrContext.title = meta.title || meta
             this.$ssrContext.description = meta.desc || meta
         }
-    },
+    }
 }
 
 const clientTitleMixin = {
-    mounted() {},
+    mounted() {}
 }
 
 export default (process.env.VUE_ENV === 'server' ? serverTitleMixin : clientTitleMixin)

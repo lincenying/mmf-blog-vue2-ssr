@@ -13,7 +13,7 @@ marked.setOptions({
     highlight(code) {
         return hljs.highlightAuto(code).value
     },
-    breaks: true,
+    breaks: true
 })
 
 /**
@@ -61,7 +61,7 @@ exports.insert = (req, res) => {
         creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
         is_delete: 0,
-        timestamp: moment().format('X'),
+        timestamp: moment().format('X')
     }
     Article.createAsync(data)
         .then(result => {
@@ -69,14 +69,14 @@ exports.insert = (req, res) => {
                 return res.json({
                     code: 200,
                     message: '发布成功',
-                    data: result,
+                    data: result
                 })
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -96,14 +96,14 @@ exports.deletes = (req, res) => {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: result,
+                    data: result
                 })
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -123,14 +123,14 @@ exports.recover = (req, res) => {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: 'success',
+                    data: 'success'
                 })
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -151,33 +151,33 @@ exports.modify = (req, res) => {
         category_name: req.body.category_name,
         content,
         html,
-        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     Article.findOneAndUpdateAsync({ _id: id }, data, { new: true })
         .then(result => {
             if (category !== category_old) {
                 Promise.all([
                     Category.updateAsync({ _id: category }, { $inc: { cate_num: 1 } }),
-                    Category.updateAsync({ _id: category_old }, { $inc: { cate_num: -1 } }),
+                    Category.updateAsync({ _id: category_old }, { $inc: { cate_num: -1 } })
                 ]).then(() => {
                     res.json({
                         code: 200,
                         message: '更新成功',
-                        data: result,
+                        data: result
                     })
                 })
             } else {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: result,
+                    data: result
                 })
             }
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }

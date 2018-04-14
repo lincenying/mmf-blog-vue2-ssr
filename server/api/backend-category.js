@@ -20,15 +20,15 @@ exports.getList = (req, res) => {
             const json = {
                 code: 200,
                 data: {
-                    list: result,
-                },
+                    list: result
+                }
             }
             res.json(json)
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -42,7 +42,7 @@ exports.insert = (req, res) => {
     if (!cate_name || !cate_order) {
         res.json({
             code: -200,
-            message: '请填写分类名称和排序',
+            message: '请填写分类名称和排序'
         })
     } else {
         return Category.createAsync({
@@ -51,12 +51,12 @@ exports.insert = (req, res) => {
             creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             is_delete: 0,
-            timestamp: moment().format('X'),
+            timestamp: moment().format('X')
         }).then(result => {
             res.json({
                 code: 200,
                 message: '添加成功',
-                data: result._id,
+                data: result._id
             })
         })
     }
@@ -75,6 +75,6 @@ exports.modify = (req, res) => {
     modify(res, Category, id, {
         cate_name,
         cate_order,
-        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     })
 }

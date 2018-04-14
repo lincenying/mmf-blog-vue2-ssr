@@ -47,14 +47,14 @@ exports.login = (req, res) => {
     if (username === '' || password === '') {
         json = {
             code: -200,
-            message: '请输入用户名和密码',
+            message: '请输入用户名和密码'
         }
         return res.json(json)
     }
     Admin.findOneAsync({
         username,
         password: md5(md5Pre + password),
-        is_delete: 0,
+        is_delete: 0
     })
         .then(result => {
             if (result) {
@@ -68,18 +68,18 @@ exports.login = (req, res) => {
                 return res.json({
                     code: 200,
                     message: '登录成功',
-                    data: token,
+                    data: token
                 })
             }
             return res.json({
                 code: -200,
-                message: '用户名或者密码错误',
+                message: '用户名或者密码错误'
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -112,7 +112,7 @@ exports.insert = (req, res, next) => {
                 creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                 update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                 is_delete: 0,
-                timestamp: moment().format('X'),
+                timestamp: moment().format('X')
             }).then(() => {
                 fs.writeFileSync('./admin.lock', username)
                 return '添加用户成功: ' + username + ', 密码: ' + password
@@ -136,7 +136,7 @@ exports.modify = (req, res) => {
     var data = {
         email,
         username,
-        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     if (password) data.password = md5(md5Pre + password)
     modify(res, Admin, id, data)

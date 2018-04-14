@@ -28,7 +28,7 @@ export function createApp() {
     const app = new Vue({
         router,
         store,
-        ...App,
+        ...App
     })
     return { app, router, store }
 }

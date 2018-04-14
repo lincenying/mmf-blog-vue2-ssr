@@ -22,7 +22,7 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
             .skip(skip)
             .limit(limit)
             .exec(),
-        mongoDB.countAsync(),
+        mongoDB.countAsync()
     ])
         .then(result => {
             const total = result[1]
@@ -33,15 +33,15 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
                     list: result[0],
                     total,
                     hasNext: totalPage > page ? 1 : 0,
-                    hasPrev: page > 1 ? 1 : 0,
-                },
+                    hasPrev: page > 1 ? 1 : 0
+                }
             }
             res.json(json)
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -59,7 +59,7 @@ exports.item = (req, res, mongoDB) => {
     if (!_id) {
         res.json({
             code: -200,
-            message: '参数错误',
+            message: '参数错误'
         })
     }
     mongoDB
@@ -67,13 +67,13 @@ exports.item = (req, res, mongoDB) => {
         .then(result => {
             res.json({
                 code: 200,
-                data: result,
+                data: result
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -94,13 +94,13 @@ exports.deletes = (req, res, mongoDB) => {
             res.json({
                 code: 200,
                 message: '更新成功',
-                data: 'success',
+                data: 'success'
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -121,13 +121,13 @@ exports.modify = (res, mongoDB, _id, data) => {
             res.json({
                 code: 200,
                 message: '更新成功',
-                data: result,
+                data: result
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -148,13 +148,13 @@ exports.recover = (req, res, mongoDB) => {
             res.json({
                 code: 200,
                 message: '更新成功',
-                data: 'success',
+                data: 'success'
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }

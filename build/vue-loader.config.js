@@ -1,4 +1,4 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 var loaders = {}
 if (process.env.NODE_ENV !== 'production') {
@@ -8,8 +8,22 @@ if (process.env.NODE_ENV !== 'production') {
     }
 } else {
     loaders = {
-        css: ExtractTextPlugin.extract({fallback: 'vue-style-loader', use: 'css-loader'}),
-        less: ExtractTextPlugin.extract({fallback: 'vue-style-loader', use: 'css-loader!less-loader'})
+        css: [
+            {
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+            {
+                use: ['vue-style-loader', 'css-loader'],
+            },
+        ],
+        less: [
+            {
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'],
+            },
+            {
+                use: ['vue-style-loader', 'css-loader', 'less-loader'],
+            },
+        ]
     }
 }
 module.exports = {

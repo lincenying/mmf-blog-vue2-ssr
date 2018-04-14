@@ -52,7 +52,7 @@ export default function(context) {
                             route: router.currentRoute,
                             cookies: context.cookies,
                             isServer: true,
-                            isClient: false,
+                            isClient: false
                         })
                 )
             )

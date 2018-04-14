@@ -33,14 +33,14 @@ exports.login = (req, res) => {
     if (username === '' || password === '') {
         json = {
             code: -200,
-            message: '请输入用户名和密码',
+            message: '请输入用户名和密码'
         }
         res.json(json)
     }
     User.findOneAsync({
         username,
         password: md5(md5Pre + password),
-        is_delete: 0,
+        is_delete: 0
     })
         .then(result => {
             if (result) {
@@ -54,12 +54,12 @@ exports.login = (req, res) => {
                 json = {
                     code: 200,
                     message: '登录成功',
-                    data: token,
+                    data: token
                 }
             } else {
                 json = {
                     code: -200,
-                    message: '用户名或者密码错误',
+                    message: '用户名或者密码错误'
                 }
             }
             res.json(json)
@@ -67,7 +67,7 @@ exports.login = (req, res) => {
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -86,13 +86,13 @@ exports.jscode2session = async (req, res) => {
             appid: mpappApiId,
             secret: mpappSecret,
             js_code,
-            grant_type: 'authorization_code',
-        },
+            grant_type: 'authorization_code'
+        }
     })
     res.json({
         code: 200,
         message: '登录成功',
-        data: xhr.data,
+        data: xhr.data
     })
 }
 /**
@@ -109,14 +109,14 @@ exports.wxLogin = (req, res) => {
     if (!nickName || !wxSignature) {
         json = {
             code: -200,
-            message: '参数有误, 微信登录失败',
+            message: '参数有误, 微信登录失败'
         }
         res.json(json)
     } else {
         User.findOneAsync({
             username: nickName,
             wx_signature: wxSignature,
-            is_delete: 0,
+            is_delete: 0
         })
             .then(result => {
                 if (result) {
@@ -129,8 +129,8 @@ exports.wxLogin = (req, res) => {
                         data: {
                             user: token,
                             userid: id,
-                            username,
-                        },
+                            username
+                        }
                     }
                     res.json(json)
                 } else {
@@ -143,7 +143,7 @@ exports.wxLogin = (req, res) => {
                         is_delete: 0,
                         timestamp: moment().format('X'),
                         wx_avatar: avatar,
-                        wx_signature: wxSignature,
+                        wx_signature: wxSignature
                     })
                         .then(_result => {
                             id = _result._id
@@ -155,14 +155,14 @@ exports.wxLogin = (req, res) => {
                                 data: {
                                     user: token,
                                     userid: id,
-                                    username,
-                                },
+                                    username
+                                }
                             })
                         })
                         .catch(err => {
                             res.json({
                                 code: -200,
-                                message: err.toString(),
+                                message: err.toString()
                             })
                         })
                 }
@@ -170,7 +170,7 @@ exports.wxLogin = (req, res) => {
             .catch(err => {
                 res.json({
                     code: -200,
-                    message: err.toString(),
+                    message: err.toString()
                 })
             })
     }
@@ -190,7 +190,7 @@ exports.logout = (req, res) => {
     res.json({
         code: 200,
         message: '退出成功',
-        data: '',
+        data: ''
     })
 }
 
@@ -207,17 +207,17 @@ exports.insert = (req, res) => {
     if (!username || !password || !email) {
         res.json({
             code: -200,
-            message: '请将表单填写完整',
+            message: '请将表单填写完整'
         })
     } else if (strlen(username) < 4) {
         res.json({
             code: -200,
-            message: '用户长度至少 2 个中文或 4 个英文',
+            message: '用户长度至少 2 个中文或 4 个英文'
         })
     } else if (strlen(password) < 8) {
         res.json({
             code: -200,
-            message: '密码长度至少 8 位',
+            message: '密码长度至少 8 位'
         })
     } else {
         User.findOneAsync({ username })
@@ -225,7 +225,7 @@ exports.insert = (req, res) => {
                 if (result) {
                     res.json({
                         code: -200,
-                        message: '该用户名已经存在!',
+                        message: '该用户名已经存在!'
                     })
                 } else {
                     return User.createAsync({
@@ -235,19 +235,19 @@ exports.insert = (req, res) => {
                         creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                         update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                         is_delete: 0,
-                        timestamp: moment().format('X'),
+                        timestamp: moment().format('X')
                     })
                         .then(() => {
                             res.json({
                                 code: 200,
                                 message: '注册成功!',
-                                data: 'success',
+                                data: 'success'
                             })
                         })
                         .catch(err => {
                             res.json({
                                 code: -200,
-                                message: err.toString(),
+                                message: err.toString()
                             })
                         })
                 }
@@ -255,7 +255,7 @@ exports.insert = (req, res) => {
             .catch(err => {
                 res.json({
                     code: -200,
-                    message: err.toString(),
+                    message: err.toString()
                 })
             })
     }
@@ -266,18 +266,18 @@ exports.getItem = (req, res) => {
     const userid = req.query.id || req.cookies.userid || req.headers.userid
     User.findOneAsync({
         _id: userid,
-        is_delete: 0,
+        is_delete: 0
     })
         .then(result => {
             if (result) {
                 json = {
                     code: 200,
-                    data: result,
+                    data: result
                 }
             } else {
                 json = {
                     code: -200,
-                    message: '请先登录, 或者数据错误',
+                    message: '请先登录, 或者数据错误'
                 }
             }
             res.json(json)
@@ -285,7 +285,7 @@ exports.getItem = (req, res) => {
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -302,7 +302,7 @@ exports.modify = (req, res) => {
     const data = {
         email,
         username,
-        update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+        update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     if (password) data.password = md5(md5Pre + password)
     modify(res, User, id, data)
@@ -325,19 +325,19 @@ exports.account = (req, res) => {
                 res.json({
                     code: 200,
                     message: '更新成功',
-                    data: 'success',
+                    data: 'success'
                 })
             })
             .catch(err => {
                 res.json({
                     code: -200,
-                    message: err.toString(),
+                    message: err.toString()
                 })
             })
     } else {
         res.json({
             code: -200,
-            message: '当前没有权限',
+            message: '当前没有权限'
         })
     }
 }
@@ -356,7 +356,7 @@ exports.password = (req, res) => {
         User.findOneAsync({
             _id: id,
             password: md5(md5Pre + old_password),
-            is_delete: 0,
+            is_delete: 0
         }).then(result => {
             if (result) {
                 User.updateAsync({ _id: id }, { $set: { password: md5(md5Pre + password) } })
@@ -364,26 +364,26 @@ exports.password = (req, res) => {
                         res.json({
                             code: 200,
                             message: '更新成功',
-                            data: 'success',
+                            data: 'success'
                         })
                     })
                     .catch(err => {
                         res.json({
                             code: -200,
-                            message: err.toString(),
+                            message: err.toString()
                         })
                     })
             } else {
                 res.json({
                     code: -200,
-                    message: '原始密码错误',
+                    message: '原始密码错误'
                 })
             }
         })
     } else {
         res.json({
             code: -200,
-            message: '当前没有权限',
+            message: '当前没有权限'
         })
     }
 }

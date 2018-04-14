@@ -9,7 +9,7 @@ const CategorySchema = new Schema({
     creat_date: String,
     update_date: String,
     is_delete: Number,
-    timestamp: Number,
+    timestamp: Number
 })
 
 const Category = mongoose.model('Category', CategorySchema)

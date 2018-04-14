@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const SwRegisterWebpackPlugin = require('sw-register-webpack-plugin')
@@ -30,10 +30,26 @@ module.exports = {
             }
         }, {
             test: /\.css$/,
-            loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader'])
+            oneOf: [
+                {
+                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+                },
+                {
+                    use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
+                },
+            ]
+            //ExtractTextPlugin.extract(['css-loader', 'postcss-loader'])
         },  {
             test: /\.less/,
-            loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader', 'less-loader'])
+            oneOf: [
+                {
+                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
+                },
+                {
+                    use: ['vue-style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
+                },
+            ]
+            //ExtractTextPlugin.extract(['css-loader', 'postcss-loader', 'less-loader'])
         }]
     },
     optimization: {
@@ -63,7 +79,13 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin('static/css/[name].[hash:7].css'),
+        // new ExtractTextPlugin('static/css/[name].[hash:7].css'),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: utils.assetsPath('css/[name].[contenthash:7].css'),
+            chunkFilename: utils.assetsPath('css/[name].[contenthash:7].css'),
+        }),
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),

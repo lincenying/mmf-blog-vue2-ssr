@@ -28,7 +28,11 @@ let config = merge(baseConfig, {
         }, {
             test: /\.vue$/,
             loader: 'vue-loader',
-            options: vueConfig
+            options: {
+                compilerOptions: {
+                    preserveWhitespace: false,
+                },
+            },
         }]
     },
     plugins: [

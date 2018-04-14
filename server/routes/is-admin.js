@@ -20,7 +20,7 @@ module.exports = (req, res, next) => {
                 return res.json({
                     code: -500,
                     message: '登录验证失败',
-                    data: '',
+                    data: ''
                 })
             }
         })
@@ -28,7 +28,7 @@ module.exports = (req, res, next) => {
         return res.json({
             code: -500,
             message: '请先登录',
-            data: '',
+            data: ''
         })
     }
 }

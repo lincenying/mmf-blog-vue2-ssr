@@ -14,9 +14,9 @@ if (process.__API__) {
             cached &&
             lruCache({
                 max: 1000,
-                maxAge: 1000 * 60 * 15,
+                maxAge: 1000 * 60 * 15
             }),
-        cachedItem: {},
+        cachedItem: {}
     }
 }
 

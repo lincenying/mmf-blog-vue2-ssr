@@ -9,13 +9,13 @@ exports.like = (req, res) => {
             res.json({
                 code: 200,
                 message: '操作成功',
-                data: 'success',
+                data: 'success'
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -28,13 +28,13 @@ exports.unlike = (req, res) => {
             res.json({
                 code: 200,
                 message: '操作成功',
-                data: 'success',
+                data: 'success'
             })
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -48,7 +48,7 @@ exports.resetLike = (req, res) => {
             res.json({
                 code: 200,
                 message: '操作成功',
-                data: 'success',
+                data: 'success'
             })
         })
 }

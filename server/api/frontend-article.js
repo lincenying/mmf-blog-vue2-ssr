@@ -16,7 +16,7 @@ exports.getList = (req, res) => {
     if (!page) page = 1
     if (!limit) limit = 10
     const data = {
-            is_delete: 0,
+            is_delete: 0
         },
         skip = (page - 1) * limit
     if (id) {
@@ -40,7 +40,7 @@ exports.getList = (req, res) => {
             .skip(skip)
             .limit(limit)
             .exec(),
-        Article.countAsync(data),
+        Article.countAsync(data)
     ])
         .then(([data, total]) => {
             const totalPage = Math.ceil(total / limit)
@@ -50,8 +50,8 @@ exports.getList = (req, res) => {
                 data: {
                     total,
                     hasNext: totalPage > page ? 1 : 0,
-                    hasPrev: page > 1,
-                },
+                    hasPrev: page > 1
+                }
             }
             if (user_id) {
                 data = data.map(item => {
@@ -76,7 +76,7 @@ exports.getList = (req, res) => {
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -95,7 +95,7 @@ exports.getItem = (req, res) => {
     if (!_id) {
         res.json({
             code: -200,
-            message: '参数错误',
+            message: '参数错误'
         })
     }
     Promise.all([Article.findOneAsync({ _id, is_delete: 0 }), Article.updateAsync({ _id }, { $inc: { visit: 1 } })])
@@ -104,7 +104,7 @@ exports.getItem = (req, res) => {
             if (!value[0]) {
                 json = {
                     code: -200,
-                    message: '没有找到该文章',
+                    message: '没有找到该文章'
                 }
             } else {
                 if (user_id) value[0]._doc.like_status = value[0].likes && value[0].likes.indexOf(user_id) > -1
@@ -112,7 +112,7 @@ exports.getItem = (req, res) => {
                 value[0].likes = []
                 json = {
                     code: 200,
-                    data: value[0],
+                    data: value[0]
                 }
             }
             res.json(json)
@@ -120,7 +120,7 @@ exports.getItem = (req, res) => {
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }
@@ -137,15 +137,15 @@ exports.getTrending = (req, res) => {
             const json = {
                 code: 200,
                 data: {
-                    list: result,
-                },
+                    list: result
+                }
             }
             res.json(json)
         })
         .catch(err => {
             res.json({
                 code: -200,
-                message: err.toString(),
+                message: err.toString()
             })
         })
 }

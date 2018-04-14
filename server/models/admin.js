@@ -9,7 +9,7 @@ const AdminSchema = new Schema({
     creat_date: String,
     update_date: String,
     is_delete: Number,
-    timestamp: Number,
+    timestamp: Number
 })
 
 const Admin = mongoose.model('Admin', AdminSchema)
