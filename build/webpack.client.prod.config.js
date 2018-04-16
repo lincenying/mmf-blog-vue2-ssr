@@ -8,7 +8,7 @@ const SwRegisterWebpackPlugin = require('sw-register-webpack-plugin')
 
 const config = require('../config')
 const utils = require('./utils')
-const srcDir = path.resolve(__dirname, '../dist/').replace(/\\/g, "\/")
+const srcDir = path.resolve(__dirname, '../dist/').replace(/\\/g, '/')
 const prefixMulti = {}
 prefixMulti[srcDir] = ''
 
@@ -21,48 +21,25 @@ module.exports = {
         chunkFilename: utils.assetsPath('js/[name].[chunkhash:7].js')
     },
     module: {
-        rules: [{
-            test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-            loader: 'url-loader',
-            query: {
-                limit: 10000,
-                name: 'static/img/[name].[hash:7].[ext]'
-            }
-        }, {
-            test: /\.css$/,
-            oneOf: [
-                {
-                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
-                },
-                {
-                    use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
-                },
-            ]
-            //ExtractTextPlugin.extract(['css-loader', 'postcss-loader'])
-        },  {
-            test: /\.less/,
-            oneOf: [
-                {
-                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
-                },
-                {
-                    use: ['vue-style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
-                },
-            ]
-            //ExtractTextPlugin.extract(['css-loader', 'postcss-loader', 'less-loader'])
-        }]
+        rules: [
+            ...utils.styleLoaders({
+                sourceMap: config.build.productionSourceMap,
+                extract: true,
+                usePostCSS: true
+            })
+        ]
     },
     optimization: {
         runtimeChunk: {
-            name: "manifest"
+            name: 'manifest'
         },
         splitChunks: {
             cacheGroups: {
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendors",
+                    name: 'vendors',
                     priority: -20,
-                    chunks: "all"
+                    chunks: 'all'
                 }
             }
         },
@@ -79,12 +56,11 @@ module.exports = {
         ]
     },
     plugins: [
-        // new ExtractTextPlugin('static/css/[name].[hash:7].css'),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
             filename: utils.assetsPath('css/[name].[contenthash:7].css'),
-            chunkFilename: utils.assetsPath('css/[name].[contenthash:7].css'),
+            chunkFilename: utils.assetsPath('css/[name].[contenthash:7].css')
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: true
@@ -96,32 +72,28 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             isProd: true,
-            chunks: [
-                'manifest', 'vendors', 'app',
-            ],
+            chunks: ['manifest', 'vendors', 'app'],
             filename: 'server.html',
             template: 'src/template/server.html',
             inject: true,
-            chunksSortMode (chunk1, chunk2) {
-                var orders = ['manifest', 'vendors', 'app'];
-                var order1 = orders.indexOf(chunk1.names[0]);
-                var order2 = orders.indexOf(chunk2.names[0]);
-                return order1 - order2;
+            chunksSortMode(chunk1, chunk2) {
+                var orders = ['manifest', 'vendors', 'app']
+                var order1 = orders.indexOf(chunk1.names[0])
+                var order2 = orders.indexOf(chunk2.names[0])
+                return order1 - order2
             }
         }),
         new HtmlWebpackPlugin({
             isProd: true,
-            chunks: [
-                'manifest', 'vendors', 'admin',
-            ],
+            chunks: ['manifest', 'vendors', 'admin'],
             filename: 'admin.html',
             template: 'src/template/admin.html',
             inject: true,
-            chunksSortMode (chunk1, chunk2) {
-                var orders = ['manifest', 'vendors', 'admin'];
-                var order1 = orders.indexOf(chunk1.names[0]);
-                var order2 = orders.indexOf(chunk2.names[0]);
-                return order1 - order2;
+            chunksSortMode(chunk1, chunk2) {
+                var orders = ['manifest', 'vendors', 'admin']
+                var order1 = orders.indexOf(chunk1.names[0])
+                var order2 = orders.indexOf(chunk2.names[0])
+                return order1 - order2
             }
         })
     ]

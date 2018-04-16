@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 const config = require('../config')
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -16,15 +17,11 @@ const baseConfig = {
     },
     output: {
         path: config.build.assetsRoot,
-        publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
+        publicPath: isProd ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {
-        extensions: [
-            '.js', '.vue'
-        ],
-        modules: [
-            path.join(__dirname, '../node_modules')
-        ],
+        extensions: ['.js', '.vue'],
+        modules: [path.join(__dirname, '../node_modules')],
         alias: {
             '@': path.resolve(__dirname, '../src'),
             '~src': path.resolve(__dirname, '../src'),
@@ -34,26 +31,45 @@ const baseConfig = {
             '~mixins': path.resolve(__dirname, '../src/mixins'),
             '~store': path.resolve(__dirname, '../src/store'),
             '~utils': path.resolve(__dirname, '../src/utils'),
-            'assets': path.resolve(__dirname, '../src/assets'),
+            assets: path.resolve(__dirname, '../src/assets'),
             'api-config': path.resolve(__dirname, '../src/api/config-client')
         }
     },
     resolveLoader: {
-        modules: [
-            path.join(__dirname, '../node_modules')
-        ]
+        modules: [path.join(__dirname, '../node_modules')]
     },
     module: {
-        rules: [{
-            test: /\.js$/,
-            loader: 'babel-loader',
-            exclude: /node_modules/
-        }]
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    compilerOptions: {
+                        preserveWhitespace: false
+                    }
+                }
+            },
+            {
+                test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: isProd ? 'static/img/[name].[hash:7].[ext]' : '[name].[hash:7].[ext]'
+                    }
+                ]
+            }
+        ]
     },
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        })
+        }),
+        new VueLoaderPlugin()
     ]
 }
 !isProd && baseConfig.plugins.push(new FriendlyErrorsPlugin())

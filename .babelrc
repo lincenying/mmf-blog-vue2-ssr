@@ -7,7 +7,7 @@
                         "browsers": ["last 2 version", "ie 10"]
                     },
                     "modules": false,
-                    "debug": true
+                    "debug": false
                 }]
             ],
             "plugins": [

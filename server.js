@@ -35,8 +35,8 @@ function createRenderer(bundle, template) {
         template,
         cache: require('lru-cache')({
             max: 1000,
-            maxAge: 1000 * 60 * 15,
-        }),
+            maxAge: 1000 * 60 * 15
+        })
     })
 }
 
@@ -118,7 +118,7 @@ app.get(
             title: 'M.M.F 小屋',
             description: 'M.M.F 小屋',
             url: req.url,
-            cookies: req.cookies,
+            cookies: req.cookies
         }
         renderer.renderToString(context, (err, html) => {
             if (err) {
