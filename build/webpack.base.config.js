@@ -12,8 +12,7 @@ const baseConfig = {
     },
     entry: {
         app: './src/entry-client.js',
-        admin: './src/admin.js',
-        vendors: ['./src/polyfill']
+        admin: './src/admin.js'
     },
     output: {
         path: config.build.assetsRoot,
@@ -59,7 +58,10 @@ const baseConfig = {
                 use: [
                     {
                         loader: 'url-loader',
-                        options: isProd ? 'static/img/[name].[hash:7].[ext]' : '[name].[hash:7].[ext]'
+                        options: {
+                            name: isProd ? 'static/img/[name].[hash:7].[ext]' : '[name].[hash:7].[ext]',
+                            limit: 8192
+                        }
                     }
                 ]
             }

@@ -1,5 +1,6 @@
-import Vue from 'vue'
+import './polyfill'
 
+import Vue from 'vue'
 import App from './admin.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import { createStore } from './store'
