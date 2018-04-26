@@ -7,3 +7,4 @@ npm-debug.log
 admin.lock
 server/config/secret.js
 server/config/mpapp.js
+yarn-error.log
