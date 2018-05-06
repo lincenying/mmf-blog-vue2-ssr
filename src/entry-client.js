@@ -5,8 +5,11 @@
 
 import './polyfill'
 import Vue from 'vue'
+import Raven from 'raven-js'
+import RavenVue from 'raven-js/plugins/vue'
 
 import FastClick from 'fastclick'
+import api from '~api'
 import { createApp } from './app'
 import ProgressBar from '@/components/ProgressBar.vue'
 
@@ -14,12 +17,22 @@ import './assets/css/hljs/googlecode.css'
 import './assets/less/style.less'
 import 'toastr/build/toastr.css'
 
+// 如果你需要前端错误信息监控, 可以到 https://sentry.io/ 注册个账号, 然后将 PUBLIC_DSN 替换下方的
+// 如果不需要可以直接删除
+Raven.config('https://cefc965cf10748aea0cc56659c2fe9ea@sentry.io/256376', {
+    includePaths: [/https?:\/\/www\.mmxiaowu\.com/]
+    // includePaths: [/https?:\/\/www\.mmxiaowu\.com/, /http:\/\/localhost:8080/]
+})
+    .addPlugin(RavenVue, Vue)
+    .install()
+
 // 全局的进度条，在组件中可通过 $loading 访问
 const loading = (Vue.prototype.$loading = new Vue(ProgressBar).$mount())
 const { app, router, store } = createApp()
 
 if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__)
+    store.$api = store.state.$api = api
 }
 
 document.body.appendChild(loading.$el)
@@ -27,36 +40,41 @@ FastClick.attach(document.body)
 
 Vue.mixin({
     // 当复用的路由组件参数发生变化时，例如/detail/1 => /detail/2
-    // beforeRouteUpdate(to, from, next) {
-    //     // asyncData方法中包含异步数据请求
-    //     const asyncData = this.$options.asyncData
-    //     if (asyncData) {
-    //         loading.start()
-    //         asyncData.call(this, {
-    //             store: this.$store,
-    //             route: to,
-    //             isServer: false,
-    //             isClient: true
-    //         }).then(() => {
-    //             loading.finish()
-    //             next()
-    //         }).catch(next)
-    //     } else {
-    //         next()
-    //     }
-    // },
+    /*
+    beforeRouteUpdate(to, from, next) {
+        // asyncData方法中包含异步数据请求
+        const asyncData = this.$options.asyncData
+        if (asyncData) {
+            loading.start()
+            asyncData
+                .call(this, {
+                    store: this.$store,
+                    route: to,
+                    isServer: false,
+                    isClient: true,
+                })
+                .then(() => {
+                    loading.finish()
+                    next()
+                })
+                .catch(next)
+        } else {
+            next()
+        }
+    },
+    */
 
-    // 路由切换时，保存页面滚动位置
+    // 页面渲染后, 跳转到记录的滚动条位置
     beforeRouteEnter(to, from, next) {
         next(vm => {
             // 通过 `vm` 访问组件实例
             vm.$nextTick().then(() => {
                 const scrollTop = vm.$store.state.appShell.historyPageScrollTop[to.fullPath] || 0
                 window.scrollTo(0, scrollTop)
-                // document.body.scrollTop = vm.$store.state.appShell.historyPageScrollTop[to.fullPath] || 0
             })
         })
     },
+    // 路由切换时，保存页面滚动位置
     beforeRouteLeave(to, from, next) {
         this.$store.dispatch('appShell/saveScrollTop', {
             path: from.fullPath,

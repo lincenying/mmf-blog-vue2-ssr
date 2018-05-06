@@ -1,15 +1,10 @@
+/* eslint-disable no-inline-comments */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Meta from 'vue-meta'
 import cookies from 'js-cookie'
 
 import { inBrowser } from '../utils'
-
-import index from '../pages/frontend-index.vue'
-import article from '../pages/frontend-article.vue'
-import about from '../pages/frontend-about.vue'
-import account from '../pages/frontend-user-account.vue'
-import password from '../pages/frontend-user-password.vue'
 
 Vue.use(VueRouter)
 Vue.use(Meta)
@@ -89,6 +84,8 @@ const scrollBehavior = to => {
     return position
 }
 
+const index = () => import(/* webpackChunkName: "frontend-topics" */ '../pages/frontend-index.vue')
+
 const guardRoute = (to, from, next) => {
     var token = cookies.get('user') || !inBrowser
     if (!token) {
@@ -104,28 +101,49 @@ export function createRouter() {
         //base: __dirname,
         scrollBehavior,
         routes: [
-            { name: 'index', path: '/', component: index },
-            { name: 'trending', path: '/trending/:by', component: index },
-            { name: 'category', path: '/category/:id', component: index },
-            { name: 'search', path: '/search/:key', component: index },
+            {
+                name: 'index',
+                path: '/',
+                component: index
+            },
+            {
+                name: 'trending',
+                path: '/trending/:by',
+                component: index
+            },
+            {
+                name: 'category',
+                path: '/category/:id',
+                component: index
+            },
+            {
+                name: 'search',
+                path: '/search/:key',
+                component: index
+            },
             {
                 name: 'article',
                 path: '/article/:id',
-                component: article,
+                component: () => import(/* webpackChunkName: "frontend-topics" */ '../pages/frontend-article.vue'),
                 meta: { scrollToTop: true, notKeepAlive: true }
             },
-            { name: 'about', path: '/about', component: about, meta: { scrollToTop: true } },
+            {
+                name: 'about',
+                path: '/about',
+                component: () => import(/* webpackChunkName: "frontend-about" */ '../pages/frontend-about.vue'),
+                meta: { scrollToTop: true }
+            },
             {
                 name: 'account',
                 path: '/user/account',
-                component: account,
+                component: () => import(/* webpackChunkName: "frontend-user" */ '../pages/frontend-user-account.vue'),
                 meta: { scrollToTop: true },
                 beforeEnter: guardRoute
             },
             {
                 name: 'password',
                 path: '/user/password',
-                component: password,
+                component: () => import(/* webpackChunkName: "frontend-user" */ '../pages/frontend-user-password.vue'),
                 meta: { scrollToTop: true },
                 beforeEnter: guardRoute
             }

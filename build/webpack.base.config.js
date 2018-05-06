@@ -2,13 +2,18 @@ const path = require('path')
 const webpack = require('webpack')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const WebpackBar = require('webpackbar')
+
 const config = require('../config')
 const isProd = process.env.NODE_ENV === 'production'
 
 const baseConfig = {
     performance: {
         maxEntrypointSize: 300000,
-        hints: isProd ? 'warning' : false
+        hints: isProd ? 'warning' : false,
+        assetFilter: function(assetFilename) {
+            return assetFilename.endsWith('.js')
+        }
     },
     entry: {
         app: './src/entry-client.js',
@@ -71,7 +76,8 @@ const baseConfig = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         }),
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new WebpackBar()
     ]
 }
 !isProd && baseConfig.plugins.push(new FriendlyErrorsPlugin())

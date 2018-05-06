@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
+const nodeExternals = require('webpack-node-externals')
 const VueSSRPlugin = require('vue-ssr-webpack-plugin')
 const base = require('./webpack.base.config')
 

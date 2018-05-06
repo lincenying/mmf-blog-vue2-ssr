@@ -4,6 +4,7 @@
  */
 
 import { createApp } from './app'
+import { api } from '~api'
 
 // const isDev = process.env.NODE_ENV !== 'production'
 
@@ -35,6 +36,8 @@ export default function(context) {
             if (!matchedComponents.length) {
                 reject({ code: 404 })
             }
+
+            store.$api = store.state.$api = api(context.cookies)
 
             // Call fetchData hooks on components matched by the route.
             // A preFetch hook dispatches a store action and returns a Promise,

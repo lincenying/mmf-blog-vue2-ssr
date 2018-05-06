@@ -26,7 +26,7 @@ import metaMixin from '~mixins'
 
 export default {
     name: 'frontend-index',
-    async asyncData({ store, route, cookies }, config = { page: 1 }) {
+    async asyncData({ store, route }, config = { page: 1 }) {
         const {
             params: { id, key, by },
             path
@@ -34,7 +34,7 @@ export default {
         await Promise.all([
             store.dispatch('global/category/getCategoryList'),
             store.dispatch('frontend/article/getTrending'),
-            store.dispatch('frontend/article/getArticleList', { ...config, limit: 10, id, path, key, by, cookies })
+            store.dispatch('frontend/article/getArticleList', { ...config, limit: 10, id, path, key, by })
         ])
     },
     mixins: [metaMixin],
