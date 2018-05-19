@@ -61,7 +61,7 @@ exports.login = (req, res) => {
                 const _username = encodeURI(username)
                 const id = result._id
                 const remember_me = 2592000000
-                const token = jwt.sign({ id, usernmae: _username }, secret, { expiresIn: 60 * 60 * 24 * 30 })
+                const token = jwt.sign({ id, username: _username }, secret, { expiresIn: 60 * 60 * 24 * 30 })
                 res.cookie('b_user', token, { maxAge: remember_me })
                 res.cookie('b_userid', id, { maxAge: remember_me })
                 res.cookie('b_username', _username, { maxAge: remember_me })

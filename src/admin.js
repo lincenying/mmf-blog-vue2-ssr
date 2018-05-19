@@ -4,18 +4,21 @@ import Vue from 'vue'
 import App from './admin.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import { createStore } from './store'
-import router from './router/admin'
+import { createRouter } from './router/admin'
 import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
+import api from '~api'
 
 import './assets/css/hljs/googlecode.css'
 import './assets/less/style.less'
 import 'toastr/build/toastr.css'
 
 const store = createStore()
+const router = createRouter()
 
 const loading = (Vue.prototype.$loading = new Vue(ProgressBar).$mount())
 
+store.$api = store.state.$api = api
 sync(store, router)
 
 Object.keys(filters).forEach(key => {
