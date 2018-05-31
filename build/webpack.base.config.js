@@ -54,7 +54,7 @@ const baseConfig = {
                 loader: 'vue-loader',
                 options: {
                     compilerOptions: {
-                        preserveWhitespace: false
+                        preserveWhitespace: true
                     }
                 }
             },
