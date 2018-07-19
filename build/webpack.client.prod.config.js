@@ -5,7 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
-const SwRegisterWebpackPlugin = require('sw-register-webpack-plugin')
 
 const config = require('../config')
 const utils = require('./utils')
@@ -24,7 +23,7 @@ module.exports = {
     module: {
         rules: [
             ...utils.styleLoaders({
-                sourceMap: config.build.productionSourceMap,
+                sourceMap: false,
                 extract: true,
                 usePostCSS: true
             })
@@ -51,6 +50,7 @@ module.exports = {
                         warnings: false
                     }
                 },
+                cache: true,
                 sourceMap: config.build.productionSourceMap,
                 parallel: true
             }),
@@ -58,7 +58,7 @@ module.exports = {
                 cssProcessorOptions: {
                     discardComments: { removeAll: true },
                     // 避免 cssnano 重新计算 z-index
-                    safe: true
+                    // safe: true
                 }
             })
         ]
@@ -74,10 +74,6 @@ module.exports = {
             minimize: true
         }),
         new SWPrecacheWebpackPlugin(config.swPrecache.build),
-        new SwRegisterWebpackPlugin({
-            prefix: '/',
-            filePath: path.resolve(__dirname, '../src/sw-register.js')
-        }),
         new HtmlWebpackPlugin({
             isProd: true,
             chunks: ['manifest', 'vendors', 'app'],

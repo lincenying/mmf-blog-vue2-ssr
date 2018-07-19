@@ -7,6 +7,28 @@ const WebpackBar = require('webpackbar')
 const config = require('../config')
 const isProd = process.env.NODE_ENV === 'production'
 
+function resolve(dir) {
+    return path.join(__dirname, '..', dir)
+}
+
+const jsLoader = [
+    {
+        loader: 'cache-loader',
+        options: {
+            cacheDirectory: path.join(__dirname, '../node_modules/.cache/babel-loader'),
+            cacheIdentifier: process.env.NODE_ENV + '_babel'
+        }
+    }
+]
+if (isProd) {
+    jsLoader.push({
+        loader: 'thread-loader'
+    })
+}
+jsLoader.push({
+    loader: 'babel-loader'
+})
+
 const baseConfig = {
     performance: {
         maxEntrypointSize: 300000,
@@ -45,18 +67,33 @@ const baseConfig = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
+                test: /\.vue$/,
+                use: [
+                    {
+                        loader: 'cache-loader',
+                        options: {
+                            cacheDirectory: path.join(__dirname, '../node_modules/.cache/vue-loader'),
+                            cacheIdentifier: process.env.NODE_ENV + '_vue'
+                        }
+                    },
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            compilerOptions: {
+                                preserveWhitespace: true
+                            },
+                            cacheDirectory: path.join(__dirname, '../node_modules/.cache/vue-loader'),
+                            cacheIdentifier: process.env.NODE_ENV + '_vue'
+                        }
+                    }
+                ],
+                include: [resolve('src')]
             },
             {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    compilerOptions: {
-                        preserveWhitespace: true
-                    }
-                }
+                test: /\.jsx?$/,
+                use: jsLoader,
+                include: [resolve('src')],
+                exclude: /node_modules/
             },
             {
                 test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,

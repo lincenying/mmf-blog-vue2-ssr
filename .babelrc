@@ -1,35 +1,14 @@
 {
-    "env": {
-        "production": {
-            "presets": [
-                ["env", {
-                    "targets": {
-                        "browsers": ["last 2 version", "ie 10"]
-                    },
-                    "modules": false,
-                    "debug": false
-                }]
-            ],
-            "plugins": [
-                "transform-runtime",
-                "transform-object-rest-spread",
-                "babel-plugin-syntax-dynamic-import"
-            ]
-        },
-        "development": {
-            "presets": [
-                ["env", {
-                    "targets": {
-                        "chrome": 60
-                    },
-                    "modules": false,
-                    "debug": true
-                }]
-            ],
-            "plugins": [
-                "transform-object-rest-spread",
-                "babel-plugin-syntax-dynamic-import"
-            ]
-        }
-    }
+    "presets": [
+        ["@babel/preset-env", {
+            "debug": false,
+            "useBuiltIns": false
+        }],
+        ["@babel/preset-stage-2", {
+            "decoratorsLegacy": true
+        }]
+    ],
+    "plugins": [
+        "@babel/plugin-transform-runtime"
+    ]
 }
