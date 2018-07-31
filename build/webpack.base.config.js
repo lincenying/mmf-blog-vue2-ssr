@@ -11,15 +11,7 @@ function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
 
-const jsLoader = [
-    {
-        loader: 'cache-loader',
-        options: {
-            cacheDirectory: path.join(__dirname, '../node_modules/.cache/babel-loader'),
-            cacheIdentifier: process.env.NODE_ENV + '_babel'
-        }
-    }
-]
+const jsLoader = []
 if (isProd) {
     jsLoader.push({
         loader: 'thread-loader'
@@ -70,20 +62,11 @@ const baseConfig = {
                 test: /\.vue$/,
                 use: [
                     {
-                        loader: 'cache-loader',
-                        options: {
-                            cacheDirectory: path.join(__dirname, '../node_modules/.cache/vue-loader'),
-                            cacheIdentifier: process.env.NODE_ENV + '_vue'
-                        }
-                    },
-                    {
                         loader: 'vue-loader',
                         options: {
                             compilerOptions: {
                                 preserveWhitespace: true
-                            },
-                            cacheDirectory: path.join(__dirname, '../node_modules/.cache/vue-loader'),
-                            cacheIdentifier: process.env.NODE_ENV + '_vue'
+                            }
                         }
                     }
                 ],
