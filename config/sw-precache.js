@@ -44,13 +44,13 @@ module.exports = {
             // map文件不需要缓存
             /\.map$/,
             /vue-ssr-client-manifest\.json/,
-            /\/backend/,
+            /\/backend/
         ],
         ignoreUrlParametersMatching: [
             // map文件不需要缓存
             /\.map$/,
             /vue-ssr-client-manifest\.json/,
-            /\/backend/,
+            /\/backend/
         ],
 
         /**
@@ -107,8 +107,8 @@ module.exports = {
         runtimeCaching: [
             {
                 urlPattern: /\/.*/,
-                handler: 'networkFirst',
-            },
+                handler: 'networkFirst'
+            }
             // 如果在staticFileGlobs中设置相同的缓存路径，可能导致此处不起作用
             // {
             //     urlPattern: /\/fonts\//,
@@ -120,6 +120,6 @@ module.exports = {
             //         }
             //     }
             // }
-        ],
-    },
+        ]
+    }
 }
