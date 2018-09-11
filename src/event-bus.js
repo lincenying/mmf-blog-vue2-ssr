@@ -3,7 +3,42 @@
  * @author lincenying(lincenying@qq.com)
  */
 
-import Vue from 'vue'
+function VueBus(Vue) {
+    var bus = new Vue({
+        data: {
+            default: {}
+        }
+    })
 
-// 全局事件总线
-export default new Vue()
+    Object.defineProperties(bus, {
+        on: {
+            get() {
+                return this.$on
+            }
+        },
+        once: {
+            get() {
+                return this.$once
+            }
+        },
+        off: {
+            get() {
+                return this.$off
+            }
+        },
+        emit: {
+            get() {
+                return this.$emit
+            }
+        }
+    })
+
+    Vue.bus = bus
+
+    Object.defineProperty(Vue.prototype, '$bus', {
+        get() {
+            return bus
+        }
+    })
+}
+export default VueBus

@@ -4,11 +4,11 @@
  */
 
 import Vue from 'vue'
+import { sync } from 'vuex-router-sync'
 
 import { createRouter } from './router'
 import { createStore } from './store'
 import App from './app.vue'
-import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 import titleMixin from './mixins'
 

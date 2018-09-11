@@ -7,9 +7,11 @@ import './polyfill'
 import Vue from 'vue'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
-
 import FastClick from 'fastclick'
+
 import api from '~api'
+import VueBus from './event-bus'
+
 import { createApp } from './app'
 import ProgressBar from '@/components/ProgressBar.vue'
 
@@ -28,6 +30,9 @@ Raven.config('https://cefc965cf10748aea0cc56659c2fe9ea@sentry.io/256376', {
 
 // 全局的进度条，在组件中可通过 $loading 访问
 const loading = (Vue.prototype.$loading = new Vue(ProgressBar).$mount())
+
+Vue.use(VueBus)
+
 const { app, router, store } = createApp()
 
 if (window.__INITIAL_STATE__) {
