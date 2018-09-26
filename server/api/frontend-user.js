@@ -320,7 +320,7 @@ exports.account = (req, res) => {
     const user_id = req.cookies.userid || req.headers.userid
     const username = req.body.username || req.headers.username
     if (user_id === id) {
-        User.updateAsync({ _id: id }, { $set: { email, username } })
+        User.updateOneAsync({ _id: id }, { $set: { email, username } })
             .then(() => {
                 res.json({
                     code: 200,
@@ -359,7 +359,7 @@ exports.password = (req, res) => {
             is_delete: 0
         }).then(result => {
             if (result) {
-                User.updateAsync({ _id: id }, { $set: { password: md5(md5Pre + password) } })
+                User.updateOneAsync({ _id: id }, { $set: { password: md5(md5Pre + password) } })
                     .then(() => {
                         res.json({
                             code: 200,

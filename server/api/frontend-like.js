@@ -4,7 +4,7 @@ const Article = mongoose.model('Article')
 exports.like = (req, res) => {
     const article_id = req.query.id
     const user_id = req.cookies.userid || req.headers.userid
-    Article.updateAsync({ _id: article_id }, { $inc: { like: 1 }, $push: { likes: user_id } })
+    Article.updateOneAsync({ _id: article_id }, { $inc: { like: 1 }, $push: { likes: user_id } })
         .then(() => {
             res.json({
                 code: 200,
@@ -23,7 +23,7 @@ exports.like = (req, res) => {
 exports.unlike = (req, res) => {
     const article_id = req.query.id
     const user_id = req.cookies.userid || req.headers.userid
-    Article.updateAsync({ _id: article_id }, { $inc: { like: -1 }, $pull: { likes: user_id } })
+    Article.updateOneAsync({ _id: article_id }, { $inc: { like: -1 }, $pull: { likes: user_id } })
         .then(() => {
             res.json({
                 code: 200,

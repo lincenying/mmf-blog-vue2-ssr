@@ -40,7 +40,7 @@ exports.getList = (req, res) => {
             .skip(skip)
             .limit(limit)
             .exec(),
-        Article.countAsync(data)
+        Article.countDocumentsAsync(data)
     ])
         .then(([data, total]) => {
             const totalPage = Math.ceil(total / limit)
@@ -98,7 +98,7 @@ exports.getItem = (req, res) => {
             message: '参数错误'
         })
     }
-    Promise.all([Article.findOneAsync({ _id, is_delete: 0 }), Article.updateAsync({ _id }, { $inc: { visit: 1 } })])
+    Promise.all([Article.findOneAsync({ _id, is_delete: 0 }), Article.updateOneAsync({ _id }, { $inc: { visit: 1 } })])
         .then(value => {
             let json
             if (!value[0]) {

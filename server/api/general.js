@@ -22,7 +22,7 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
             .skip(skip)
             .limit(limit)
             .exec(),
-        mongoDB.countAsync()
+        mongoDB.countDocumentsAsync()
     ])
         .then(result => {
             const total = result[1]
@@ -89,7 +89,7 @@ exports.item = (req, res, mongoDB) => {
 exports.deletes = (req, res, mongoDB) => {
     const _id = req.query.id
     mongoDB
-        .updateAsync({ _id }, { is_delete: 1 })
+        .updateOneAsync({ _id }, { is_delete: 1 })
         .then(() => {
             res.json({
                 code: 200,
@@ -143,7 +143,7 @@ exports.modify = (res, mongoDB, _id, data) => {
 exports.recover = (req, res, mongoDB) => {
     const _id = req.query.id
     mongoDB
-        .updateAsync({ _id }, { is_delete: 0 })
+        .updateOneAsync({ _id }, { is_delete: 0 })
         .then(() => {
             res.json({
                 code: 200,

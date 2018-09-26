@@ -39,7 +39,7 @@ exports.insert = (req, res) => {
     }
     Comment.createAsync(data)
         .then(result => {
-            return Article.updateAsync(
+            return Article.updateOneAsync(
                 {
                     _id: id
                 },
@@ -97,7 +97,7 @@ exports.getList = (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .exec(),
-            Comment.countAsync(data)
+            Comment.countDocumentsAsync(data)
         ])
             .then(result => {
                 const total = result[1]
@@ -130,9 +130,9 @@ exports.getList = (req, res) => {
  */
 exports.deletes = (req, res) => {
     const _id = req.query.id
-    Comment.updateAsync({ _id }, { is_delete: 1 })
+    Comment.updateOneAsync({ _id }, { is_delete: 1 })
         .then(() => {
-            return Article.updateAsync({ _id }, { $inc: { comment_count: -1 } }).then(() => {
+            return Article.updateOneAsync({ _id }, { $inc: { comment_count: -1 } }).then(() => {
                 res.json({
                     code: 200,
                     message: '删除成功',
@@ -157,9 +157,9 @@ exports.deletes = (req, res) => {
  */
 exports.recover = (req, res) => {
     const _id = req.query.id
-    Comment.updateAsync({ _id }, { is_delete: 0 })
+    Comment.updateOneAsync({ _id }, { is_delete: 0 })
         .then(() => {
-            return Article.updateAsync({ _id }, { $inc: { comment_count: 1 } }).then(() => {
+            return Article.updateOneAsync({ _id }, { $inc: { comment_count: 1 } }).then(() => {
                 res.json({
                     code: 200,
                     message: '恢复成功',
