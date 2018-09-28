@@ -49,7 +49,7 @@ let backend
 let renderer
 if (isProd) {
     // 生产模式: 从 fs 创建服务器 HTML 渲染器和索引
-    const bundle = require('./dist/vue-ssr-bundle.json')
+    const bundle = require('./dist/vue-ssr-server-bundle.json')
     frontend = fs.readFileSync(resolve('./dist/server.html'), 'utf-8')
     renderer = createRenderer(bundle, frontend)
 } else {
