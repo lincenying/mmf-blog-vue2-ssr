@@ -14,6 +14,13 @@ prefixMulti[srcDir] = ''
 
 module.exports = {
     mode: 'production',
+    performance: {
+        maxAssetSize: 500000,
+        maxEntrypointSize: 1000000,
+        assetFilter: function(assetFilename) {
+            return assetFilename.endsWith('.js')
+        }
+    },
     devtool: false,
     output: {
         path: config.build.assetsRoot,
