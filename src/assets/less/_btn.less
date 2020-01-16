@@ -1,3 +1,5 @@
+// 全局按钮样式
+
 .btn {
     height: 40px;
     font-size: 15px;
@@ -5,6 +7,13 @@
     text-align: center;
     padding: 0 15px;
     border-radius: 4px;
+    & + .btn {
+        margin-left: 5px;
+    }
+    &.block {
+        width: 100%;
+        margin-left: 0;
+    }
     &.disabled {
         background: #e2e9e9;
         color: #818c8c;
@@ -32,7 +41,7 @@
     background: white;
     color: #3e4545;
     &:hover {
-        opacity: .8;
+        opacity: 0.8;
     }
 }
 
@@ -41,7 +50,7 @@
     border: 1px solid white;
     color: white;
     &:hover {
-        opacity: .8;
+        opacity: 0.8;
     }
 }
 

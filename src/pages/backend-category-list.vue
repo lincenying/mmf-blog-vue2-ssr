@@ -19,7 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import checkAdmin from '~mixins/check-admin'
+import checkAdmin from '@/mixins/check-admin'
 
 export default {
     name: 'backend-category-list',

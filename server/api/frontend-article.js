@@ -31,8 +31,7 @@ exports.getList = (req, res) => {
         sort = '-' + by
     }
 
-    const filds =
-        'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
+    const filds = 'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
 
     Promise.all([
         Article.find(data, filds)
@@ -74,10 +73,7 @@ exports.getList = (req, res) => {
             }
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -93,10 +89,7 @@ exports.getItem = (req, res) => {
     const _id = req.query.id
     const user_id = req.cookies.userid || req.headers.userid
     if (!_id) {
-        res.json({
-            code: -200,
-            message: '参数错误'
-        })
+        res.json({ code: -200, message: '参数错误' })
     }
     Promise.all([Article.findOneAsync({ _id, is_delete: 0 }), Article.updateOneAsync({ _id }, { $inc: { visit: 1 } })])
         .then(value => {
@@ -134,18 +127,14 @@ exports.getTrending = (req, res) => {
         .limit(limit)
         .exec()
         .then(result => {
-            const json = {
+            res.json({
                 code: 200,
                 data: {
                     list: result
                 }
-            }
-            res.json(json)
+            })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }

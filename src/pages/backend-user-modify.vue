@@ -2,31 +2,31 @@
     <div class="settings-main card">
         <div class="settings-main-content">
             <a-input title="昵称">
-                <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username">
+                <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username" />
                 <span class="input-info error">请输入昵称</span>
             </a-input>
             <a-input title="邮箱">
-                <input type="text" v-model="form.email" placeholder="邮箱" class="base-input" name="email">
+                <input type="text" v-model="form.email" placeholder="邮箱" class="base-input" name="email" />
                 <span class="input-info error">请输入邮箱</span>
             </a-input>
             <a-input title="密码">
-                <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password">
+                <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password" />
                 <span class="input-info error">请输入密码</span>
             </a-input>
         </div>
-        <div class="settings-footer clearfix">
-            <router-link to="/backend/user/list" class="btn btn-blue">返回</router-link>
+        <div class="settings-footer">
             <a @click="modify" href="javascript:;" class="btn btn-yellow">编辑用户</a>
+            <router-link to="/backend/user/list" class="btn btn-blue">返回</router-link>
         </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { showMsg } from '~utils'
+import { showMsg } from '@/utils'
 // import api from '~api'
-import checkAdmin from '~mixins/check-admin'
-import aInput from '~components/_input.vue'
+import checkAdmin from '@/mixins/check-admin'
+import aInput from '@/components/_input.vue'
 
 export default {
     name: 'backend-user-modify',

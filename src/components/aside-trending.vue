@@ -1,7 +1,7 @@
 <template>
-    <!-- <Affix :offset-top="10" class="card-affix">
-
-    </Affix> -->
+    <!--
+        <Affix :offset-top="10" class="card-affix"></Affix>
+    -->
     <div class="card card-trending">
         <h2 class="card-title">热门文章</h2>
         <div class="card-content">
@@ -17,7 +17,8 @@
     </div>
 </template>
 <script>
-// import Affix from '~components/affix.vue'
+// import Affix from '@/components/affix.vue'
+
 export default {
     name: 'aside-trending',
     components: {

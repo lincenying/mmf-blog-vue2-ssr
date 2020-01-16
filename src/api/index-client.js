@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import config from './config-client'
-import { showMsg } from '~utils'
+import { showMsg } from '@/utils'
 
 axios.interceptors.request.use(
     config => {
@@ -12,10 +12,13 @@ axios.interceptors.request.use(
     }
 )
 
-axios.interceptors.response.use(response => response, error => Promise.resolve(error.response))
+axios.interceptors.response.use(
+    response => response,
+    error => Promise.resolve(error.response)
+)
 
 function checkStatus(response) {
-    if (response.status === 200 || response.status === 304) {
+    if (response && (response.status === 200 || response.status === 304)) {
         return response
     }
     return {

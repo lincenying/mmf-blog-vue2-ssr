@@ -3,15 +3,21 @@ const router = express.Router()
 const multipart = require('connect-multiparty')
 const multipartMiddleware = multipart()
 
+const cors = require('./cors')
+
 const backendArticle = require('../api/backend-article')
 const backendCategory = require('../api/backend-category')
 const backendUser = require('../api/backend-user')
+
 const frontendArticle = require('../api/frontend-article')
 const frontendComment = require('../api/frontend-comment')
 const frontendLike = require('../api/frontend-like')
 const frontendUser = require('../api/frontend-user')
+
 const isAdmin = require('./is-admin')
 const isUser = require('./is-user')
+
+router.options('*', cors)
 
 // 添加管理员
 router.get('/backend', (req, res) => {
@@ -100,7 +106,7 @@ router.post('/frontend/user/login', multipartMiddleware, frontendUser.login)
 router.post('/frontend/user/wxLogin', multipartMiddleware, frontendUser.wxLogin)
 router.post('/frontend/user/jscode2session', multipartMiddleware, frontendUser.jscode2session)
 // 前台退出
-router.post('/frontend/user/logout', isUser, frontendUser.logout)
+router.post('/frontend/user/logout', frontendUser.logout)
 // 前台账号读取
 router.get('/frontend/user/account', isUser, frontendUser.getItem)
 // 前台账号修改

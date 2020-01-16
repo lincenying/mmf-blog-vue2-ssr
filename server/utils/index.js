@@ -1,4 +1,5 @@
 const fs = require('fs')
+
 const fsExistsSync = path => {
     try {
         fs.accessSync(path, fs.F_OK)
@@ -23,11 +24,11 @@ exports.strlen = str => {
 
 exports.creatSecret = () => {
     if (!fsExistsSync('./server/config/secret.js')) {
-        const secretServer = Math.random() * 1000000
-        const secretClient = Math.random() * 1000000
-        const secret = `exports.secretServer = '${secretServer}'
-exports.secretClient = '${secretClient}'`
-        fs.writeFileSync('./server/config/secret.js', secret)
+        const secretServer1 = Math.random() * 1000000
+        const secretClient1 = Math.random() * 1000000
+        const secret1 = `exports.secretServer = '${secretServer1}'
+exports.secretClient = '${secretClient1}'`
+        fs.writeFileSync('./server/config/secret.js', secret1)
     }
 }
 

@@ -39,10 +39,7 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
             res.json(json)
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -57,24 +54,15 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
 exports.item = (req, res, mongoDB) => {
     const _id = req.query.id
     if (!_id) {
-        res.json({
-            code: -200,
-            message: '参数错误'
-        })
+        res.json({ code: -200, message: '参数错误' })
     }
     mongoDB
         .findOneAsync({ _id })
         .then(result => {
-            res.json({
-                code: 200,
-                data: result
-            })
+            res.json({ code: 200, data: result })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -91,17 +79,10 @@ exports.deletes = (req, res, mongoDB) => {
     mongoDB
         .updateOneAsync({ _id }, { is_delete: 1 })
         .then(() => {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: 'success'
-            })
+            res.json({ code: 200, message: '更新成功', data: 'success' })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -118,17 +99,10 @@ exports.modify = (res, mongoDB, _id, data) => {
     mongoDB
         .findOneAndUpdateAsync({ _id }, data, { new: true })
         .then(result => {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: result
-            })
+            res.json({ code: 200, message: '更新成功', data: result })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -145,16 +119,9 @@ exports.recover = (req, res, mongoDB) => {
     mongoDB
         .updateOneAsync({ _id }, { is_delete: 0 })
         .then(() => {
-            res.json({
-                code: 200,
-                message: '更新成功',
-                data: 'success'
-            })
+            res.json({ code: 200, message: '更新成功', data: 'success' })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }

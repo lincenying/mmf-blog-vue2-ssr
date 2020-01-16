@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import ls from 'store2'
 import toastr from 'toastr'
+import get from 'lodash.get'
 
 toastr.options.positionClass = 'toast-top-center'
 
@@ -62,9 +63,5 @@ export const showMsg = message => {
 }
 
 export const oc = (props, property, def) => {
-    if (props === null || props === undefined) return def
-    if (!property || typeof property !== 'string') return props
-    const arrProperty = property.split('.')
-    const $return = arrProperty.reduce((prev, curr) => prev !== null && prev !== undefined && prev[curr], props)
-    return $return !== null && $return !== undefined ? $return : def
+    return get(props, property, def)
 }

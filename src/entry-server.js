@@ -1,22 +1,11 @@
-/**
- * @file client server
- * @author lincenying(lincenying@qq.com)
- */
-
-import { createApp } from './app'
 import { api } from '~api'
+import { createApp } from './main'
 
-// const isDev = process.env.NODE_ENV !== 'production'
-
-// This exported function will be called by `bundleRenderer`.
-// This is where we perform data-prefetching to determine the
-// state of our application before actually rendering it.
-// Since data fetching is async, this function is expected to
-// return a Promise that resolves to the app instance.
-export default function(context) {
-    return new Promise((resolve, reject) => {
-        const s = Date.now()
-        const { app, router, store } = createApp()
+export default context => {
+    // eslint-disable-next-line
+    return new Promise(async (resolve, reject) => {
+        // const nowTime = Date.now()
+        const { app, router, store } = await createApp()
 
         const url = context.url
         const fullPath = router.resolve(url).route.fullPath
@@ -25,7 +14,19 @@ export default function(context) {
             reject({ url: fullPath })
         }
 
-        // set router's location
+        if (url !== '/backend/' && url.indexOf('/backend/') > -1) {
+            if (!context.req.cookies.b_user) {
+                context.req.res.redirect('/backend')
+                return
+            }
+        }
+        if (url !== '/user/' && url.indexOf('/user/') > -1) {
+            if (!context.req.cookies.b_user) {
+                context.req.res.redirect('/')
+                return
+            }
+        }
+
         router.push(url)
 
         // wait until router has resolved possible async hooks
@@ -37,8 +38,8 @@ export default function(context) {
                 reject({ code: 404 })
             }
 
-            store.$api = store.state.$api = api(context.cookies)
-
+            store.$api = store.state.$api = api(context.req.cookies)
+            store.commit('global/setCookies', context.req.cookies)
             // Call fetchData hooks on components matched by the route.
             // A preFetch hook dispatches a store action and returns a Promise,
             // which is resolved when the action is complete and store state has been
@@ -50,14 +51,14 @@ export default function(context) {
                         asyncData({
                             store,
                             route: router.currentRoute,
-                            cookies: context.cookies,
+                            cookies: context.req.cookies,
                             isServer: true,
                             isClient: false
                         })
                 )
             )
                 .then(() => {
-                    console.log(`data pre-fetch: ${Date.now() - s}ms`)
+                    // console.log(`data pre-fetch: ${Date.now() - nowTime}ms`)
 
                     // After all preFetch hooks are resolved, our store is now
                     // filled with the state needed to render the app.

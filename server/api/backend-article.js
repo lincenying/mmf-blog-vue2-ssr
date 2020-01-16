@@ -66,18 +66,11 @@ exports.insert = (req, res) => {
     Article.createAsync(data)
         .then(result => {
             return Category.updateOneAsync({ _id: arr_category[0] }, { $inc: { cate_num: 1 } }).then(() => {
-                return res.json({
-                    code: 200,
-                    message: '发布成功',
-                    data: result
-                })
+                return res.json({ code: 200, message: '发布成功', data: result })
             })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -93,18 +86,11 @@ exports.deletes = (req, res) => {
     Article.updateOneAsync({ _id }, { is_delete: 1 })
         .then(() => {
             return Category.updateOneAsync({ _id }, { $inc: { cate_num: -1 } }).then(result => {
-                res.json({
-                    code: 200,
-                    message: '更新成功',
-                    data: result
-                })
+                res.json({ code: 200, message: '更新成功', data: result })
             })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -120,18 +106,11 @@ exports.recover = (req, res) => {
     Article.updateOneAsync({ _id }, { is_delete: 0 })
         .then(() => {
             return Category.updateOneAsync({ _id }, { $inc: { cate_num: 1 } }).then(() => {
-                res.json({
-                    code: 200,
-                    message: '更新成功',
-                    data: 'success'
-                })
+                res.json({ code: 200, message: '更新成功', data: 'success' })
             })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -160,24 +139,13 @@ exports.modify = (req, res) => {
                     Category.updateOneAsync({ _id: category }, { $inc: { cate_num: 1 } }),
                     Category.updateOneAsync({ _id: category_old }, { $inc: { cate_num: -1 } })
                 ]).then(() => {
-                    res.json({
-                        code: 200,
-                        message: '更新成功',
-                        data: result
-                    })
+                    res.json({ code: 200, message: '更新成功', data: result })
                 })
             } else {
-                res.json({
-                    code: 200,
-                    message: '更新成功',
-                    data: result
-                })
+                res.json({ code: 200, message: '更新成功', data: result })
             }
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }

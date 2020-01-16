@@ -26,10 +26,7 @@ exports.getList = (req, res) => {
             res.json(json)
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -40,10 +37,7 @@ exports.getItem = (req, res) => {
 exports.insert = (req, res) => {
     const { cate_name, cate_order } = req.body
     if (!cate_name || !cate_order) {
-        res.json({
-            code: -200,
-            message: '请填写分类名称和排序'
-        })
+        res.json({ code: -200, message: '请填写分类名称和排序' })
     } else {
         return Category.createAsync({
             cate_name,
@@ -53,11 +47,7 @@ exports.insert = (req, res) => {
             is_delete: 0,
             timestamp: moment().format('X')
         }).then(result => {
-            res.json({
-                code: 200,
-                message: '添加成功',
-                data: result._id
-            })
+            res.json({ code: 200, message: '添加成功', data: result._id })
         })
     }
 }

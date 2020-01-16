@@ -42,14 +42,9 @@ exports.getItem = (req, res) => {
  * @return {[type]}       [description]
  */
 exports.login = (req, res) => {
-    let json = {}
     const { password, username } = req.body
     if (username === '' || password === '') {
-        json = {
-            code: -200,
-            message: '请输入用户名和密码'
-        }
-        return res.json(json)
+        return res.json({ code: -200, message: '请输入用户名和密码' })
     }
     Admin.findOneAsync({
         username,
@@ -65,22 +60,12 @@ exports.login = (req, res) => {
                 res.cookie('b_user', token, { maxAge: remember_me })
                 res.cookie('b_userid', id, { maxAge: remember_me })
                 res.cookie('b_username', _username, { maxAge: remember_me })
-                return res.json({
-                    code: 200,
-                    message: '登录成功',
-                    data: token
-                })
+                return res.json({ code: 200, message: '登录成功', data: token })
             }
-            return res.json({
-                code: -200,
-                message: '用户名或者密码错误'
-            })
+            return res.json({ code: -200, message: '用户名或者密码错误' })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 

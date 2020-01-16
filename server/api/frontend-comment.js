@@ -13,12 +13,9 @@ const Article = mongoose.model('Article')
  */
 exports.insert = (req, res) => {
     const { id, content } = req.body
-    const avatar = req.body.avatar || ''
     const creat_date = moment().format('YYYY-MM-DD HH:mm:ss')
     const timestamp = moment().format('X')
     const userid = req.cookies.userid || req.headers.userid
-    let username = req.cookies.username || req.headers.username
-    username = decodeURI(username)
     if (!id) {
         res.json({ code: -200, message: '参数错误' })
         return
@@ -26,12 +23,9 @@ exports.insert = (req, res) => {
         res.json({ code: -200, message: '请输入评论内容' })
         return
     }
-    var data = {
+    const data = {
         article_id: id,
-        avatar,
         userid,
-        username,
-        email: '',
         content,
         creat_date,
         is_delete: 0,
@@ -49,18 +43,11 @@ exports.insert = (req, res) => {
                     }
                 }
             ).then(() => {
-                res.json({
-                    code: 200,
-                    data: result,
-                    message: '发布成功'
-                })
+                res.json({ code: 200, data: result, message: '发布成功' })
             })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
 
@@ -75,10 +62,7 @@ exports.getList = (req, res) => {
     const { all, id } = req.query
     let { limit, page } = req.query
     if (!id) {
-        res.json({
-            code: -200,
-            message: '参数错误'
-        })
+        res.json({ code: -200, message: '参数错误' })
     } else {
         page = parseInt(page, 10)
         limit = parseInt(limit, 10)
@@ -113,10 +97,7 @@ exports.getList = (req, res) => {
                 res.json(json)
             })
             .catch(err => {
-                res.json({
-                    code: -200,
-                    message: err.toString()
-                })
+                res.json({ code: -200, message: err.toString() })
             })
     }
 }
@@ -133,11 +114,7 @@ exports.deletes = (req, res) => {
     Comment.updateOneAsync({ _id }, { is_delete: 1 })
         .then(() => {
             return Article.updateOneAsync({ _id }, { $inc: { comment_count: -1 } }).then(() => {
-                res.json({
-                    code: 200,
-                    message: '删除成功',
-                    data: 'success'
-                })
+                res.json({ code: 200, message: '删除成功', data: 'success' })
             })
         })
         .catch(err => {
@@ -160,17 +137,10 @@ exports.recover = (req, res) => {
     Comment.updateOneAsync({ _id }, { is_delete: 0 })
         .then(() => {
             return Article.updateOneAsync({ _id }, { $inc: { comment_count: 1 } }).then(() => {
-                res.json({
-                    code: 200,
-                    message: '恢复成功',
-                    data: 'success'
-                })
+                res.json({ code: 200, message: '恢复成功', data: 'success' })
             })
         })
         .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
+            res.json({ code: -200, message: err.toString() })
         })
 }
