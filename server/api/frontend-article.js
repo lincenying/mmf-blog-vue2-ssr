@@ -31,8 +31,7 @@ exports.getList = (req, res) => {
         sort = '-' + by
     }
 
-    const filds =
-        'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
+    const filds = 'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
 
     Promise.all([
         Article.find(data, filds)

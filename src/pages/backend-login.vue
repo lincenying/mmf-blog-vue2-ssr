@@ -4,17 +4,15 @@
             <div class="settings-main card">
                 <div class="settings-main-content">
                     <a-input title="昵称">
-                        <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username">
+                        <input type="text" v-model="form.username" placeholder="昵称" class="base-input" name="username" />
                         <span class="input-info error">请输入昵称</span>
                     </a-input>
                     <a-input title="密码">
-                        <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password">
+                        <input type="password" v-model="form.password" placeholder="密码" class="base-input" name="password" />
                         <span class="input-info error">请输入密码</span>
                     </a-input>
                 </div>
-                <div class="settings-footer clearfix">
-                    <a @click="login" href="javascript:;" class="btn btn-yellow">登录</a>
-                </div>
+                <div class="settings-footer clearfix"><a @click="login" href="javascript:;" class="btn btn-yellow">登录</a></div>
             </div>
         </div>
     </div>

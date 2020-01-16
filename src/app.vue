@@ -2,9 +2,7 @@
     <div id="app" :class="backend ? 'backend' : 'frontend'">
         <Navigation :backend="backend"></Navigation>
         <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
-            <keep-alive>
-                <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view>
-            </keep-alive>
+            <keep-alive> <router-view :key="$route.fullPath" v-if="!$route.meta.notKeepAlive" class="app-view"></router-view> </keep-alive>
         </transition>
         <transition :name="pageTransitionName" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
             <router-view :key="$route.fullPath" v-if="$route.meta.notKeepAlive" class="app-view"></router-view>
@@ -21,7 +19,6 @@ import Navigation from './components/navigation.vue'
 import signUp from './components/signup.vue'
 import signIn from './components/signin.vue'
 import backTop from './components/backtop.vue'
-import backendMenu from './components/backend-menu.vue'
 
 export default {
     name: 'app',
@@ -29,8 +26,7 @@ export default {
         Navigation,
         signUp,
         signIn,
-        backTop,
-        backendMenu
+        backTop
     },
     data() {
         return {}

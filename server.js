@@ -14,9 +14,7 @@ const { createBundleRenderer } = require('vue-server-renderer')
 const config = require('./src/api/config-server')
 const resolve = file => path.resolve(__dirname, file)
 
-const serverInfo =
-    `express/${require('express/package.json').version} ` +
-    `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
+const serverInfo = `express/${require('express/package.json').version} vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 // 引入 mongoose 相关模型
 require('./server/models/admin')
@@ -55,6 +53,7 @@ if (isProd) {
 } else {
     // 开发模式: 设置带有热重新加载的 dev 服务器，并在文件更改时更新渲染器和索引 HTML
     require('./build/setup-dev-server')(app, (bundle, _template) => {
+        console.log(_template)
         frontend = _template.frontend
         backend = _template.backend
         renderer = createRenderer(bundle, frontend)
@@ -89,56 +88,53 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 app.use('/api', routes)
 
 // 前台路由, ssr 渲染
-app.get(
-    ['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'],
-    (req, res) => {
-        if ((req.originalUrl === '/user/account' || req.originalUrl === '/user/password') && !req.cookies.user) {
-            return res.redirect('/')
-        }
-        if (!renderer) {
-            return res.end('waiting for compilation... refresh in a moment.')
-        }
-        const s = Date.now()
-
-        res.setHeader('Content-Type', 'text/html')
-        res.setHeader('Server', serverInfo)
-
-        const errorHandler = err => {
-            if (err && err.code === 404) {
-                res.status(404).end('404 | Page Not Found')
-            } else {
-                // Render Error Page or Redirect
-                res.status(500).end('Internal Error 500')
-                console.error(`error during render : ${req.url}`)
-                console.error(err)
-            }
-        }
-
-        const context = {
-            title: 'M.M.F 小屋',
-            description: 'M.M.F 小屋',
-            url: req.url,
-            cookies: req.cookies
-        }
-        renderer.renderToString(context, (err, html) => {
-            if (err) {
-                return errorHandler(err)
-            }
-            res.end(html)
-            console.log(`whole request: ${Date.now() - s}ms`)
-        })
-        // const htmlStream = new HTMLStream({ template: frontend, context })
-        // htmlStream.on('beforeStart', () => {
-        //     const meta = context.meta.inject()
-        //     context.head = (context.head || '') + meta.title.text()
-        // })
-        // renderer.renderToStream(context)
-        //     .on('error', errorHandler)
-        //     .pipe(htmlStream)
-        //     .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
-        //     .pipe(res)
+app.get(['/', '/category/:id', '/search/:qs', '/article/:id', '/about', '/trending/:by', '/user/account', '/user/password'], (req, res) => {
+    if ((req.originalUrl === '/user/account' || req.originalUrl === '/user/password') && !req.cookies.user) {
+        return res.redirect('/')
     }
-)
+    if (!renderer) {
+        return res.end('waiting for compilation... refresh in a moment.')
+    }
+    const s = Date.now()
+
+    res.setHeader('Content-Type', 'text/html')
+    res.setHeader('Server', serverInfo)
+
+    const errorHandler = err => {
+        if (err && err.code === 404) {
+            res.status(404).end('404 | Page Not Found')
+        } else {
+            // Render Error Page or Redirect
+            res.status(500).end('Internal Error 500')
+            console.error(`error during render : ${req.url}`)
+            console.error(err)
+        }
+    }
+
+    const context = {
+        title: 'M.M.F 小屋',
+        description: 'M.M.F 小屋',
+        url: req.url,
+        cookies: req.cookies
+    }
+    renderer.renderToString(context, (err, html) => {
+        if (err) {
+            return errorHandler(err)
+        }
+        res.end(html)
+        console.log(`whole request: ${Date.now() - s}ms`)
+    })
+    // const htmlStream = new HTMLStream({ template: frontend, context })
+    // htmlStream.on('beforeStart', () => {
+    //     const meta = context.meta.inject()
+    //     context.head = (context.head || '') + meta.title.text()
+    // })
+    // renderer.renderToStream(context)
+    //     .on('error', errorHandler)
+    //     .pipe(htmlStream)
+    //     .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
+    //     .pipe(res)
+})
 
 // 后台渲染
 app.get(['/backend', '/backend/*'], (req, res) => {

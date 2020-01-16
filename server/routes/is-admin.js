@@ -6,11 +6,7 @@ module.exports = (req, res, next) => {
     const { b_user, b_userid, b_username } = req.cookies
     if (b_user) {
         jwt.verify(b_user, secret, function(err, decoded) {
-            if (
-                !err &&
-                decoded.id === b_userid &&
-                (decoded.username === b_username || decoded.username === encodeURI(b_username))
-            ) {
+            if (!err && decoded.id === b_userid && (decoded.username === b_username || decoded.username === encodeURI(b_username))) {
                 req.decoded = decoded
                 next()
             } else {

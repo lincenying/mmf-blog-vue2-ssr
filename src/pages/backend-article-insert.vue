@@ -2,7 +2,7 @@
     <div class="settings-main card">
         <div class="settings-main-content">
             <a-input title="标题">
-                <input type="text" v-model="form.title" placeholder="标题" class="base-input" name="title">
+                <input type="text" v-model="form.title" placeholder="标题" class="base-input" name="title" />
                 <span class="input-info error">请输入标题</span>
             </a-input>
             <a-input title="分类" :classes="'select-item-wrap'">
@@ -19,9 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="settings-footer clearfix">
-            <a @click="insert" href="javascript:;" class="btn btn-yellow">添加文章</a>
-        </div>
+        <div class="settings-footer clearfix"><a @click="insert" href="javascript:;" class="btn btn-yellow">添加文章</a></div>
     </div>
 </template>
 
@@ -39,13 +37,6 @@ export default {
         aInput
     },
     mixins: [checkAdmin],
-    async asyncData({ store, route }, config = { limit: 99 }) {
-        config.all = 1
-        await store.dispatch('global/category/getCategoryList', {
-            ...config,
-            path: route.path
-        })
-    },
     data() {
         return {
             form: {
@@ -58,6 +49,13 @@ export default {
     computed: {
         ...mapGetters({
             category: 'global/category/getCategoryList'
+        })
+    },
+    async asyncData({ store, route }, config = { limit: 99 }) {
+        config.all = 1
+        await store.dispatch('global/category/getCategoryList', {
+            ...config,
+            path: route.path
         })
     },
     mounted() {
