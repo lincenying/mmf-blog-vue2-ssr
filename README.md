@@ -20,8 +20,6 @@ vue2 spa版本: [https://github.com/lincenying/mmf-blog-vue2](https://github.com
 
 vue2 ssr版本: [https://github.com/lincenying/mmf-blog-vue2-ssr](https://github.com/lincenying/mmf-blog-vue2-ssr)
 
-vue2 pwa ssr版本: [https://github.com/lincenying/mmf-blog-vue2-pwa-ssr](https://github.com/lincenying/mmf-blog-vue2-pwa-ssr)
-
 ---
 
 ```
