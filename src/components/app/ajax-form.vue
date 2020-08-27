@@ -30,31 +30,31 @@ export default {
         before: {
             type: Function,
             default() {
-                return function() {}
+                return function () {}
             }
         },
         error: {
             type: Function,
             default() {
-                return function() {}
+                return function () {}
             }
         },
         complete: {
             type: Function,
             default() {
-                return function() {}
+                return function () {}
             }
         },
         progress: {
             type: Function,
             default() {
-                return function() {}
+                return function () {}
             }
         },
         after: {
             type: Function,
             default() {
-                return function() {}
+                return function () {}
             }
         }
     },
