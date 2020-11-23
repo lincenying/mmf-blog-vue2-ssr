@@ -75,14 +75,7 @@ exports.getList = (req, res) => {
         if (!all) {
             data.is_delete = 0
         }
-        Promise.all([
-            Comment.find(data)
-                .sort('-_id')
-                .skip(skip)
-                .limit(limit)
-                .exec(),
-            Comment.countDocumentsAsync(data)
-        ])
+        Promise.all([Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(), Comment.countDocumentsAsync(data)])
             .then(result => {
                 const total = result[1]
                 const totalPage = Math.ceil(total / limit)

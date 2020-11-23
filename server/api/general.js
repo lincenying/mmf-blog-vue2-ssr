@@ -15,15 +15,7 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
     if (!page) page = 1
     if (!limit) limit = 10
     const skip = (page - 1) * limit
-    Promise.all([
-        mongoDB
-            .find()
-            .sort(sort)
-            .skip(skip)
-            .limit(limit)
-            .exec(),
-        mongoDB.countDocumentsAsync()
-    ])
+    Promise.all([mongoDB.find().sort(sort).skip(skip).limit(limit).exec(), mongoDB.countDocumentsAsync()])
         .then(result => {
             const total = result[1]
             const totalPage = Math.ceil(total / limit)

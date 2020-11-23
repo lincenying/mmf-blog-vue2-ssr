@@ -3,17 +3,21 @@
  * @author lincenying(lincenying@qq.com)
  */
 
-import FastClick from 'fastclick'
-import 'toastr/build/toastr.css'
 import Vue from 'vue'
-import ProgressBar from '~/components/progress-bar.vue'
+import FastClick from 'fastclick'
 import api from '~api'
-import './assets/css/hljs/googlecode.css'
-import './assets/less/style.less'
 import VueBus from './event-bus'
 import { createApp } from './main'
 import './polyfill'
 import './registerServiceWorker'
+
+import ProgressBar from '~/components/progress-bar.vue'
+
+import 'mavon-editor/dist/css/index.css'
+import 'toastr/build/toastr.css'
+import './assets/css/hljs/googlecode.css'
+import './assets/css/github-markdown.css'
+import './assets/less/style.less'
 
 // 全局的进度条，在组件中可通过 $loading 访问
 const loading = (Vue.prototype.$loading = new Vue(ProgressBar).$mount())
@@ -62,7 +66,9 @@ Vue.mixin({
             // 通过 `vm` 访问组件实例
             vm.$nextTick().then(() => {
                 const scrollTop = vm.$store.state.appShell.historyPageScrollTop[to.fullPath] || 0
-                window.scrollTo(0, scrollTop)
+                setTimeout(() => {
+                    window.scrollTo(0, scrollTop)
+                }, 350)
             })
         })
     },

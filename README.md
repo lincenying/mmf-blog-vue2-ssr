@@ -1,115 +1,259 @@
-# mmf-blog vuejs 2.0 服务端渲染 v2版
+@[toc]
 
-demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
+# 1. 首先你得有台服务器
 
-## 说明
+# 2. 推荐安装 linux 系统
 
-本站服务端采用 express + mongoDB 搭建, 客户端采用 Vue2 的服务端渲染搭建
+本文以 CentOS 7.2 为例
 
-主要功能包括: 管理员, 用户, 分类, 文章, 评论, 文章点赞
+# 3. 更换 yum 为国内镜像
 
-主要技术栈: express, mongoose, vue2, vue2-router, vuex, webpack, babel, eslint
-
----
-
-#### 其他版本
-
-react spa版本: [https://github.com/lincenying/mmf-blog-react-v2](https://github.com/lincenying/mmf-blog-react-v2)
-
-vue2 spa版本: [https://github.com/lincenying/mmf-blog-vue2](https://github.com/lincenying/mmf-blog-vue2)
-
-vue2 pwa ssr版本: [https://github.com/lincenying/mmf-blog-vue2-pwa-ssr](https://github.com/lincenying/mmf-blog-vue2-pwa-ssr)
-
----
-
+1. 备份你的原镜像文件，以免出错后可以恢复。
+```bash
+# mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 ```
-配置文件: src/api/config-client.js (浏览器端)
-api: api地址 (如果 api 服务器和网站服务器是同一个域名, 或者用了反向代理, 可以直接用省去域名的绝对路径, 如: /api/)
-配置文件: src/api/config-server.js (服务器端)
-api: api地址 (如果 api 服务器 和网站服务器在同一台主机, 可以用本地地址, 如: http://localhost:8080)
-port: 启动端口
+2. 下载新的CentOS-Base.repo 到/etc/yum.repos.d/
+```bash
+// CentOS 5
+# wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-5.repo
+// CentOS 6
+# wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-6.repo
+// CentOS 7
+# wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+// CentOS 8
+# wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+```
+3. 生成缓存
+```bash
+# yum makecache
 ```
 
-## 准备工作:
-安装 NodeJS:
-https://nodejs.org/zh-cn/
+# 4. 安装 Nodejs
 
-安装 Mongodb:
-https://www.mongodb.com/download-center#community
+### 方法1: 用 yum 安装
+```bash
+// nodejs 8.x
+# curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+// ...
+// nodejs 12.x
+# curl --silent --location https://rpm.nodesource.com/setup_12.x | bash -
+// ...
+// nodejs 15.x
+# curl --silent --location https://rpm.nodesource.com/setup_15.x | bash -
+```
+具体所有版本见:
+https://github.com/nodesource/distributions/tree/master/rpm
+根据自己需要安装的 nodejs 版本, 选一个命令执行
+开始安装: `yum install -y nodejs`
+测试是否成功: `node -v`, 如果出现对应的版本号, 则安装成功
 
-在 server/config 文件夹下 创建 mpapp.js 文件
-里面写入: (小程序登录用的)
-```javascript
-exports.apiId = ''
-exports.secret = ''
+### 方法2:
+
+```bash
+// 1. 下载 nodejs
+# cd ~
+# wget https://nodejs.org/dist/v12.14.0/node-v12.14.0-linux-x64.tar.gz
+// 其他版本: https://nodejs.org/dist/v(版本号)/node-v(版本号)-linux-x64.tar.gz
+// https://nodejs.org/dist/ 可以看到所有版本
+
+// 2. 解压
+# tar -xvf node-v12.4.0-linux-x64.tar.xz
+
+// 3. 创建软链结
+# ln -s /root/node-v12.4.0-linux-x64/bin/node /usr/bin/node
+# ln -s /root/node-v12.4.0-linux-x64/bin/npm /usr/bin/npm
+
+# ln -s /root/node-v12.4.0-linux-x64/bin/node /usr/local/bin/node
+# ln -s /root/node-v12.4.0-linux-x64/bin/npm /usr/local/bin/npm
+```
+测试是否成功: `node -v`, 如果出现对应的版本号, 则安装成功
+
+# 5. 安装 nginx
+
+1. 添加 Nginx 到 yum 源
+```bash
+# sudo rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+```
+其他源地址见: http://nginx.org/packages/
+centOS7 原地址: http://nginx.org/packages/centos/7/x86_64/RPMS/
+
+2. 安装 Nginx
+```bash
+# sudo yum install -y nginx
+```
+3. 启动 Nginx
+```bash
+# sudo systemctl start nginx.service
+```
+4. 开机启动 Nginx
+```bash
+# sudo systemctl enable nginx.service
+```
+5. Nginx 配置信息
+```bash
+// 网站默认站点配置
+# vi /etc/nginx/conf.d/default.conf
+// 自定义 Nginx 站点配置文件存放目录
+# vi /etc/nginx/conf.d/
+// Nginx 全局配置
+# vi /etc/nginx/nginx.conf
 ```
 
-在 server/config 文件夹下 创建 shihua.js 文件
-里面写入: (百度识花用的)
-接口申请地址: http://ai.baidu.com/tech/imagerecognition
-```javascript
-exports.APP_ID = ''
-exports.API_KEY = ''
-exports.SECRET_KEY = ''
+# 6. 安装 git
+
+## 方法一、yum 安装
+
+```bash
+# yum install git
+```
+通过yum方式安装，版本比较旧，CentOS 7.2上安装好是1.8版。如果想安装最新版或其他版本，需要使用方法二或三。
+
+## 方法二、第三方仓库安装方式（IUS）
+ius 官方的 [安装说明](https://ius.io/setup "安装说明") 及 [使用说明](https://ius.io/usage "使用说明")
+```bash
+# curl https://setup.ius.io | sh
+// 卸载老版本
+# yum remove -y git
+// 安装新版本
+yum -y install git2u
 ```
 
-```shell
-# 安装依赖
-$ npm install
+## 方法三、源码包安装
 
-# 或者
-$ yarn
-# 注意: 不要用 cnpm 安装依赖
-
-# 开发模式
-$ yarn ssr:serve
-
-# 生产模式
-$ yarn ssr:build
-
-# 启动(需先运行 yarn ssr:build )
-$ yarn ssr:start
+1. 安装依赖包
+```bash
+# yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel
+# yum install  gcc perl-ExtUtils-MakeMaker
+```
+2. 卸载旧的git版本（如果之前有安装rpm包）
+```
+# yum remove git
+```
+3. 下载&解压
+```
+# cd /usr/src
+# wget https://github.com/git/git/archive/v2.24.1.tar.gz
+# tar -zxvf v2.24.1.tar.gz
+```
+或到 https://github.com/git/git/releases 选择一个版本
+4. 编译安装
+```
+# cd v2.24.1
+# make prefix=/usr/local/git all
+# make prefix=/usr/local/git install
+# echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc
+# source /etc/bashrc
+```
+5. 检查git版本
+```
+# git --version
+// git version 2.24.1
 ```
 
-首页
-http://localhost:8080
-
-登录
-http://localhost:8080/backend
-
-添加管理员
-http://localhost:8080/api/backend
-
-管理员添加成功后, 会自动生成 admin.lock 文件锁定, 如果需要继续添加, 请把该文件删除
-
-## loadtest 测试
+# 7. 安装 mongoDB
 
 ```
-[Sat Jul 15 2017 10:53:20] INFO Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
-[Sat Jul 15 2017 10:53:25] INFO Requests: 356 (18%), requests per second: 71, mean latency: 14 ms
-[Sat Jul 15 2017 10:53:30] INFO Requests: 804 (40%), requests per second: 90, mean latency: 11.1 ms
-[Sat Jul 15 2017 10:53:35] INFO Requests: 1290 (65%), requests per second: 97, mean latency: 10.2 ms
-[Sat Jul 15 2017 10:53:40] INFO Requests: 1764 (88%), requests per second: 95, mean latency: 10.6 ms
-[Sat Jul 15 2017 10:53:43] INFO
-[Sat Jul 15 2017 10:53:43] INFO Target URL:          http://localhost:8080/
-[Sat Jul 15 2017 10:53:43] INFO Max requests:        2000
-[Sat Jul 15 2017 10:53:43] INFO Concurrency level:   1
-[Sat Jul 15 2017 10:53:43] INFO Agent:               none
-[Sat Jul 15 2017 10:53:43] INFO
-[Sat Jul 15 2017 10:53:43] INFO Completed requests:  2000
-[Sat Jul 15 2017 10:53:43] INFO Total errors:        0
-[Sat Jul 15 2017 10:53:43] INFO Total time:          22.645280754999998s
-[Sat Jul 15 2017 10:53:43] INFO Requests per second: 88
-[Sat Jul 15 2017 10:53:43] INFO Mean latency:        11.3 ms
-[Sat Jul 15 2017 10:53:43] INFO
-[Sat Jul 15 2017 10:53:43] INFO Percentage of the requests served within a certain time
-[Sat Jul 15 2017 10:53:43] INFO   50%      8 ms
-[Sat Jul 15 2017 10:53:43] INFO   90%      17 ms
-[Sat Jul 15 2017 10:53:43] INFO   95%      27 ms
-[Sat Jul 15 2017 10:53:43] INFO   99%      38 ms
-[Sat Jul 15 2017 10:53:43] INFO  100%      438 ms (longest request)
+# vi /etc/yum.repos.d/mongodb-org-3.2.repo // 3.x
+# vi /etc/yum.repos.d/mongodb-org-4.0.repo // 4.x
+```
+写入以下内容
+```
+// 3.x
+[mongodb-org-3.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc
+
+// 4.x
+[mongodb-org-4.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+```
+保存并退出
+开始安装:
+```
+# yum install -y mongodb-org
+```
+配置文件：`/etc/mongod.conf`
+数据文件：`/var/lib/mongo`
+日志文件：`/var/log/mongodb`
+相关命令:
+```
+// 启动
+# service mongod start
+// 停止
+# service mongod stop
+// 重启
+# service mongod restart
+// 增加开机启动
+# chkconfig mongod on
 ```
 
-# LICENSE
+# 8. api 服务器
 
-MIT
+vue2 ssr 不管是服务端还是浏览器端, 都是通过 api 来获取数据的, 所以我们需要先搭 api 服务器
+安装 pm2, 让 nodejs 服务可以在后台运行
+```
+npm install -g pm2
+```
+从 github 克隆一个项目
+```
+# cd /home
+# mkdir web
+# cd web
+# git clone https://github.com/lincenying/mmf-blog-api-v2.git
+# cd mmf-blog-api-v2
+# yarn
+# pm2 start ./bin/www
+```
+这样, api 服务器就起来了
+
+# 9. SSR 服务器
+```
+# cd /home/web
+# git clone https://github.com/lincenying/mmf-blog-vue2-pwa-ssr.git
+# cd mmf-blog-vue2-pwa-ssr
+# yarn
+```
+构建 vue2 项目
+```
+# yarn build
+```
+启动服务
+```
+# pm2 start yarn -- ssr:start
+```
+
+# 10. 利用 nginx 反向代理来绑定域名
+
+```
+# vi /etc/nginx/conf.d/ssr.conf
+```
+写入以下内容:
+```
+server {
+            listen 80;
+            server_name xxxx.com www.xxxx.com; // 你的域名
+            location / {
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Host  $http_host;
+                    proxy_set_header X-Nginx-Proxy true;
+                    proxy_set_header Connection "";
+                    proxy_pass  http://127.0.0.1:8080; // 代理到 nodejs 网站服务器
+            }
+}
+```
+保存并退出
+重新加载 nginx
+```
+nginx -t // 测试 nginx 配置文件
+nginx -s reload
+```
+
+到此, 基本配就结束了...

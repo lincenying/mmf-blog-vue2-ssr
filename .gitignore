@@ -21,6 +21,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+*-port.txt
 
 package-lock.json
 admin.lock

@@ -119,11 +119,11 @@ const guardRouteBackend = (to, from, next) => {
     }
 }
 
-const scrollBehavior = to => {
+const scrollBehavior = (/*to*/) => {
     const position = {}
-    if (to.hash) {
-        position.selector = to.hash
-    }
+    // if (to.hash) {
+    //     position.selector = to.hash
+    // }
     // if (to.matched.some(mm => mm.meta.scrollToTop)) {
     //     position.x = 0
     //     position.y = 0

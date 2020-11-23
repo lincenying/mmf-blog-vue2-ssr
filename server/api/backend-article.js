@@ -1,4 +1,8 @@
 const moment = require('moment')
+const markdownIt = require('markdown-it')
+const markdownItTocAndAnchor = require('markdown-it-toc-and-anchor').default
+const hljs = require('highlight.js')
+
 const mongoose = require('../mongoose')
 const Article = mongoose.model('Article')
 const Category = mongoose.model('Category')
@@ -7,14 +11,34 @@ const general = require('./general')
 const list = general.list
 const item = general.item
 
-const marked = require('marked')
-const hljs = require('highlight.js')
-marked.setOptions({
-    highlight(code) {
-        return hljs.highlightAuto(code).value
-    },
-    breaks: true
-})
+const marked = md => {
+    const $return = {
+        html: '',
+        toc: ''
+    }
+    const html = markdownIt({
+        breaks: true,
+        html: true,
+        linkify: true,
+        typographer: true,
+        highlight(str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return hljs.highlight(lang, str).value
+                } catch (error) {}
+            }
+            return ''
+        }
+    })
+        .use(markdownItTocAndAnchor, {
+            tocCallback(tocMarkdown, tocArray, tocHtml) {
+                $return.toc = tocHtml
+            }
+        })
+        .render(md)
+    $return.html = html
+    return $return
+}
 
 /**
  * 管理时, 获取文章列表
@@ -47,7 +71,9 @@ exports.getItem = (req, res) => {
  */
 exports.insert = (req, res) => {
     const { category, content, title } = req.body
-    const html = marked(content)
+    const md = marked(content)
+    const html = md.html
+    const toc = md.toc
     const arr_category = category.split('|')
     const data = {
         title,
@@ -55,6 +81,7 @@ exports.insert = (req, res) => {
         category_name: arr_category[1],
         content,
         html,
+        toc,
         visit: 0,
         like: 0,
         comment_count: 0,
@@ -123,13 +150,16 @@ exports.recover = (req, res) => {
  */
 exports.modify = (req, res) => {
     const { id, category, category_old, content } = req.body
-    const html = marked(content)
+    const md = marked(content)
+    const html = md.html
+    const toc = md.toc
     const data = {
         title: req.body.title,
         category: req.body.category,
         category_name: req.body.category_name,
         content,
         html,
+        toc,
         update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     Article.findOneAndUpdateAsync({ _id: id }, data, { new: true })
