@@ -17,7 +17,7 @@ import 'mavon-editor/dist/css/index.css'
 import 'toastr/build/toastr.css'
 import './assets/css/hljs/googlecode.css'
 import './assets/css/github-markdown.css'
-import './assets/less/style.less'
+import './assets/scss/style.scss'
 
 // 全局的进度条，在组件中可通过 $loading 访问
 const loading = (Vue.prototype.$loading = new Vue(ProgressBar).$mount())

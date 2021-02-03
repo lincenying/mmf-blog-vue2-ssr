@@ -122,8 +122,10 @@ module.exports = {
                     })
                 )
                 const bodyParser = require('body-parser')
+                // parse application/json
                 app.use(bodyParser.json())
-                app.use(bodyParser.urlencoded({ extended: false }))
+                // parse application/x-www-form-urlencoded
+                app.use(bodyParser.urlencoded({ extended: true }))
                 const cookieParser = require('cookie-parser')
                 app.use(cookieParser())
 

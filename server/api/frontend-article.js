@@ -33,14 +33,7 @@ exports.getList = (req, res) => {
 
     const filds = 'title content category category_name visit like likes comment_count creat_date update_date is_delete timestamp'
 
-    Promise.all([
-        Article.find(data, filds)
-            .sort(sort)
-            .skip(skip)
-            .limit(limit)
-            .exec(),
-        Article.countDocumentsAsync(data)
-    ])
+    Promise.all([Article.find(data, filds).sort(sort).skip(skip).limit(limit).exec(), Article.countDocumentsAsync(data)])
         .then(([data, total]) => {
             const totalPage = Math.ceil(total / limit)
             const user_id = req.cookies.userid || req.headers.userid
