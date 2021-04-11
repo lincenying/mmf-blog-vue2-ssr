@@ -5,7 +5,6 @@
 
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
-import mavonEditor from 'mavon-editor'
 
 import * as filters from './filters'
 import titleMixin from './mixins'
@@ -16,7 +15,6 @@ import { oc } from './utils'
 import App from './App.vue'
 
 Vue.mixin(titleMixin)
-Vue.use(mavonEditor)
 
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])

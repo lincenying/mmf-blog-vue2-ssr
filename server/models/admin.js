@@ -1,6 +1,5 @@
 const mongoose = require('../mongoose')
 const Schema = mongoose.Schema
-const Promise = require('bluebird')
 
 const AdminSchema = new Schema({
     username: String,
@@ -13,7 +12,5 @@ const AdminSchema = new Schema({
 })
 
 const Admin = mongoose.model('Admin', AdminSchema)
-Promise.promisifyAll(Admin)
-Promise.promisifyAll(Admin.prototype)
 
 module.exports = Admin

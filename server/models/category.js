@@ -1,6 +1,5 @@
 const mongoose = require('../mongoose')
 const Schema = mongoose.Schema
-const Promise = require('bluebird')
 
 const CategorySchema = new Schema({
     cate_name: String,
@@ -13,7 +12,5 @@ const CategorySchema = new Schema({
 })
 
 const Category = mongoose.model('Category', CategorySchema)
-Promise.promisifyAll(Category)
-Promise.promisifyAll(Category.prototype)
 
 module.exports = Category

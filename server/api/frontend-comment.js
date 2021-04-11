@@ -11,7 +11,7 @@ const Article = mongoose.model('Article')
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.insert = (req, res) => {
+exports.insert = async (req, res) => {
     const { id, content } = req.body
     const creat_date = moment().format('YYYY-MM-DD HH:mm:ss')
     const timestamp = moment().format('X')
@@ -31,24 +31,22 @@ exports.insert = (req, res) => {
         is_delete: 0,
         timestamp
     }
-    Comment.createAsync(data)
-        .then(result => {
-            return Article.updateOneAsync(
-                {
-                    _id: id
-                },
-                {
-                    $inc: {
-                        comment_count: 1
-                    }
+    try {
+        const result = await Comment.create(data)
+        await Article.updateOne(
+            {
+                _id: id
+            },
+            {
+                $inc: {
+                    comment_count: 1
                 }
-            ).then(() => {
-                res.json({ code: 200, data: result, message: '发布成功' })
-            })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+            }
+        )
+        res.json({ code: 200, data: result, message: '发布成功' })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -58,7 +56,7 @@ exports.insert = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.getList = (req, res) => {
+exports.getList = async (req, res) => {
     const { all, id } = req.query
     let { limit, page } = req.query
     if (!id) {
@@ -75,23 +73,21 @@ exports.getList = (req, res) => {
         if (!all) {
             data.is_delete = 0
         }
-        Promise.all([Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(), Comment.countDocumentsAsync(data)])
-            .then(result => {
-                const total = result[1]
-                const totalPage = Math.ceil(total / limit)
-                const json = {
-                    code: 200,
-                    data: {
-                        list: result[0],
-                        total,
-                        hasNext: totalPage > page ? 1 : 0
-                    }
+        try {
+            const [list, total] = await Promise.all([Comment.find(data).sort('-_id').skip(skip).limit(limit).exec(), Comment.countDocuments(data)])
+            const totalPage = Math.ceil(total / limit)
+            const json = {
+                code: 200,
+                data: {
+                    list,
+                    total,
+                    hasNext: totalPage > page ? 1 : 0
                 }
-                res.json(json)
-            })
-            .catch(err => {
-                res.json({ code: -200, message: err.toString() })
-            })
+            }
+            res.json(json)
+        } catch (err) {
+            res.json({ code: -200, message: err.toString() })
+        }
     }
 }
 
@@ -102,20 +98,17 @@ exports.getList = (req, res) => {
  * @param  {[type]}    res [description]
  * @return {[type]}        [description]
  */
-exports.deletes = (req, res) => {
+exports.deletes = async (req, res) => {
     const _id = req.query.id
-    Comment.updateOneAsync({ _id }, { is_delete: 1 })
-        .then(() => {
-            return Article.updateOneAsync({ _id }, { $inc: { comment_count: -1 } }).then(() => {
-                res.json({ code: 200, message: '删除成功', data: 'success' })
-            })
+    try {
+        await Promise.all([Comment.updateOne({ _id }, { is_delete: 1 }), Article.updateOne({ _id }, { $inc: { comment_count: -1 } })])
+        res.json({ code: 200, message: '删除成功', data: 'success' })
+    } catch (err) {
+        res.json({
+            code: -200,
+            message: err.toString()
         })
-        .catch(err => {
-            res.json({
-                code: -200,
-                message: err.toString()
-            })
-        })
+    }
 }
 
 /**
@@ -125,15 +118,12 @@ exports.deletes = (req, res) => {
  * @param  {[type]}    res [description]
  * @return {[type]}        [description]
  */
-exports.recover = (req, res) => {
+exports.recover = async (req, res) => {
     const _id = req.query.id
-    Comment.updateOneAsync({ _id }, { is_delete: 0 })
-        .then(() => {
-            return Article.updateOneAsync({ _id }, { $inc: { comment_count: 1 } }).then(() => {
-                res.json({ code: 200, message: '恢复成功', data: 'success' })
-            })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        await Promise.all([Comment.updateOne({ _id }, { is_delete: 0 }), Article.updateOne({ _id }, { $inc: { comment_count: 1 } })])
+        res.json({ code: 200, message: '恢复成功', data: 'success' })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }

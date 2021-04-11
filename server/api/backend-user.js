@@ -20,7 +20,7 @@ const { list, item, modify, deletes, recover } = general
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    list(req, res, Admin)
+    list.call(Admin, req, res)
 }
 
 /**
@@ -31,7 +31,7 @@ exports.getList = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.getItem = (req, res) => {
-    item(req, res, Admin)
+    item.call(Admin, req, res)
 }
 
 /**
@@ -41,32 +41,31 @@ exports.getItem = (req, res) => {
  * @param  {[type]}   res [description]
  * @return {[type]}       [description]
  */
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     const { password, username } = req.body
     if (username === '' || password === '') {
         return res.json({ code: -200, message: '请输入用户名和密码' })
     }
-    Admin.findOneAsync({
-        username,
-        password: md5(md5Pre + password),
-        is_delete: 0
-    })
-        .then(result => {
-            if (result) {
-                const _username = encodeURI(username)
-                const id = result._id
-                const remember_me = 2592000000
-                const token = jwt.sign({ id, username: _username }, secret, { expiresIn: 60 * 60 * 24 * 30 })
-                res.cookie('b_user', token, { maxAge: remember_me })
-                res.cookie('b_userid', id, { maxAge: remember_me })
-                res.cookie('b_username', _username, { maxAge: remember_me })
-                return res.json({ code: 200, message: '登录成功', data: token })
-            }
-            return res.json({ code: -200, message: '用户名或者密码错误' })
+    try {
+        const result = await Admin.findOne({
+            username,
+            password: md5(md5Pre + password),
+            is_delete: 0
         })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+        if (result) {
+            const _username = encodeURI(username)
+            const id = result._id
+            const remember_me = 2592000000
+            const token = jwt.sign({ id, username: _username }, secret, { expiresIn: 60 * 60 * 24 * 30 })
+            res.cookie('b_user', token, { maxAge: remember_me })
+            res.cookie('b_userid', id, { maxAge: remember_me })
+            res.cookie('b_username', _username, { maxAge: remember_me })
+            return res.json({ code: 200, message: '登录成功', data: token })
+        }
+        return res.json({ code: -200, message: '用户名或者密码错误' })
+    } catch (error) {
+        res.json({ code: -200, message: error.toString() })
+    }
 }
 
 /**
@@ -77,7 +76,7 @@ exports.login = (req, res) => {
  * @param  {Function}  next [description]
  * @return {json}         [description]
  */
-exports.insert = (req, res, next) => {
+exports.insert = async (req, res, next) => {
     const { email, password, username } = req.body
     if (fsExistsSync('./admin.lock')) {
         return res.render('admin-add.html', { message: '请先把 admin.lock 删除' })
@@ -85,28 +84,26 @@ exports.insert = (req, res, next) => {
     if (!username || !password || !email) {
         return res.render('admin-add.html', { message: '请将表单填写完整' })
     }
-    Admin.findOneAsync({ username })
-        .then(result => {
-            if (result) {
-                return '该用户已经存在'
-            }
-            return Admin.createAsync({
-                username,
-                password: md5(md5Pre + password),
-                email,
-                creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                is_delete: 0,
-                timestamp: moment().format('X')
-            }).then(() => {
-                fs.writeFileSync('./admin.lock', username)
-                return '添加用户成功: ' + username + ', 密码: ' + password
-            })
+    try {
+        const result = await Admin.findOne({ username })
+        if (result) {
+            return '该用户已经存在'
+        }
+        return Admin.create({
+            username,
+            password: md5(md5Pre + password),
+            email,
+            creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+            update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+            is_delete: 0,
+            timestamp: moment().format('X')
+        }).then(() => {
+            fs.writeFileSync('./admin.lock', username)
+            return '添加用户成功: ' + username + ', 密码: ' + password
         })
-        .then(message => {
-            res.render('admin-add.html', { message })
-        })
-        .catch(err => next(err))
+    } catch (error) {
+        next(error)
+    }
 }
 
 /**
@@ -124,7 +121,7 @@ exports.modify = (req, res) => {
         update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     if (password) data.password = md5(md5Pre + password)
-    modify(res, Admin, id, data)
+    modify.call(Admin, res, id, data)
 }
 
 /**
@@ -135,7 +132,7 @@ exports.modify = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.deletes = (req, res) => {
-    deletes(req, res, Admin)
+    deletes.call(Admin, req, res)
 }
 
 /**
@@ -146,5 +143,5 @@ exports.deletes = (req, res) => {
  * @return {[type]}        [description]
  */
 exports.recover = (req, res) => {
-    recover(req, res, Admin)
+    recover.call(Admin, req, res)
 }

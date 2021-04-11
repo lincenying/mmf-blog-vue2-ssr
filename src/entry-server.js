@@ -68,6 +68,7 @@ export default context => {
                     // the initial data fetching on the client.
                     context.state = store.state
                     context.isProd = process.env.NODE_ENV === 'production'
+                    context.meta = app.$meta()
                     resolve(app)
                 })
                 .catch(reject)

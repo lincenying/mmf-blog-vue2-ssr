@@ -1,6 +1,5 @@
 const mongoose = require('../mongoose')
 const Schema = mongoose.Schema
-const Promise = require('bluebird')
 
 const UserSchema = new Schema({
     username: String,
@@ -15,7 +14,5 @@ const UserSchema = new Schema({
 })
 
 const User = mongoose.model('User', UserSchema)
-Promise.promisifyAll(User)
-Promise.promisifyAll(User.prototype)
 
 module.exports = User

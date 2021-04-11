@@ -12,57 +12,57 @@ const { item, modify, deletes, recover } = general
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.getList = (req, res) => {
-    Category.find()
-        .sort('-cate_order')
-        .exec()
-        .then(result => {
-            const json = {
-                code: 200,
-                data: {
-                    list: result
-                }
+exports.getList = async (req, res) => {
+    try {
+        const result = await Category.find().sort('-cate_order').exec()
+        const json = {
+            code: 200,
+            data: {
+                list: result
             }
-            res.json(json)
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+        }
+        res.json(json)
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 exports.getItem = (req, res) => {
-    item(req, res, Category)
+    item.call(Category, req, res)
 }
 
-exports.insert = (req, res) => {
+exports.insert = async (req, res) => {
     const { cate_name, cate_order } = req.body
     if (!cate_name || !cate_order) {
         res.json({ code: -200, message: '请填写分类名称和排序' })
     } else {
-        return Category.createAsync({
-            cate_name,
-            cate_order,
-            creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-            update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-            is_delete: 0,
-            timestamp: moment().format('X')
-        }).then(result => {
+        try {
+            const result = await Category.create({
+                cate_name,
+                cate_order,
+                creat_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                update_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                is_delete: 0,
+                timestamp: moment().format('X')
+            })
             res.json({ code: 200, message: '添加成功', data: result._id })
-        })
+        } catch (err) {
+            res.json({ code: -200, message: err.toString() })
+        }
     }
 }
 
 exports.deletes = (req, res) => {
-    deletes(req, res, Category)
+    deletes.call(Category, req, res)
 }
 
 exports.recover = (req, res) => {
-    recover(req, res, Category)
+    recover.call(Category, req, res)
 }
 
 exports.modify = (req, res) => {
     const { id, cate_name, cate_order } = req.body
-    modify(res, Category, id, {
+    modify.call(Category, res, id, {
         cate_name,
         cate_order,
         update_date: moment().format('YYYY-MM-DD HH:mm:ss')

@@ -48,7 +48,7 @@ const marked = md => {
  * @return {[type]}     [description]
  */
 exports.getList = (req, res) => {
-    list(req, res, Article, '-update_date')
+    list.call(Article, req, res, '-update_date')
 }
 
 /**
@@ -59,7 +59,7 @@ exports.getList = (req, res) => {
  * @return {[type]}     [description]
  */
 exports.getItem = (req, res) => {
-    item(req, res, Article)
+    item.call(Article, req, res)
 }
 
 /**
@@ -69,7 +69,7 @@ exports.getItem = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.insert = (req, res) => {
+exports.insert = async (req, res) => {
     const { category, content, title } = req.body
     const md = marked(content)
     const html = md.html
@@ -90,15 +90,13 @@ exports.insert = (req, res) => {
         is_delete: 0,
         timestamp: moment().format('X')
     }
-    Article.createAsync(data)
-        .then(result => {
-            return Category.updateOneAsync({ _id: arr_category[0] }, { $inc: { cate_num: 1 } }).then(() => {
-                return res.json({ code: 200, message: '发布成功', data: result })
-            })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        const result = await Article.create(data)
+        await Category.updateOne({ _id: arr_category[0] }, { $inc: { cate_num: 1 } })
+        res.json({ code: 200, message: '发布成功', data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -108,17 +106,15 @@ exports.insert = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.deletes = (req, res) => {
+exports.deletes = async (req, res) => {
     const _id = req.query.id
-    Article.updateOneAsync({ _id }, { is_delete: 1 })
-        .then(() => {
-            return Category.updateOneAsync({ _id }, { $inc: { cate_num: -1 } }).then(result => {
-                res.json({ code: 200, message: '更新成功', data: result })
-            })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        const result = await Article.updateOne({ _id }, { is_delete: 1 })
+        await Category.updateOne({ _id }, { $inc: { cate_num: -1 } })
+        res.json({ code: 200, message: '更新成功', data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -128,17 +124,15 @@ exports.deletes = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.recover = (req, res) => {
+exports.recover = async (req, res) => {
     const _id = req.query.id
-    Article.updateOneAsync({ _id }, { is_delete: 0 })
-        .then(() => {
-            return Category.updateOneAsync({ _id }, { $inc: { cate_num: 1 } }).then(() => {
-                res.json({ code: 200, message: '更新成功', data: 'success' })
-            })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        const result = await Article.updateOne({ _id }, { is_delete: 0 })
+        await Category.updateOne({ _id }, { $inc: { cate_num: 1 } })
+        res.json({ code: 200, message: '更新成功', data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -148,7 +142,7 @@ exports.recover = (req, res) => {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.modify = (req, res) => {
+exports.modify = async (req, res) => {
     const { id, category, category_old, content } = req.body
     const md = marked(content)
     const html = md.html
@@ -162,20 +156,16 @@ exports.modify = (req, res) => {
         toc,
         update_date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
-    Article.findOneAndUpdateAsync({ _id: id }, data, { new: true })
-        .then(result => {
-            if (category !== category_old) {
-                Promise.all([
-                    Category.updateOneAsync({ _id: category }, { $inc: { cate_num: 1 } }),
-                    Category.updateOneAsync({ _id: category_old }, { $inc: { cate_num: -1 } })
-                ]).then(() => {
-                    res.json({ code: 200, message: '更新成功', data: result })
-                })
-            } else {
-                res.json({ code: 200, message: '更新成功', data: result })
-            }
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        const result = await Article.findOneAndUpdate({ _id: id }, data, { new: true })
+        if (category !== category_old) {
+            await Promise.all([
+                Category.updateOne({ _id: category }, { $inc: { cate_num: 1 } }),
+                Category.updateOne({ _id: category_old }, { $inc: { cate_num: -1 } })
+            ])
+        }
+        res.json({ code: 200, message: '更新成功', data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }

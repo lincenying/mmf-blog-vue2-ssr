@@ -121,11 +121,11 @@ module.exports = {
                         }
                     })
                 )
-                const bodyParser = require('body-parser')
+                const express = require('express')
                 // parse application/json
-                app.use(bodyParser.json())
+                app.use(express.json())
                 // parse application/x-www-form-urlencoded
-                app.use(bodyParser.urlencoded({ extended: true }))
+                app.use(express.urlencoded({ extended: true }))
                 const cookieParser = require('cookie-parser')
                 app.use(cookieParser())
 
@@ -165,6 +165,9 @@ module.exports = {
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
         manifestPath: 'static/manifest.json',
+        manifestOptions: {
+            start_url: '/'
+        },
         iconPaths: {
             favicon32: 'static/img/icons/favicon-32x32.png',
             favicon16: 'static/img/icons/favicon-16x16.png',

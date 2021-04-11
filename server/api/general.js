@@ -3,11 +3,10 @@
  * @method list
  * @param  {[type]} req     [description]
  * @param  {[type]} res     [description]
- * @param  {[type]} mongoDB [description]
  * @param  {[type]} sort    排序
  * @return {[type]}         [description]
  */
-exports.list = (req, res, mongoDB, sort = '-_id') => {
+exports.list = async function (req, res, sort = '-_id') {
     sort = sort || '-_id'
     let { limit, page } = req.query
     page = parseInt(page, 10)
@@ -15,24 +14,23 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
     if (!page) page = 1
     if (!limit) limit = 10
     const skip = (page - 1) * limit
-    Promise.all([mongoDB.find().sort(sort).skip(skip).limit(limit).exec(), mongoDB.countDocumentsAsync()])
-        .then(result => {
-            const total = result[1]
-            const totalPage = Math.ceil(total / limit)
-            const json = {
-                code: 200,
-                data: {
-                    list: result[0],
-                    total,
-                    hasNext: totalPage > page ? 1 : 0,
-                    hasPrev: page > 1 ? 1 : 0
-                }
+    try {
+        const result = await Promise.all([this.find().sort(sort).skip(skip).limit(limit).exec(), this.countDocuments()])
+        const total = result[1]
+        const totalPage = Math.ceil(total / limit)
+        const json = {
+            code: 200,
+            data: {
+                list: result[0],
+                total,
+                hasNext: totalPage > page ? 1 : 0,
+                hasPrev: page > 1 ? 1 : 0
             }
-            res.json(json)
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+        }
+        res.json(json)
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -40,22 +38,19 @@ exports.list = (req, res, mongoDB, sort = '-_id') => {
  * @method item
  * @param  {[type]} req     [description]
  * @param  {[type]} res     [description]
- * @param  {[type]} mongoDB [description]
  * @return {[type]}         [description]
  */
-exports.item = (req, res, mongoDB) => {
+exports.item = async function (req, res) {
     const _id = req.query.id
     if (!_id) {
         res.json({ code: -200, message: '参数错误' })
     }
-    mongoDB
-        .findOneAsync({ _id })
-        .then(result => {
-            res.json({ code: 200, data: result })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        const result = await this.findOne({ _id })
+        res.json({ code: 200, data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -63,39 +58,33 @@ exports.item = (req, res, mongoDB) => {
  * @method flagDelete
  * @param  {[type]}   req     [description]
  * @param  {[type]}   res     [description]
- * @param  {[type]}   mongoDB [description]
  * @return {[type]}           [description]
  */
-exports.deletes = (req, res, mongoDB) => {
+exports.deletes = async function (req, res) {
     const _id = req.query.id
-    mongoDB
-        .updateOneAsync({ _id }, { is_delete: 1 })
-        .then(() => {
-            res.json({ code: 200, message: '更新成功', data: 'success' })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        await this.updateOne({ _id }, { is_delete: 1 })
+        res.json({ code: 200, message: '更新成功', data: 'success' })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
  * 通用编辑
  * @method modify
  * @param  {[type]} res     [description]
- * @param  {[type]} mongoDB [description]
  * @param  {[type]} _id     [description]
  * @param  {[type]} data    [description]
  * @return {[type]}         [description]
  */
-exports.modify = (res, mongoDB, _id, data) => {
-    mongoDB
-        .findOneAndUpdateAsync({ _id }, data, { new: true })
-        .then(result => {
-            res.json({ code: 200, message: '更新成功', data: result })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+exports.modify = async function (res, _id, data) {
+    try {
+        const result = await this.findOneAndUpdate({ _id }, data, { new: true })
+        res.json({ code: 200, message: '更新成功', data: result })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
 
 /**
@@ -103,17 +92,14 @@ exports.modify = (res, mongoDB, _id, data) => {
  * @method recover
  * @param  {[type]} req     [description]
  * @param  {[type]} res     [description]
- * @param  {[type]} mongoDB [description]
  * @return {[type]}         [description]
  */
-exports.recover = (req, res, mongoDB) => {
+exports.recover = async function (req, res) {
     const _id = req.query.id
-    mongoDB
-        .updateOneAsync({ _id }, { is_delete: 0 })
-        .then(() => {
-            res.json({ code: 200, message: '更新成功', data: 'success' })
-        })
-        .catch(err => {
-            res.json({ code: -200, message: err.toString() })
-        })
+    try {
+        await this.updateOne({ _id }, { is_delete: 0 })
+        res.json({ code: 200, message: '更新成功', data: 'success' })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
+    }
 }
