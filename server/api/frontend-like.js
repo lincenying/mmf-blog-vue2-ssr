@@ -5,7 +5,11 @@ exports.like = async (req, res) => {
     const article_id = req.query.id
     const user_id = req.cookies.userid || req.headers.userid
     try {
-        await Article.updateOne({ _id: article_id }, { $inc: { like: 1 }, $push: { likes: user_id } })
+        const result = await Article.findOne({ _id: article_id, is_delete: 0 })
+        if (!result.likes || result.likes.findIndex(item => item === user_id) === -1) {
+            await Article.updateOne({ _id: article_id }, { $inc: { like: 1 }, $push: { likes: user_id } })
+            res.json({ code: 200, message: '操作成功', data: 'success' })
+        }
         res.json({ code: 200, message: '操作成功', data: 'success' })
     } catch (err) {
         res.json({ code: -200, message: err.toString() })
@@ -16,7 +20,7 @@ exports.unlike = async (req, res) => {
     const article_id = req.query.id
     const user_id = req.cookies.userid || req.headers.userid
     try {
-        Article.updateOne({ _id: article_id }, { $inc: { like: -1 }, $pull: { likes: user_id } })
+        await Article.updateOne({ _id: article_id }, { $inc: { like: -1 }, $pullAll: { likes: [user_id] } })
         res.json({ code: 200, message: '操作成功', data: 'success' })
     } catch (err) {
         res.json({ code: -200, message: err.toString() })

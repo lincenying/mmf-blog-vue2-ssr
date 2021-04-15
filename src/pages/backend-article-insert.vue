@@ -54,7 +54,27 @@ export default {
                 html: ''
             },
             externalLink: {
-                markdown_css: false
+                markdown_css: false,
+                hljs_js() {
+                    // 这是你的hljs文件路径
+                    return 'https://cdn.jsdelivr.net/npm/highlightjs/highlight.pack.min.js'
+                },
+                hljs_css(css) {
+                    // 这是你的代码高亮配色文件路径
+                    return 'https://cdn.jsdelivr.net/npm/highlightjs/styles/' + css + '.min.css'
+                },
+                hljs_lang() {
+                    // 这是你的代码高亮语言解析路径
+                    return false
+                },
+                katex_css() {
+                    // 这是你的katex配色方案路径路径
+                    return 'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css'
+                },
+                katex_js() {
+                    // 这是你的katex.js路径
+                    return 'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js'
+                }
             }
         }
     },

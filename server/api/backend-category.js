@@ -45,7 +45,7 @@ exports.insert = async (req, res) => {
                 is_delete: 0,
                 timestamp: moment().format('X')
             })
-            res.json({ code: 200, message: '添加成功', data: result._id })
+            res.json({ code: 200, message: '添加成功', data: result })
         } catch (err) {
             res.json({ code: -200, message: err.toString() })
         }
