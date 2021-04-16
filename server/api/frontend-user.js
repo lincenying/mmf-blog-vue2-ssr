@@ -277,26 +277,22 @@ exports.account = async (req, res) => {
  * @return {[type]}        [description]
  */
 exports.password = async (req, res) => {
-    const { id, old_password, password } = req.body
+    const { old_password, password } = req.body
     const user_id = req.cookies.userid || req.headers.userid
-    if (user_id === id) {
-        try {
-            const result = await User.findOne({
-                _id: id,
-                password: md5(md5Pre + old_password),
-                is_delete: 0
-            })
-            if (result) {
-                await User.updateOne({ _id: id }, { $set: { password: md5(md5Pre + password) } })
-                res.json({ code: 200, message: '更新成功', data: 'success' })
-            } else {
-                res.json({ code: -200, message: '原始密码错误' })
-            }
-        } catch (err) {
-            res.json({ code: -200, message: err.toString() })
+    try {
+        const result = await User.findOne({
+            _id: user_id,
+            password: md5(md5Pre + old_password),
+            is_delete: 0
+        })
+        if (result) {
+            await User.updateOne({ _id: user_id }, { $set: { password: md5(md5Pre + password) } })
+            res.json({ code: 200, message: '更新成功', data: 'success' })
+        } else {
+            res.json({ code: -200, message: '原始密码错误' })
         }
-    } else {
-        res.json({ code: -200, message: '当前没有权限' })
+    } catch (err) {
+        res.json({ code: -200, message: err.toString() })
     }
 }
 
