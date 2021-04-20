@@ -1,6 +1,7 @@
 /* eslint-disable no-inline-comments */
 const path = require('path')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = {
     configureWebpack: {
@@ -133,15 +134,17 @@ module.exports = {
                 app.engine('.html', require('ejs').__express)
                 app.set('view engine', 'ejs')
 
-                // 引入 mongoose 相关模型
-                require('./server/models/admin')
-                require('./server/models/article')
-                require('./server/models/category')
-                require('./server/models/comment')
-                require('./server/models/user')
-                // 引入 api 路由
-                const routes = require('./server/routes/index')
-                app.use('/api', routes)
+                // 反向代理 => 4000端口
+                app.use(
+                    '/api',
+                    createProxyMiddleware({
+                        target: 'http://localhost:4000',
+                        changeOrigin: true,
+                        pathRewrite: {
+                            '^/api': '/api'
+                        }
+                    })
+                )
             },
             // ===== 在启动时将URL复制到系统剪贴板
             // copyUrlOnStart: true,
