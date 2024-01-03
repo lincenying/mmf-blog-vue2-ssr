@@ -1,5 +1,7 @@
 # mmf-blog vuejs 2.0 v2         [中文说明](https://github.com/lincenying/mmf-blog-vue2-pwa-ssr/blob/main/README_CN.md)
 
+### Vue2生命周期将近, 请关注Vue3版本SSR仓库 https://github.com/lincenying/mmf-blog-vite-vue3-ssr
+
 demo: [http://www.mmxiaowu.com](http://www.mmxiaowu.com)
 
 The main technical stack: vue 2, vue-router 3, vuex 3, vue-clio, eslint, pwa, ssr
